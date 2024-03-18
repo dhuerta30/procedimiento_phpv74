@@ -2558,6 +2558,7 @@ class HomeController
 		$crud = DB::PDOCrud(true);
 		$crud->formDisplayInPopup();
 		$crud->setSettings("viewbtn", false);
+		$crud->enqueueBtnTopActions("Report",  "<i class='fa fa-upload'></i> Carga Masiva", "javascript:;", array(), "btn-report btn btn-info carga_masiva");
 		$crud->fieldRenameLable("tipo_de_examen", "Tipo de Exámen");
 		$crud->fieldRenameLable("examen", "Exámen");
 		$crud->formFields(array("tipo_solicitud","especialidad","tipo_de_examen", "codigo_fonasa", "glosa"));
