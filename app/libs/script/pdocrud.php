@@ -94,9 +94,7 @@ function eliminar_submenu($data, $obj){
 
 function carga_masiva_prestaciones_insertar($data, $obj){
     $archivo = basename($data["carga_masiva_prestaciones"]["archivo"]);
-
-    $explode = explode('.', $archivo);
-    $extension = array_pop($explode);
+    $extension = pathinfo($archivo, PATHINFO_EXTENSION);
 
     $pdomodel = $obj->getPDOModelObj();
    
@@ -105,10 +103,9 @@ function carga_masiva_prestaciones_insertar($data, $obj){
         die(json_encode($error_msg));
     } else {
         if ($extension != "xlsx") { /* comprobamos si la extensión del archivo es diferente de excel */
-            unlink(__DIR__ . "/uploads/".$archivo); /* eliminamos el archivo que se subió */
+            //unlink(__DIR__ . "/uploads/".$archivo); /* eliminamos el archivo que se subió */
             $error_msg = array("message" => "", "error" => "El Archivo Subido no es un Archivo Excel Válido", "redirectionurl" => "");
             die(json_encode($error_msg));
-
         } else {
 
             $records = $pdomodel->excelToArray("uploads/".$archivo); /* Acá capturamos el nombre del archivo excel a importar */

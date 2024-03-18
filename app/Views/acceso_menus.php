@@ -183,6 +183,7 @@
                         introJs().setOptions({
                             doneLabel: 'Finalizado', // Personaliza el texto del botón "Done"
                             showStepNumbers: false,    // Puedes ocultar los números de paso si lo deseas
+                            showProgress: true
                         }).start();
                     }
                 });

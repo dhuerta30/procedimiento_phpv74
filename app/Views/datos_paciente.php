@@ -53,7 +53,7 @@
                         <h5>Formulario de Solicitud de Exámen</h5>
                         <hr>
                         <h5 class="bg-default border w-lg-25 w-md-100 p-2 text-center bg-light">Datos Paciente</h5>
-                        <button class="btn btn-info ayuda"><i class="fas fa-info-circle"></i> Ayuda</button>
+                        <button class="btn btn-info ayuda"><i class="fas fa-info-circle"></i> ¿Necesitas Ayuda?</button>
                         <?=$render;?>
                         <?=$mask;?>
 
@@ -115,6 +115,7 @@
                     nextLabel: 'Siguiente',
                     prevLabel: 'Anterior',
                     showStepNumbers: false,    // Puedes ocultar los números de paso si lo deseas
+                    showProgress: true
                 }).start();
             });
 
