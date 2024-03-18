@@ -1277,7 +1277,7 @@ class HomeController
 
 	public function codigo(){
 		$pdocrud = DB::PDOCrud();
-		$pdocrud->enqueueBtnTopActions("Report",  "<i class='fa fa-upload'></i> Carga Masiva", "javascript:;", array(), "btn-report btn btn-info carga_masiva");
+		$pdocrud->enqueueBtnTopActions("Report",  "<i class='fa fa-upload'></i> Carga Masiva", "javascript:;", array(), "btn-report btn btn-light carga_masiva");
 		$pdocrud->setSearchCols(array("codigo_o","operacion"));
 		$pdocrud->colRename("codigo_o", "Código");
 		$pdocrud->colRename("operacion", "Descripción");
@@ -2568,7 +2568,7 @@ class HomeController
 		$crud = DB::PDOCrud(true);
 		$crud->formDisplayInPopup();
 		$crud->setSettings("viewbtn", false);
-		$crud->enqueueBtnTopActions("Report",  "<i class='fa fa-upload'></i> Carga Masiva", "javascript:;", array(), "btn-report btn btn-info carga_masiva");
+		$crud->enqueueBtnTopActions("Report",  "<i class='fa fa-upload'></i> Carga Masiva", "javascript:;", array(), "btn-report btn btn-light carga_masiva");
 		$crud->fieldRenameLable("tipo_de_examen", "Tipo de Exámen");
 		$crud->fieldRenameLable("examen", "Exámen");
 		$crud->formFields(array("tipo_solicitud","especialidad","tipo_de_examen", "codigo_fonasa", "glosa"));

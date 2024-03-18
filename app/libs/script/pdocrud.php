@@ -111,8 +111,8 @@ function carga_masiva_codigo_insertar($data, $obj){
 
             $sql = array();
             foreach ($records as $Excelval) {
-                $sql['codigo_o'] = $Excelval['Codigo'];
-                $sql['operacion'] = $Excelval['Operacion'];
+                $sql['codigo_o'] = $Excelval['Código'];
+                $sql['operacion'] = $Excelval['Descripción'];
                 $pdomodel->insertBatch("codigo", array($sql));
             }
             $data["carga_masiva_codigo"]["archivo"] = basename($data["carga_masiva_codigo"]["archivo"]);
