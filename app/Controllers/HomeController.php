@@ -1277,6 +1277,7 @@ class HomeController
 
 	public function codigo(){
 		$pdocrud = DB::PDOCrud();
+		$pdocrud->enqueueBtnTopActions("Report",  "<i class='fa fa-upload'></i> Carga Masiva", "javascript:;", array(), "btn-report btn btn-info carga_masiva");
 		$pdocrud->setSearchCols(array("codigo_o","operacion"));
 		$pdocrud->colRename("codigo_o", "Código");
 		$pdocrud->colRename("operacion", "Descripción");
@@ -1293,8 +1294,17 @@ class HomeController
 		$pdocrud->buttonHide("submitBtnSaveBack");
 		$render = $pdocrud->dbTable("codigo")->render();
 
+		$carga = DB::PDOCrud(true);
+		$carga->fieldRenameLable("archivo", "Archivo Excel");
+		$carga->setLangData("save", "Subir");
+		$carga->setSettings("required", false);
+		$carga->fieldTypes("archivo", "FILE_NEW");
+		$carga->addCallback("before_insert", "carga_masiva_codigo_insertar");
+		$render2 = $carga->dbTable("carga_masiva_codigo")->render("insertform");
+
 		View::render("codigo", [
-			'render' => $render
+			'render' => $render,
+			'render2' => $render2
 		]);
 	}
 
