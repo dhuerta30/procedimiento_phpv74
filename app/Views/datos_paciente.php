@@ -2,7 +2,7 @@
 <?php require 'layouts/sidebar.php'; ?>
 <link href="<?=$_ENV["BASE_URL"]?>css/sweetalert2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/flatpickr.min.css">
-<link href="https://unpkg.com/intro.js/introjs.css" rel="stylesheet">
+<link href="<?=$_ENV["BASE_URL"]?>css/intro.css" rel="stylesheet">
 <style>
     .chosen-container {
         width: 100% !important;
@@ -105,7 +105,7 @@
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/flatpickr.js"></script>
-<script src="https://unpkg.com/intro.js/intro.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/intro.js"></script>
 <script>
         $(document).ready(function(){
            

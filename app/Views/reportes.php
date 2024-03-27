@@ -2,6 +2,7 @@
 <?php require 'layouts/sidebar.php'; ?>
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link href="<?=$_ENV["BASE_URL"]?>css/sweetalert2.min.css" rel="stylesheet">
 <style>
     .page-title.clearfix.card-header.pdocrud-table-heading, .row.pdocrud-options-files {
         display: none;
@@ -49,6 +50,7 @@
     <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>js/flatpickr.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -102,6 +104,7 @@ function datatable(){
 
 $(document).ready(function(){
     datatable();
+    ComboAno();
 });
 
 $(document).on("click", ".btn_search", function(){
@@ -196,7 +199,7 @@ function ComboAno() {
    }
 }
 
-window.onload = ComboAno;
+//window.onload = ComboAno;
 
 $(document).on("click", ".btn_limpiar", function(){
 
@@ -206,12 +209,12 @@ $(document).on("click", ".btn_limpiar", function(){
     $('.ano_desde').select2('destroy');
     $('.ano_desde').val("");
     $('.ano_desde').select2();
-    $('.ano_desde').html('<option>Seleccionar Año Desde</option>');
+    $('.ano_desde').html('<option value="0">Seleccionar Año Desde</option>');
 
     $('.ano_hasta').select2('destroy');
     $('.ano_hasta').val("");
     $('.ano_hasta').select2();
-    $('.ano_hasta').html('<option>Seleccionar Año Hasta</option>');
+    $('.ano_hasta').html('<option value="0">Seleccionar Año Hasta</option>');
     ComboAno();
     $('.btn_search').click();
 });

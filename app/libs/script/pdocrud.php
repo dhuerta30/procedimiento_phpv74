@@ -321,7 +321,8 @@ function editar_egresar_solicitud($data, $obj) {
     $pdomodel->where("id_datos_paciente", $id_datos_paciente);
     $pdomodel->where("fecha_solicitud", $fecha_solicitud);
     $pdomodel->update("detalle_de_solicitud", array(
-        "observacion" => $observacion
+        "observacion" => $observacion,
+        "estado" => "Egresado"
     ));
 
     $pdomodel->where("id_datos_paciente", $id_datos_paciente);

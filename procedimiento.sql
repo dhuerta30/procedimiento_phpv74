@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-03-2024 a las 19:18:55
+-- Tiempo de generación: 27-03-2024 a las 19:29:32
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 7.4.29
 
@@ -74,6 +74,17 @@ CREATE TABLE `campos` (
 INSERT INTO `campos` (`id_campos`, `id_modulos`, `nombre`, `tipo_de_campo`, `nulo`, `visibilidad_formulario`, `visibilidad_busqueda`, `visibilidad_de_filtro_busqueda`, `visibilidad_grilla`, `indice`, `autoincrementable`, `tipo`, `longitud`) VALUES
 (700, 94, 'id', 'Input', 'NOT NULL', 'Ocultar', 'Ocultar', 'Ocultar', 'Ocultar', 'PRIMARY KEY', 'AUTO_INCREMENT', 'INT', '11'),
 (701, 94, 'contenido', 'ckeditor', 'NOT NULL', 'Mostrar', 'Mostrar', 'Mostrar', 'Mostrar', '', '', 'TEXT', '');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `carga_masiva_codigo`
+--
+
+CREATE TABLE `carga_masiva_codigo` (
+  `id_carga_masiva_codigo` int(11) NOT NULL,
+  `archivo` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -9483,8 +9494,8 @@ INSERT INTO `detalle_de_solicitud` (`id_detalle_de_solicitud`, `id_datos_pacient
 (98, 30, '1601111', 'Procedimientos', 'Procedimientos dermatología y tegumentos', 'Aplicación de inmunomoduladores, químicos y similares hasta 10 lesiones por sesión', '', '', 'hola', '', '', '2024-03-16', '2024-03-16', 'Agendado'),
 (99, 20, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Medio', 'Hombro', 'asdasdasd', '', '', '2024-03-16', NULL, 'Ingresado'),
 (100, 20, '1101006', 'Procedimientos', 'Procedimientos diagnósticos neurología', 'Electroencefalograma (E.E.G.) standard y/o activado \"sin privación de sueño\" (incluye mono y bipolares, hiperventilación, c/s reactividad auditiva, visual, lumínica, por drogas u otras). Equipo de 8 canales', '', '', 'asdasdada', '', '', '2024-03-16', NULL, 'Ingresado'),
-(101, 30, '0403001', 'Imageneologica', 'Scanner', 'Tomografía Computarizada de cráneo encefálica', '', '', 'werwerwerw', '', '', '2024-03-15', NULL, 'Ingresado'),
-(102, 30, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Brazo', 'werwerwerw', '', '', '2024-03-15', NULL, 'Ingresado'),
+(101, 30, '0403001', 'Imageneologica', 'Scanner', 'Tomografía Computarizada de cráneo encefálica', '', '', 'werwerwerw', '', '', '2024-03-15', '2023-03-12', 'Egresado'),
+(102, 30, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Brazo', 'werwerwerw', '', '', '2024-03-15', '2023-03-12', 'Egresado'),
 (103, 22, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Derecha', 'Mano', 'sdfsdfsdfsdf', '', '', '2024-03-17', NULL, 'Ingresado'),
 (104, 22, '0405001', 'Imageneologica', 'Resonancia magnética', 'Resonancia Magnética Cráneo Encefálica u Oídos, bilateral', '', '', 'sdfsdfs', '', '', '2024-03-17', NULL, 'Ingresado'),
 (105, 21, '1101006', 'Procedimientos', 'Procedimientos diagnósticos neurología', 'Electroencefalograma (E.E.G.) standard y/o activado \"sin privación de sueño\" (incluye mono y bipolares, hiperventilación, c/s reactividad auditiva, visual, lumínica, por drogas u otras). Equipo de 8 canales', '', '', 'sfsdfsdf', '', '', '2024-03-17', NULL, 'Ingresado'),
@@ -10128,6 +10139,12 @@ ALTER TABLE `campos`
   ADD PRIMARY KEY (`id_campos`);
 
 --
+-- Indices de la tabla `carga_masiva_codigo`
+--
+ALTER TABLE `carga_masiva_codigo`
+  ADD PRIMARY KEY (`id_carga_masiva_codigo`);
+
+--
 -- Indices de la tabla `carga_masiva_prestaciones`
 --
 ALTER TABLE `carga_masiva_prestaciones`
@@ -10277,6 +10294,12 @@ ALTER TABLE `campos`
   MODIFY `id_campos` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=702;
 
 --
+-- AUTO_INCREMENT de la tabla `carga_masiva_codigo`
+--
+ALTER TABLE `carga_masiva_codigo`
+  MODIFY `id_carga_masiva_codigo` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `carga_masiva_prestaciones`
 --
 ALTER TABLE `carga_masiva_prestaciones`
@@ -10388,7 +10411,7 @@ ALTER TABLE `tareas`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_menu`

@@ -1852,6 +1852,8 @@ class HomeController
 			"dp.apellido_paterno",
 			"dp.apellido_materno",
 			"dp.edad",
+			"dg_p.fecha_solicitud_paciente",
+			"dg_p.fecha_egreso",
 			"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
 			"GROUP_CONCAT(DISTINCT ds.estado) AS estado",
 			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
@@ -1877,9 +1879,10 @@ class HomeController
 						<th>Edad</th>
 						<th>Fecha Solicitud</th>
 						<th>Estado</th>
+						<th>Fecha Egreso</th>
 						<th>Código</th>
 						<th>Exámen</th>
-						<th>Fecha</th>
+						<th>Fecha Agendada</th>
 						<th>Especialidad</th>
 						<th>Profesional</th>
 						<th>Acciones</th>
@@ -1913,6 +1916,14 @@ class HomeController
 			$profesional = str_replace(',', "<br>", $row["profesional"]);
 			$especialidad = str_replace(',', "<br>", $row["especialidad"]);
 
+
+			$fecha_egreso = date('d/m/Y', strtotime($row["fecha_egreso"]));
+			if($fecha_egreso != "01/01/1970" && $fecha_egreso != "31/12/1969"){
+				$fecha_egreso;
+			} else {
+				$fecha_egreso = "<div class='badge badge-danger'>Sin Fecha</div>";
+			}
+
 			$html .= '
 				<tr style="white-space: nowrap;">
 					<td>' . $row['rut'] . '</td>
@@ -1920,6 +1931,7 @@ class HomeController
 					<td>' . $row["edad"] . '</td>
 					<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
 					<td>' . $row["estado"] . '</td>
+					<td>' . $fecha_egreso . '</td>
 					<td>'. $code .'</td>
 					<td>' . $exam . '</td>
 					<td>' . $data_fecha . '</td>
@@ -2049,8 +2061,17 @@ class HomeController
 			$pdocrud->fieldAddOnInfo("fecha", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 			$pdocrud->fieldCssClass("fecha", array("fecha"));
 			$pdocrud->fieldRenameLable("estado", "Cambiar Estado");
+			$pdocrud->fieldRenameLable("fecha", "Fecha Agendada");
 			$pdocrud->fieldTypes("estado", "select");
-			$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
+			$pdocrud->fieldDataBinding(
+				"estado",                                 
+				"estado_procedimiento",                    
+				"nombre",
+				array("nombre"),
+				"db",
+				"-",
+				array(array("nombre", "Egresado", "!="), array("nombre", "Ingresado", "!="))
+			);
 
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
@@ -2084,7 +2105,7 @@ class HomeController
 			$pdocrud->setLangData("login", "Guardar");
 			$pdocrud->addCallback("before_select", "editar_procedimientos");
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
-			HomeController::modal("procedimientos", "<i class='fa fa-folder'></i> Procedimientos", $render);
+			HomeController::modal("procedimientos", "<i class='fa fa-folder'></i> Modificar Procedimientos", $render);
 		}
 	}
 
@@ -2363,6 +2384,7 @@ class HomeController
 			"count(ds.examen) AS total_examen",
 			"ds.examen",
 			"ds.codigo_fonasa",
+			"ds.fecha_solicitud",
 			"ds.tipo_examen",
 			"dg_p.diagnostico",
 			"dp.nombres",
@@ -2377,8 +2399,7 @@ class HomeController
 		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
 
-		$pdomodel->where("ds.fecha", "1970", "!=");
-		$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha");
+		$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha_solicitud");
 		$pdomodel->orderByCols = array("ds.fecha asc");
 		$data = $pdomodel->select("datos_paciente as dp");
 
@@ -2392,6 +2413,8 @@ class HomeController
 					<tr>
 						<th>Código Fonasa</th>
 						<th>Paciente</th>
+						<th>Rut</th>
+						<th>Fecha Solicitud</th>
 						<th>Diagnóstico CIE-10</th>
 						<th>Exámen</th>
 						<th>Estado</th>
@@ -2405,15 +2428,24 @@ class HomeController
 	
 		foreach ($data as $row) {
 			$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
+			$ano = date('Y', strtotime($row["fecha_solicitud"]));
+			$year = "";
+			if($ano != "1970"){
+				$year = $ano;
+			} else {
+				$year = "Sin Año";
+			}
 			$html .= '
 				<tr style="white-space: nowrap;">
 					<td>' . $row['codigo_fonasa'] . '</td>
 					<td>' . ucwords($nombre_completo) . '</td>
+					<td>' . $row["rut"] . '</td>
+					<td>' . date('d-m-Y', strtotime($row["fecha_solicitud"])) . '</td>
 					<td>' . $row["diagnostico"] . '</td>
 					<td>' . $row["examen"] . '</td>
 					<td>' . $row["estado"] . '</td>
 					<td>' . $row["tipo_examen"] . '</td>
-					<td>' . date('Y', strtotime($row["fecha"])) . '</td>
+					<td>' . $year . '</td>
 					<td>' . $row["total_examen"] . '</td>
 				</tr>
 			';
@@ -2443,7 +2475,7 @@ class HomeController
 					<label for="correo">Año Desde</label>
 					<div class="input-group-append">
 						<select class="form-control ano_desde" type="text" name="ano_desde" id="ano_desde">
-							<option>Seleccionar Año Desde</option>
+							<option value="0">Seleccionar Año Desde</option>
 						</select>
 						<span class="btn btn-default border" id="basic-addon1">
 							<i class="fa fa-calendar"></i>
@@ -2454,7 +2486,7 @@ class HomeController
 					<label for="fecha">Año Hasta</label>
 					<div class="input-group-append">
 						<select class="form-control ano_hasta" type="text" name="ano_hasta" id="ano_hasta">
-							<option>Seleccionar Año Hasta</option>
+							<option value="0">Seleccionar Año Hasta</option>
 						</select>
 						<span class="btn btn-default border" id="basic-addon1">
 							<i class="fa fa-calendar"></i>
@@ -2695,6 +2727,7 @@ class HomeController
 				"ds.examen",
 				"ds.codigo_fonasa",
 				"ds.tipo_examen",
+				"ds.fecha_solicitud",
 				"dg_p.diagnostico",
 				"dp.nombres",
 				"dp.apellido_paterno",
@@ -2712,26 +2745,26 @@ class HomeController
 			$estado = $request->post('estado');
 
 			if (!empty($rut)) {
-				/*if (!self::validaRut($rut)) {
-					echo json_encode(['error' => 'Ingrese un Rut válido']);
+				if (!self::validaRut($rut)) {
+					$grilla_ingreso_egreso = $this->crud_ingreso_egreso();
+					echo json_encode(['rut_invalid' => 'Ingrese un Rut válido', 'default' => $grilla_ingreso_egreso]);
 					return;
-				}*/
-				$pdomodel->where("dp.rut", $rut, "=");
-				$pdomodel->andOrOperator = "AND";
-				$pdomodel->where("ds.estado", "Agendado", "!=");
+				}
+				$pdomodel->where("dp.rut", $rut);
+				//$pdomodel->andOrOperator = "AND";
+				//$pdomodel->where("ds.estado", "Agendado", "!=");
 			} 
 			
 			if (!empty($estado)) {
-				$pdomodel->where("ds.estado", $estado, "=");
+				$pdomodel->where("ds.estado", $estado);
 			}
 
 			$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha");
 			$pdomodel->where("ds.estado", "Agendado", "!=");
-			$pdomodel->where("ds.fecha", "1970", "!=");
 			$data = $pdomodel->select("datos_paciente as dp");
 			//echo $pdomodel->getLastQuery();
 	
-			if (empty($rut) && $estado == 0) {
+			if (empty($rut) && empty($estado)) {
 				$grilla_ingreso_egreso = $this->crud_ingreso_egreso();
 				echo json_encode(['error' => 'No se encontraron resultados', 'default' => $grilla_ingreso_egreso]);
             	return;
@@ -2743,6 +2776,8 @@ class HomeController
 						<tr>
 							<th>Código Fonasa</th>
 							<th>Paciente</th>
+							<th>Rut</th>
+							<th>Fecha Solicitud</th>
 							<th>Diagnóstico CIE-10</th>
 							<th>Exámen</th>
 							<th>Estado</th>
@@ -2756,15 +2791,24 @@ class HomeController
 
 			foreach ($data as $row) {
 				$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
+				$ano = date('Y', strtotime($row["fecha"]));
+				$year = "";
+				if($ano != "1970"){
+					$year = $ano;
+				} else {
+					$year = "Sin Año";
+				}
 				$html .= '
 					<tr>
 						<td>' . $row['codigo_fonasa'] . '</td>
 						<td>' . ucwords($nombre_completo) . '</td>
+						<td>' . $row["rut"] . '</td>
+						<td>' . date('d-m-Y', strtotime($row["fecha_solicitud"])) . '</td>
 						<td>' . $row["diagnostico"] . '</td>
 						<td>' . $row["examen"] . '</td>
 						<td>' . $row["estado"] . '</td>
 						<td>' . $row["tipo_examen"] . '</td>
-						<td>' . date('Y', strtotime($row["fecha"])) . '</td>
+						<td>' . $year . '</td>
 						<td>' . $row["total_examen"] . '</td>
 					</tr>
 				';
@@ -2794,6 +2838,7 @@ class HomeController
 				"count(ds.examen) AS total_examen",
 				"ds.examen",
 				"ds.codigo_fonasa",
+				"ds.fecha_solicitud",
 				"ds.tipo_examen",
 				"dg_p.diagnostico",
 				"dp.nombres",
@@ -2810,43 +2855,20 @@ class HomeController
 			$ano_desde = $request->post('ano_desde');
 			$ano_hasta = $request->post('ano_hasta');
 
-			if (!empty($ano_desde) && !empty($ano_hasta)) {
-				$pdomodel->whereYear("ds.fecha", $ano_desde);
+			if (!empty($ano_desde) || !empty($ano_hasta)) {
+				$pdomodel->whereYear("ds.fecha_solicitud", $ano_desde);
 				$pdomodel->andOrOperator = "OR";
-				$pdomodel->whereYear("ds.fecha", $ano_hasta);
+				$pdomodel->whereYear("ds.fecha_solicitud", $ano_hasta);
 				$pdomodel->andOrOperator = "OR";
-				$pdomodel->whereYearBetween('ds.fecha', $ano_desde, $ano_hasta);
+				$pdomodel->whereYearBetween('ds.fecha_solicitud', $ano_desde, $ano_hasta);
 			}
-
-			/*if (!empty($rut)) {
-				if (!self::validaRut($rut)) {
-					$render = $this->reportes_all();
-					echo json_encode(['render' => $render]);
-					//echo json_encode(['error' => 'Ingrese un Rut válido']);
-					exit;
-				}
-
-				$pdomodel->where("dp.rut", $rut);
-			} 
-			
-			if (!empty($ano)) {
-				// Validar que el año sea numérico y tenga 4 dígitos
-				if (!is_numeric($ano) || strlen($ano) !== 4) {
-					$render = $this->reportes_all();
-					echo json_encode(['render' => $render]);
-					//echo json_encode(['error' => 'Ingrese un Año válido']);
-					exit;
-				}
-
-				$pdomodel->whereYear("dg_p.fecha", $ano);	
-			}*/
 	
-			$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha");
+			$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha_solicitud");
 			$data = $pdomodel->select("datos_paciente as dp");
 			//echo $pdomodel->getLastQuery();
 			//die();
 	
-			if (empty($data)) {
+			if (empty($ano_desde) && empty($ano_hasta)) {
 				$grilla_reportes = $this->reportes_all();
 				echo json_encode(['error' => 'No se encontraron resultados', 'default' => $grilla_reportes]);
             	return;
@@ -2858,6 +2880,8 @@ class HomeController
 						<tr>
 							<th>Código Fonasa</th>
 							<th>Paciente</th>
+							<th>Rut</th>
+							<th>Fecha Solicitud</th>
 							<th>Diagnóstico CIE-10</th>
 							<th>Exámen</th>
 							<th>Tipo de Exámen</th>
@@ -2870,14 +2894,23 @@ class HomeController
 		
 			foreach ($data as $row) {
 				$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
+				$ano = date('Y', strtotime($row["fecha_solicitud"]));
+				$year = "";
+				if($ano != "1970"){
+					$year = $ano;
+				} else {
+					$year = "Sin Año";
+				}
 				$html .= '
 					<tr>
 						<td>' . $row['codigo_fonasa'] . '</td>
 						<td>' . ucwords($nombre_completo) . '</td>
+						<td>' . $row["rut"] . '</td>
+						<td>' . date('d-m-Y', strtotime($row["fecha_solicitud"])) . '</td>
 						<td>' . $row["diagnostico"] . '</td>
 						<td>' . $row["examen"] . '</td>
 						<td>' . $row["tipo_examen"] . '</td>
-						<td>' . date('Y', strtotime($row["fecha"])) . '</td>
+						<td>' . $year . '</td>
 						<td>' . $row["total_examen"] . '</td>
 					</tr>
 				';
@@ -2911,6 +2944,8 @@ class HomeController
 				"dp.apellido_paterno",
 				"dp.apellido_materno",
 				"dp.edad",
+				"dg_p.fecha_solicitud_paciente",
+				"dg_p.fecha_egreso",
 				"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
 				"ds.estado",
 				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
@@ -2990,6 +3025,7 @@ class HomeController
 								<th>Edad</th>
 								<th>Fecha Solicitud</th>
 								<th>Estado</th>
+								<th>Fecha Egreso</th>
 								<th>Código</th>
 								<th>Exámen</th>
 								<th>Fecha</th>
@@ -3026,6 +3062,13 @@ class HomeController
 					$profesional = str_replace(',', "<br>", $row["profesional"]);
 					$especialidad = str_replace(',', "<br>", $row["especialidad"]);
 
+					$fecha_egreso = date('d/m/Y', strtotime($row["fecha_egreso"]));
+					if($fecha_egreso != "01/01/1970" && $fecha_egreso != "31/12/1969"){
+						$fecha_egreso;
+					} else {
+						$fecha_egreso = "<div class='badge badge-danger'>Sin Fecha</div>";
+					}
+
 					$html .= '
 						<tr style="white-space: nowrap;">
 							<td>' . $row['rut'] . '</td>
@@ -3033,6 +3076,7 @@ class HomeController
 							<td>' . $row["edad"] . '</td>
 							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
 							<td>' . $row["estado"] . '</td>
+							<td>' . $fecha_egreso . '</td>
 							<td>'. $code .'</td>
 							<td>' . $exam . '</td>
 							<td>' . $data_fecha . '</td>
@@ -3833,6 +3877,7 @@ class HomeController
 			"ds.examen",
 			"ds.codigo_fonasa",
 			"ds.tipo_examen",
+			"ds.fecha_solicitud",
 			"dg_p.diagnostico",
 			"dp.nombres",
 			"dp.apellido_paterno",
@@ -3849,7 +3894,6 @@ class HomeController
 		$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha");
 		$pdomodel->where("ds.estado", "Agendado", "!=");
 		$pdomodel->andOrOperator = "AND";
-		$pdomodel->where("ds.fecha", "1970", "!=");
 		$data = $pdomodel->select("datos_paciente as dp");
 
 		$html = '
@@ -3858,6 +3902,8 @@ class HomeController
 					<tr>
 						<th>Código Fonasa</th>
 						<th>Paciente</th>
+						<th>Rut</th>
+						<th>Fecha Solicitud</th>
 						<th>Diagnóstico CIE-10</th>
 						<th>Exámen</th>
 						<th>Estado</th>
@@ -3871,15 +3917,26 @@ class HomeController
 	
 		foreach ($data as $row) {
 			$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
+			$ano = date('Y', strtotime($row["fecha"]));
+
+			$year = "";
+			if($ano != "1970"){
+				$year = $ano;
+			} else {
+				$year = "Sin Año";
+			}
+
 			$html .= '
 				<tr>
 					<td>' . $row['codigo_fonasa'] . '</td>
 					<td>' . ucwords($nombre_completo) . '</td>
+					<td>' . $row["rut"] . '</td>
+					<td>' . date('d-m-Y', strtotime($row["fecha_solicitud"])) . '</td>
 					<td>' . $row["diagnostico"] . '</td>
 					<td>' . $row["examen"] . '</td>
 					<td>' . $row["estado"] . '</td>
 					<td>' . $row["tipo_examen"] . '</td>
-					<td>' . date('Y', strtotime($row["fecha"])) . '</td>
+					<td>' . $year . '</td>
 					<td>' . $row["total_examen"] . '</td>
 				</tr>
 			';

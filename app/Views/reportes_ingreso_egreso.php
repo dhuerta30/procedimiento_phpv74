@@ -2,6 +2,7 @@
 <?php require 'layouts/sidebar.php'; ?>
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link href="<?=$_ENV["BASE_URL"]?>css/sweetalert2.min.css" rel="stylesheet">
 <style>
     .page-title.clearfix.card-header.pdocrud-table-heading, .row.pdocrud-options-files {
         display: none;
@@ -47,6 +48,7 @@
 <div id="pdocrud-ajax-loader">
     <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
+<script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/flatpickr.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -71,7 +73,7 @@ function datatable(){
                     return 'reportes';
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3] // Define las columnas a exportar
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] // Define las columnas a exportar
                 }
             }
         ],
@@ -123,6 +125,14 @@ $(document).on("click", ".btn_search", function(){
                 datatable();
                 $('.btn_limpiar').removeClass('d-none');
             } else {
+                if(data['rut_invalid']){
+                    Swal.fire({
+                        title: 'Lo siento!',
+                        text: data['rut_invalid'],
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
                 $('.reportes').html("<div class='table-responsive'>"+ data['default'] +"</div>");
                 datatable();
                 $('.btn_limpiar').addClass('d-none');
