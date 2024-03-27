@@ -1844,31 +1844,36 @@ class HomeController
 	private function mostrar_grilla_lista_espera(){
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
-		$pdomodel->columns = array(
-			"dp.id_datos_paciente",
-			"ds.id_detalle_de_solicitud",
-			"dp.rut",
-			"dp.nombres",
-			"dp.apellido_paterno",
-			"dp.apellido_materno",
-			"dp.edad",
-			"dg_p.fecha_solicitud_paciente",
-			"dg_p.fecha_egreso",
-			"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
-			"GROUP_CONCAT(DISTINCT ds.estado) AS estado",
-			"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
-			"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
-			"GROUP_CONCAT(DISTINCT ds.fecha) as fecha", 
-			"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
-			"GROUP_CONCAT(DISTINCT nombre_profesional, ' ', apellido_profesional) AS profesional", 
+		$data = $pdomodel->executeQuery(
+			"SELECT 
+			dp.id_datos_paciente,
+			ds.id_detalle_de_solicitud,
+			dp.rut,
+			dp.nombres,
+			dp.apellido_paterno,
+			dp.apellido_materno,
+			dp.edad,
+			dg_p.fecha_egreso,
+			GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud,
+			GROUP_CONCAT(DISTINCT ds.estado) AS estado,
+			GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo,
+			GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS examen,
+			GROUP_CONCAT(DISTINCT ds.fecha) as fecha,
+			GROUP_CONCAT(DISTINCT especialidad) AS especialidad,
+			GROUP_CONCAT(DISTINCT nombre_profesional, ' ', apellido_profesional) AS profesional 
+		FROM 
+			datos_paciente AS dp
+		INNER JOIN
+			detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+		INNER JOIN 
+			diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+		INNER JOIN 
+			profesional AS pro ON pro.id_profesional = dg_p.profesional
+		WHERE 
+			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+		GROUP BY 
+			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud"
 		);
-
-		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
-		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
-		$pdomodel->joinTables("profesional as pro", "pro.id_profesional = dg_p.profesional", "INNER JOIN");
-
-		$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad", "ds.fecha", "ds.fecha_solicitud");
-		$data = $pdomodel->select("datos_paciente as dp");
 		
 		$html = '
 			<table class="table table-striped tabla_reportes text-center" style="width:100%">
@@ -2932,33 +2937,12 @@ class HomeController
 		
 		$request = new Request();
 
-		if($request->getMethod() === 'POST'){	
+		if($request->getMethod() === 'POST'){
 
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->columns = array(
-				"dp.id_datos_paciente",
-				"ds.id_detalle_de_solicitud",
-				"dp.rut",
-				"dp.nombres",
-				"dp.apellido_paterno",
-				"dp.apellido_materno",
-				"dp.edad",
-				"dg_p.fecha_solicitud_paciente",
-				"dg_p.fecha_egreso",
-				"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
-				"ds.estado",
-				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS Codigo",
-				"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
-				"GROUP_CONCAT(DISTINCT ds.fecha) as fecha", 
-				"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
-				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ', apellido_profesional) AS profesional", 
-			);
-	
-			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
-			$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
-			$pdomodel->joinTables("profesional as pro", "pro.id_profesional = dg_p.profesional", "INNER JOIN");
 
+			$where = "";
 			$run = $request->post('run');
 			$nombre_paciente = $request->post('nombre_paciente');
 			$estado = $request->post('estado');
@@ -2973,11 +2957,11 @@ class HomeController
 					return;
 				}
 
-				$pdomodel->where("dp.rut", $run);
+				$where .= " AND dp.rut = '$run' ";
 			}
 
 			if (!empty($nombre_paciente)) {
-				$pdomodel->where("dp.nombres", $nombre_paciente);
+				/*$pdomodel->where("dp.nombres", $nombre_paciente);
 				$pdomodel->openBrackets = "(";
 				$pdomodel->andOrOperator = "OR";
 				$pdomodel->where("CONCAT(dp.nombres, ' ', dp.apellido_paterno)", $nombre_paciente);
@@ -2985,34 +2969,66 @@ class HomeController
 				$pdomodel->where("CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno)", $nombre_paciente);
 				$pdomodel->andOrOperator = "OR";
 				$pdomodel->where("CONCAT(dp.nombres, ' ', dp.apellido_materno)", $nombre_paciente);
-				$pdomodel->closedBrackets = ")";
+				$pdomodel->closedBrackets = ")";*/
+				$where .= " AND (dp.nombres = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_materno) = '$nombre_paciente')";
 			}
 
 			if (!empty($estado)) {
-				$pdomodel->where("ds.estado", $estado);
+				$where .= " AND ds.estado = '$estado' ";
 			}
 
 			if (!empty($prestacion)) {
-				$pdomodel->where("ds.examen", $prestacion);
+				$where .= " AND ds.examen = '$prestacion' ";
 			}
-			
 
 			if (!empty($profesional)) {
-				$pdomodel->where("pro.nombre_profesional", $profesional);
+				/*$pdomodel->where("pro.nombre_profesional", $profesional);
 				$pdomodel->openBrackets = "(";
 				$pdomodel->andOrOperator = "OR";
 				$pdomodel->where("CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional)", $profesional);
 				$pdomodel->andOrOperator = "OR";
 				$pdomodel->where("CONCAT(pro.apellido_profesional)", $profesional);
-				$pdomodel->closedBrackets = ")";
+				$pdomodel->closedBrackets = ")";*/
+				$where .= " AND (pro.nombre_profesional = '$profesional' OR CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional) = '$profesional' OR pro.apellido_profesional = '$profesional')";
+				
 			}
 
 			if (!empty($fecha_solicitud)) {
-				$pdomodel->where("ds.fecha_solicitud", $fecha_solicitud);
+				$where .= " AND dg_p.fecha_solicitud_paciente = '$fecha_solicitud' ";
 			}
 
-			$pdomodel->groupByCols = array("dp.id_datos_paciente", "dp.rut", "dp.edad", "ds.fecha", "ds.fecha_solicitud");
-			$data = $pdomodel->select("datos_paciente as dp");
+			$data = $pdomodel->executeQuery(
+				"SELECT 
+					dp.id_datos_paciente,
+					ds.id_detalle_de_solicitud,
+					dp.rut,
+					dp.nombres,
+					dp.apellido_paterno,
+					dp.apellido_materno,
+					dp.edad,
+					dg_p.fecha_egreso,
+					GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud,
+					GROUP_CONCAT(DISTINCT ds.estado) AS estado,
+					GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo,
+					GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS examen,
+					GROUP_CONCAT(DISTINCT ds.fecha) as fecha,
+					GROUP_CONCAT(DISTINCT especialidad) AS especialidad,
+					GROUP_CONCAT(DISTINCT nombre_profesional, ' ', apellido_profesional) AS profesional 
+				FROM 
+					datos_paciente AS dp
+				INNER JOIN 
+					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					profesional AS pro ON pro.id_profesional = dg_p.profesional
+				WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
+				GROUP BY 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud;"
+			);
+
+			//echo $pdomodel->getLastQuery();
+			//die();
 
 			if (isset($run)) {
 				$html = '
@@ -3028,7 +3044,7 @@ class HomeController
 								<th>Fecha Egreso</th>
 								<th>Código</th>
 								<th>Exámen</th>
-								<th>Fecha</th>
+								<th>Fecha Agendada</th>
 								<th>Especialidad</th>
 								<th>Profesional</th>
 								<th>Acciones</th>
