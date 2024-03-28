@@ -2385,28 +2385,33 @@ class HomeController
 	private function reportes_all(){
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
-		$pdomodel->columns = array(
-			"count(ds.examen) AS total_examen",
-			"ds.examen",
-			"ds.codigo_fonasa",
-			"ds.fecha_solicitud",
-			"ds.tipo_examen",
-			"dg_p.diagnostico",
-			"dp.nombres",
-			"dp.apellido_paterno",
-			"dp.apellido_materno",
-			"ds.estado",
-			"dp.rut",
-			"dp.fecha_y_hora_ingreso",
-			"ds.fecha"
-		);
-
-		$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
-		$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
-
-		$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha_solicitud");
-		$pdomodel->orderByCols = array("ds.fecha asc");
-		$data = $pdomodel->select("datos_paciente as dp");
+		$data = $pdomodel->executeQuery(
+			"SELECT 
+			dp.id_datos_paciente,
+			COUNT(ds.examen) AS total_examen,
+			GROUP_CONCAT(DISTINCT ds.examen) AS examen,
+			ds.codigo_fonasa,
+			ds.fecha_solicitud,
+			GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
+			GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
+			dp.nombres,
+			dp.apellido_paterno,
+			dp.apellido_materno,
+			GROUP_CONCAT(ds.estado) AS estado,
+			dp.rut,
+			dp.fecha_y_hora_ingreso,
+			GROUP_CONCAT(ds.fecha) AS fecha
+		FROM 
+			datos_paciente AS dp
+		INNER JOIN 
+			detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+		INNER JOIN 
+			diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+		GROUP BY
+			dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
+		ORDER BY 
+			ds.fecha ASC;"
+		);		
 
 		//echo $pdomodel->getLastQuery();
 		//die();
