@@ -2961,15 +2961,6 @@ class HomeController
 			}
 
 			if (!empty($nombre_paciente)) {
-				/*$pdomodel->where("dp.nombres", $nombre_paciente);
-				$pdomodel->openBrackets = "(";
-				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(dp.nombres, ' ', dp.apellido_paterno)", $nombre_paciente);
-				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno)", $nombre_paciente);
-				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(dp.nombres, ' ', dp.apellido_materno)", $nombre_paciente);
-				$pdomodel->closedBrackets = ")";*/
 				$where .= " AND (dp.nombres = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_materno) = '$nombre_paciente')";
 			}
 
@@ -2982,13 +2973,6 @@ class HomeController
 			}
 
 			if (!empty($profesional)) {
-				/*$pdomodel->where("pro.nombre_profesional", $profesional);
-				$pdomodel->openBrackets = "(";
-				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional)", $profesional);
-				$pdomodel->andOrOperator = "OR";
-				$pdomodel->where("CONCAT(pro.apellido_profesional)", $profesional);
-				$pdomodel->closedBrackets = ")";*/
 				$where .= " AND (pro.nombre_profesional = '$profesional' OR CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional) = '$profesional' OR pro.apellido_profesional = '$profesional')";
 				
 			}
