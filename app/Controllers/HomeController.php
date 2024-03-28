@@ -2974,7 +2974,6 @@ class HomeController
 
 			if (!empty($profesional)) {
 				$where .= " AND (pro.nombre_profesional = '$profesional' OR CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional) = '$profesional' OR pro.apellido_profesional = '$profesional')";
-				
 			}
 
 			if (!empty($fecha_solicitud)) {
