@@ -1854,13 +1854,13 @@ class HomeController
 			dp.apellido_materno,
 			dp.edad,
 			dg_p.fecha_egreso,
-			GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud,
-			GROUP_CONCAT(DISTINCT ds.estado) AS estado,
-			GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo,
-			GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS examen,
-			GROUP_CONCAT(DISTINCT ds.fecha) as fecha,
-			GROUP_CONCAT(DISTINCT especialidad) AS especialidad,
-			GROUP_CONCAT(DISTINCT nombre_profesional, ' ', apellido_profesional) AS profesional 
+			fecha_solicitud as fecha_solicitud,
+			ds.estado AS estado,
+			codigo_fonasa AS codigo,
+			examen,
+			ds.fecha as fecha,
+			especialidad,
+			CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
 		FROM 
 			datos_paciente AS dp
 		INNER JOIN
@@ -1871,8 +1871,8 @@ class HomeController
 			profesional AS pro ON pro.id_profesional = dg_p.profesional
 		WHERE 
 			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-		GROUP BY 
-			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud"
+		/*GROUP BY 
+			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud*/"
 		);
 		
 		$html = '
