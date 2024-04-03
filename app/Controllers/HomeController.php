@@ -621,13 +621,13 @@ class HomeController
 				"fundamento",
 				"fecha_egreso",
 				"observacion",
-				"GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud",
+				"fecha_solicitud as fecha_solicitud",
 				"detalle_de_solicitud.estado",
-				"GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo",
-				"GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS Examen",
-				"GROUP_CONCAT(DISTINCT detalle_de_solicitud.fecha) as fecha", 
-				"GROUP_CONCAT(DISTINCT especialidad) AS especialidad",
-				"GROUP_CONCAT(DISTINCT nombre_profesional, ' ', apellido_profesional) AS profesional", 
+				"codigo_fonasa AS codigo",
+				"examen AS examen",
+				"detalle_de_solicitud.fecha as fecha", 
+				"especialidad AS especialidad",
+				"CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional", 
 			);
 			$pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdomodel->joinTables("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
@@ -635,7 +635,7 @@ class HomeController
 			$pdomodel->where("datos_paciente.id_datos_paciente", $id);
 			$pdomodel->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
 
-			$pdomodel->groupByCols = array("id_datos_paciente", "rut", "edad", "detalle_de_solicitud.fecha", "fecha_solicitud");
+			//$pdomodel->groupByCols = array("id_datos_paciente", "rut", "edad", "detalle_de_solicitud.fecha", "fecha_solicitud");
 			$data = $pdomodel->select("datos_paciente");
 
 			$pdomodel->where("id_causal_salida", $data[0]["motivo_egreso"]);
@@ -1945,7 +1945,6 @@ class HomeController
 					<td>
 						<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
 						<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
-						<a href="javascript:;" title="Ver Log" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-exclamation"></i></a>
 						<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
 						<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
 					</td>
@@ -2995,13 +2994,13 @@ class HomeController
 					dp.apellido_materno,
 					dp.edad,
 					dg_p.fecha_egreso,
-					GROUP_CONCAT(DISTINCT fecha_solicitud) as fecha_solicitud,
-					GROUP_CONCAT(DISTINCT ds.estado) AS estado,
-					GROUP_CONCAT(DISTINCT codigo_fonasa) AS codigo,
-					GROUP_CONCAT(DISTINCT examen SEPARATOR ' - ') AS examen,
-					GROUP_CONCAT(DISTINCT ds.fecha) as fecha,
-					GROUP_CONCAT(DISTINCT especialidad) AS especialidad,
-					GROUP_CONCAT(DISTINCT nombre_profesional, ' ', apellido_profesional) AS profesional 
+					fecha_solicitud as fecha_solicitud,
+					ds.estado AS estado,
+					codigo_fonasa AS codigo,
+					examen AS examen,
+					ds.fecha as fecha,
+					especialidad AS especialidad,
+					CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
 				FROM 
 					datos_paciente AS dp
 				INNER JOIN 
@@ -3011,8 +3010,8 @@ class HomeController
 				INNER JOIN 
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
-				GROUP BY 
-					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud;"
+				/*GROUP BY 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud;*/"
 			);
 
 			//echo $pdomodel->getLastQuery();
@@ -3089,7 +3088,6 @@ class HomeController
 							<td>
 								<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
 								<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
-								<a href="javascript:;" title="Ver Log" class="btn btn-info btn-sm ver_logs" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-exclamation"></i></a>
 								<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
 								<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
 							</td>
