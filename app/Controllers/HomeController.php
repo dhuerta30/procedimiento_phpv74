@@ -604,40 +604,42 @@ class HomeController
 		
 			$request = new Request();
 			$id = $request->get('id');
-			$fecha_solicitud = $request->get('fecha_solicitud');
+			$id_detalle_de_solicitud = $request->get('id_detalle_de_solicitud');
 
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->columns = array(
-				"datos_paciente.id_datos_paciente",
-				"id_detalle_de_solicitud",
-				"rut",
-				"nombres",
-				"apellido_paterno",
-				"apellido_materno",
-				"edad",
-				"motivo_egreso",
-				"adjuntar",
-				"fundamento",
-				"fecha_egreso",
-				"observacion",
-				"fecha_solicitud as fecha_solicitud",
-				"detalle_de_solicitud.estado",
-				"codigo_fonasa AS codigo",
-				"examen AS examen",
-				"detalle_de_solicitud.fecha as fecha", 
-				"especialidad AS especialidad",
-				"CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional", 
+			$data = $pdomodel->executeQuery(
+				"SELECT 
+				dp.id_datos_paciente,
+				ds.id_detalle_de_solicitud,
+				dp.rut,
+				dp.nombres,
+				dp.apellido_paterno,
+				dp.apellido_materno,
+				dp.edad,
+				dg_p.fecha_egreso,
+				fecha_solicitud as fecha_solicitud,
+				ds.estado AS estado,
+				codigo_fonasa AS codigo,
+				examen,
+				ds.fecha as fecha,
+				especialidad,
+				fundamento,
+				motivo_egreso,
+				observacion,
+				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+			FROM 
+				datos_paciente AS dp
+			INNER JOIN
+				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				profesional AS pro ON pro.id_profesional = dg_p.profesional
+			WHERE 
+				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud AND ds.id_detalle_de_solicitud = ".$id_detalle_de_solicitud
 			);
-			$pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
-			$pdomodel->joinTables("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
-			$pdomodel->joinTables("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "INNER JOIN");
-			$pdomodel->where("datos_paciente.id_datos_paciente", $id);
-			$pdomodel->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
-
-			//$pdomodel->groupByCols = array("id_datos_paciente", "rut", "edad", "detalle_de_solicitud.fecha", "fecha_solicitud");
-			$data = $pdomodel->select("datos_paciente");
-
+			
 			$pdomodel->where("id_causal_salida", $data[0]["motivo_egreso"]);
 			$motivo_egreso = $pdomodel->select("causal_salida");
 
@@ -1945,7 +1947,7 @@ class HomeController
 					<td>
 						<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
 						<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
-						<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
+						<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
 						<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
 					</td>
 				</tr>
@@ -3088,7 +3090,7 @@ class HomeController
 							<td>
 								<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
 								<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
-								<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
+								<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
 								<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
 							</td>
 						</tr>

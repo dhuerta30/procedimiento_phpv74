@@ -392,8 +392,8 @@ $(document).on("click", ".ver_logs", function(){
 
 $(document).on('click', '.imprimir_solicitud', function () {
     let id = $(this).data('id');
-    let fecha_solicitud = $(this).data('fechasolicitud');
-    window.open("<?=$_ENV["BASE_URL"]?>home/imprimir_solicitud/id/" + id + "/fecha_solicitud/" + fecha_solicitud);
+    let id_detalle_de_solicitud = $(this).data('solicitud');
+    window.open("<?=$_ENV["BASE_URL"]?>home/imprimir_solicitud/id/" + id + "/id_detalle_de_solicitud/" + id_detalle_de_solicitud);
 });
 
 $(document).on("pdocrud_before_ajax_action", function(event, obj, data){
