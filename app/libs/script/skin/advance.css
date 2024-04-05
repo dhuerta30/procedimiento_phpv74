@@ -63,6 +63,7 @@ a.pdocrud-actions.pdocrud-button.pdocrud-button-export {
     border-top: 0;
     padding: 4px 25px;  
     white-space: nowrap;
+    text-align: center;
 }
 .pdocrud-table-container .table tbody tr td {
     border-right: 1px solid #d5d5d5;

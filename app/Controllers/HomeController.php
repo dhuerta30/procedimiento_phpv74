@@ -600,6 +600,25 @@ class HomeController
 		}
 	}
 
+	public function profesionales(){
+		$pdocrud = DB::PDOCrud();
+		$pdocrud->formDisplayInPopup();
+		$pdocrud->colRename("id_profesional", "ID");
+		$pdocrud->setSearchCols(array("nombre_profesional","apellido_profesional"));
+		$pdocrud->buttonHide("submitBtnSaveBack");
+		$pdocrud->setSettings("viewbtn", false);
+		$pdocrud->setSettings("printBtn", false);
+		$pdocrud->setSettings("pdfBtn", false);
+		$pdocrud->setSettings("csvBtn", false);
+		$pdocrud->setSettings("excelBtn", false);
+		$render = $pdocrud->dbTable("profesional")->render();
+		View::render(
+			'profesional',[
+				'render' => $render
+			]
+		);
+	}
+
 	public function imprimir_solicitud(){
 		
 			$request = new Request();
@@ -1912,16 +1931,6 @@ class HomeController
 				$code .= '<div class="badge badge-info">'. $codigo . '</div>' . '<br>';
 			}
 
-    		$exam = str_replace(' - ', "<br>", $row["examen"]);
-
-			$examArray = explode('<br>', $exam);
-			foreach ($examArray as $key => $element) {
-				$examArray[$key] = ($key + 1) . '. ' . $element;
-			}
-
-			// Unir de nuevo el array en una cadena con saltos de línea
-			$exam = implode("<br>", $examArray);
-
 			$profesional = str_replace(',', "<br>", $row["profesional"]);
 			$especialidad = str_replace(',', "<br>", $row["especialidad"]);
 
@@ -1942,7 +1951,7 @@ class HomeController
 					<td>' . $row["estado"] . '</td>
 					<td>' . $fecha_egreso . '</td>
 					<td>'. $code .'</td>
-					<td>' . $exam . '</td>
+					<td>' . $row["examen"] . '</td>
 					<td>' . $data_fecha . '</td>
 					<td>' . $especialidad . '</td>
 					<td>' . $profesional . '</td>
@@ -3058,16 +3067,6 @@ class HomeController
 					foreach ($codigos as $codigo) {
 						$code .= '<div class="badge badge-info">'. $codigo . '</div>' . '<br>';
 					}
-
-					$exam = str_replace(' - ', "<br>", $row["examen"]);
-
-					$examArray = explode('<br>', $exam);
-					foreach ($examArray as $key => $element) {
-						$examArray[$key] = ($key + 1) . '. ' . $element;
-					}
-
-					// Unir de nuevo el array en una cadena con saltos de línea
-					$exam = implode("<br>", $examArray);
 		
 					$profesional = str_replace(',', "<br>", $row["profesional"]);
 					$especialidad = str_replace(',', "<br>", $row["especialidad"]);
@@ -3088,7 +3087,7 @@ class HomeController
 							<td>' . $row["estado"] . '</td>
 							<td>' . $fecha_egreso . '</td>
 							<td>'. $code .'</td>
-							<td>' . $exam . '</td>
+							<td>' . $row["examen"] . '</td>
 							<td>' . $data_fecha . '</td>
 							<td>' . $especialidad . '</td>
 							<td>' . $profesional . '</td>
