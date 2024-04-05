@@ -3013,7 +3013,7 @@ class HomeController
 					fecha_solicitud as fecha_solicitud,
 					ds.estado AS estado,
 					codigo_fonasa AS codigo,
-					examen AS examen,
+					ds.examen AS examen,
 					ds.fecha as fecha,
 					especialidad AS especialidad,
 					CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
