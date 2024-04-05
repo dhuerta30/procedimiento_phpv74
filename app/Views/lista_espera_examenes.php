@@ -196,7 +196,7 @@ $(document).on("click", ".limpiar_filtro", function(){
 
 $(document).on("click", ".egresar_solicitud", function(){
     let id = $(this).data('id');
-    let fecha_solicitud = $(this).data('fechasolicitud');
+    let id_detalle_de_solicitud = $(this).data('solicitud');
 
     $.ajax({
         type: "POST",
@@ -204,7 +204,7 @@ $(document).on("click", ".egresar_solicitud", function(){
         dataType: "html",
         data: {
             id: id,
-            fecha_solicitud: fecha_solicitud
+            id_detalle_de_solicitud: id_detalle_de_solicitud
         },
         beforeSend: function() {
             $("#pdocrud-ajax-loader").show();
@@ -215,7 +215,7 @@ $(document).on("click", ".egresar_solicitud", function(){
             $('#egresar_solicitud').modal('show');
 
             $(".fecha_egreso").flatpickr({
-                dateFormat: "d-m-Y",
+                dateFormat: "Y-m-d",
                 allowInput: true,
                 //defaultDate: new Date(),
                 locale: {
@@ -272,6 +272,7 @@ $(document).on("click", ".egresar_solicitud", function(){
 $(document).on("click", ".procedimientos", function(){
     let id = $(this).data('id');
     let fecha_solicitud = $(this).data('fechasolicitud');
+    let id_detalle_de_solicitud = $(this).data('solicitud');
 
     $.ajax({
         type: "POST",
@@ -279,7 +280,8 @@ $(document).on("click", ".procedimientos", function(){
         dataType: "html",
         data: {
             id: id,
-            fecha_solicitud: fecha_solicitud
+            fecha_solicitud: fecha_solicitud,
+            id_detalle_de_solicitud: id_detalle_de_solicitud
         },
         beforeSend: function() {
             $("#pdocrud-ajax-loader").show();

@@ -617,7 +617,7 @@ class HomeController
 				dp.apellido_paterno,
 				dp.apellido_materno,
 				dp.edad,
-				dg_p.fecha_egreso,
+				ds.fecha_egreso,
 				fecha_solicitud as fecha_solicitud,
 				ds.estado AS estado,
 				codigo_fonasa AS codigo,
@@ -769,7 +769,7 @@ class HomeController
 						</tr>
 						<tr>
 							<td><strong>Fecha Egreso</strong></td>
-							<td>".$data[0]["fecha_egreso"]."</td>
+							<td>".date('d/m/Y', strtotime($data[0]["fecha_egreso"]))."</td>
 						</tr>
 						<tr>
 							<td><strong>Motivo Egreso</strong></td>
@@ -1855,7 +1855,8 @@ class HomeController
 			dp.apellido_paterno,
 			dp.apellido_materno,
 			dp.edad,
-			dg_p.fecha_egreso,
+			ds.fecha_egreso,
+			ds.motivo_egreso,
 			fecha_solicitud as fecha_solicitud,
 			ds.estado AS estado,
 			codigo_fonasa AS codigo,
@@ -1872,9 +1873,7 @@ class HomeController
 		INNER JOIN 
 			profesional AS pro ON pro.id_profesional = dg_p.profesional
 		WHERE 
-			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-		/*GROUP BY 
-			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud*/"
+			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud"
 		);
 		
 		$html = '
@@ -1946,9 +1945,9 @@ class HomeController
 					<td>' . $profesional . '</td>
 					<td>
 						<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
-						<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
+						<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
 						<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
-						<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
+						<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
 					</td>
 				</tr>
 			';
@@ -2052,12 +2051,13 @@ class HomeController
 
 			$id = $request->post('id');
 			$fecha_solicitud = $request->post('fecha_solicitud');
+			$id_detalle_de_solicitud = $request->post('id_detalle_de_solicitud');
 
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
 			$pdomodel->where("id_datos_paciente", $id, "=", "AND");
-			$pdomodel->where("fecha_solicitud", $fecha_solicitud);
+			$pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud);
 			$detalle_de_solicitud = $pdomodel->select("detalle_de_solicitud");
 
 			$pdomodel->where("id_datos_paciente", $id, "=", "AND");
@@ -2095,19 +2095,24 @@ class HomeController
 			$pdocrud->fieldHideLable("id_datos_paciente");
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
 
+			$pdocrud->formFieldValue("id_detalle_de_solicitud", $detalle_de_solicitud[0]["id_detalle_de_solicitud"]);
+			
+			$pdocrud->fieldHideLable("id_detalle_de_solicitud");
+			$pdocrud->fieldDataAttr("id_detalle_de_solicitud", array("style"=>"display:none"));
+
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("value"=> $detalle_de_solicitud[0]["id_datos_paciente"]));
 			$pdocrud->formFieldValue("estado", $detalle_de_solicitud[0]["estado"]);
 			$pdocrud->formFieldValue("fecha", $detalle_de_solicitud[0]["fecha"]);
 			$pdocrud->fieldDataAttr("fecha_solicitud", array("value"=> $detalle_de_solicitud[0]["fecha_solicitud"]));
 
 			$diagnostico = isset($diagnostico_antecedentes_paciente[0]["diagnostico"]) ? $diagnostico_antecedentes_paciente[0]["diagnostico"] : '';
-			$fundamento = isset($diagnostico_antecedentes_paciente[0]["fundamento"]) ? $diagnostico_antecedentes_paciente[0]["fundamento"] : '';
-			$adjuntar = isset($diagnostico_antecedentes_paciente[0]["adjuntar"]) ? $diagnostico_antecedentes_paciente[0]["adjuntar"] : '';
+			$fundamento = isset($detalle_de_solicitud[0]["fundamento"]) ? $detalle_de_solicitud[0]["fundamento"] : '';
+			$adjuntar = isset($detalle_de_solicitud[0]["adjuntar"]) ? $detalle_de_solicitud[0]["adjuntar"] : '';
 			$pdocrud->fieldDataAttr("diagnostico", array("value"=> $diagnostico));
 			$pdocrud->formFieldValue("fundamento", $fundamento);
 			$pdocrud->fieldDataAttr("adjuntar", array("value"=> $adjuntar));
 
-			$pdocrud->formFields(array("fecha", "id_datos_paciente", "fecha_solicitud", "diagnostico", "fundamento", "adjuntar", "estado"));
+			$pdocrud->formFields(array("fecha", "id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "diagnostico", "fundamento", "adjuntar", "estado"));
 			$pdocrud->setLangData("login", "Guardar");
 			$pdocrud->addCallback("before_select", "editar_procedimientos");
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
@@ -2325,30 +2330,26 @@ class HomeController
 
 			$id = $request->post('id');
 			$fecha_solicitud = $request->post('fecha_solicitud');
+			$id_detalle_de_solicitud = $request->post('id_detalle_de_solicitud');
 
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
-			
+
 			$pdomodel->where("id_datos_paciente", $id, "=", "AND");
-			$pdomodel->where("fecha_solicitud_paciente", $fecha_solicitud);
-			$diagnostico_antecedentes_paciente = $pdomodel->select("diagnostico_antecedentes_paciente");
-			
-			$fecha_egreso = isset($diagnostico_antecedentes_paciente[0]["fecha_egreso"]) ? $diagnostico_antecedentes_paciente[0]["fecha_egreso"] : '';
-			$motivo_egreso = isset($diagnostico_antecedentes_paciente[0]["motivo_egreso"]) ? $diagnostico_antecedentes_paciente[0]["motivo_egreso"] : '';
+			$pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud);
+			$detalle_de_solicitud = $pdomodel->select("detalle_de_solicitud");
+
+			$fecha_egreso = isset($detalle_de_solicitud[0]["fecha_egreso"]) ? $detalle_de_solicitud[0]["fecha_egreso"] : '';
+			$motivo_egreso = isset($detalle_de_solicitud[0]["motivo_egreso"]) ? $detalle_de_solicitud[0]["motivo_egreso"] : '';
 			$pdocrud->formFieldValue("fecha_egreso", $fecha_egreso);
 			$pdocrud->formFieldValue("motivo_egreso", $motivo_egreso);
 
-			$pdomodel->where("id_datos_paciente", $id, "=", "AND");
-			$pdomodel->where("fecha_solicitud", $fecha_solicitud);
-			$detalle_de_solicitud = $pdomodel->select("detalle_de_solicitud");
-
 			$pdocrud->formFieldValue("observacion", $detalle_de_solicitud[0]["observacion"]);
 
-			$id_datos_paciente = isset($diagnostico_antecedentes_paciente[0]["id_datos_paciente"]) ? $diagnostico_antecedentes_paciente[0]["id_datos_paciente"] : $detalle_de_solicitud[0]["id_datos_paciente"];
-			$pdocrud->formFieldValue("id_datos_paciente", $id_datos_paciente);
-
-			$fecha_solicitud = isset($diagnostico_antecedentes_paciente[0]["fecha_solicitud_paciente"]) ? $diagnostico_antecedentes_paciente[0]["fecha_solicitud_paciente"] : $detalle_de_solicitud[0]["fecha_solicitud"];
-			$pdocrud->formFieldValue("fecha_solicitud", $fecha_solicitud);
+			$pdocrud->formFieldValue("id_detalle_de_solicitud", $detalle_de_solicitud[0]["id_detalle_de_solicitud"]);
+			
+			$pdocrud->fieldHideLable("id_detalle_de_solicitud");
+			$pdocrud->fieldDataAttr("id_detalle_de_solicitud", array("style"=>"display:none"));
 
 			$pdocrud->fieldHideLable("id_datos_paciente");
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
@@ -2360,7 +2361,7 @@ class HomeController
 			$pdocrud->fieldTypes("motivo_egreso", "select");
 			$pdocrud->fieldAddOnInfo("fecha_egreso", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 			$pdocrud->fieldDataBinding("motivo_egreso", "causal_salida", "id_causal_salida", "nombre");
-			$pdocrud->formFields(array("id_datos_paciente","motivo_egreso","observacion", "fecha_egreso", "fecha_solicitud"));
+			$pdocrud->formFields(array("id_datos_paciente","id_detalle_de_solicitud","motivo_egreso","observacion", "fecha_egreso", "fecha_solicitud"));
 			$pdocrud->setSettings("required", false);
 			$pdocrud->fieldNotMandatory("observacion");
 			$pdocrud->setSettings("hideAutoIncrement", false);
@@ -2372,8 +2373,8 @@ class HomeController
 			$pdocrud->fieldCssClass("observacion", array("observacion"));
 			$pdocrud->fieldCssClass("motivo_egreso", array("motivo_egreso"));
 
-			$pdomodel->where("id_datos_paciente", $id);
-			$observacion = $pdomodel->select("detalle_de_solicitud");
+			//$pdomodel->where("id_datos_paciente", $id);
+			//$observacion = $pdomodel->select("detalle_de_solicitud");
 
 			$pdocrud->addCallback("before_select", "editar_egresar_solicitud");
 			
@@ -2995,7 +2996,8 @@ class HomeController
 					dp.apellido_paterno,
 					dp.apellido_materno,
 					dp.edad,
-					dg_p.fecha_egreso,
+					ds.fecha_egreso,
+					ds.motivo_egreso,
 					fecha_solicitud as fecha_solicitud,
 					ds.estado AS estado,
 					codigo_fonasa AS codigo,
@@ -3089,9 +3091,9 @@ class HomeController
 							<td>' . $profesional . '</td>
 							<td>
 								<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
-								<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
+								<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
 								<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
-								<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
+								<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
 							</td>
 						</tr>
 					';

@@ -281,28 +281,28 @@ function before_sql_data_estat($data, $obj){
 }*/
 
 function editar_procedimientos($data, $obj){
+    $id_detalle_de_solicitud = $data["detalle_de_solicitud"]["id_detalle_de_solicitud"];
     $id_datos_paciente = $data["datos_paciente"]["id_datos_paciente"];
     $estado = $data["detalle_de_solicitud"]["estado"];
     $fecha = $data["detalle_de_solicitud"]["fecha"];
     $fecha_solicitud = $data["detalle_de_solicitud"]["fecha_solicitud"];
-    $adjuntar = $data["diagnostico_antecedentes_paciente"]["adjuntar"];
+    $adjuntar = $data["detalle_de_solicitud"]["adjuntar"];
     $diagnostico = $data["diagnostico_antecedentes_paciente"]["diagnostico"];
-    $fundamento = $data["diagnostico_antecedentes_paciente"]["fundamento"];
+    $fundamento = $data["detalle_de_solicitud"]["fundamento"];
 
     $pdomodel = $obj->getPDOModelObj();
-    $pdomodel->where("id_datos_paciente", $id_datos_paciente);
-    $pdomodel->where("fecha_solicitud", $fecha_solicitud);
+    $pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud);
     $pdomodel->update("detalle_de_solicitud", array(
         "estado" => $estado, 
-        "fecha" => $fecha
+        "fecha" => $fecha,
+        "adjuntar" => $adjuntar,
+        "fundamento" => $fundamento
     ));
 
     $pdomodel->where("id_datos_paciente", $id_datos_paciente);
     $pdomodel->where("fecha_solicitud_paciente", $fecha_solicitud);
     $pdomodel->update("diagnostico_antecedentes_paciente", $datos = array(
-        "adjuntar" => $adjuntar, 
-        "diagnostico" => $diagnostico, 
-        "fundamento" => $fundamento
+        "diagnostico" => $diagnostico
     ));
     
     return $data;
@@ -310,28 +310,21 @@ function editar_procedimientos($data, $obj){
 
 
 function editar_egresar_solicitud($data, $obj) {
+    $id_detalle_de_solicitud = $data["detalle_de_solicitud"]["id_detalle_de_solicitud"];
     $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];
-    $fecha_egreso = $data['diagnostico_antecedentes_paciente']['fecha_egreso'];
-    $motivo_egreso = $data['diagnostico_antecedentes_paciente']['motivo_egreso'];
+    $fecha_egreso = $data['detalle_de_solicitud']['fecha_egreso'];
+    $motivo_egreso = $data['detalle_de_solicitud']['motivo_egreso'];
     $observacion = $data['detalle_de_solicitud']['observacion'];
     $fecha_solicitud = $data['detalle_de_solicitud']['fecha_solicitud'];
 
     $pdomodel = $obj->getPDOModelObj();
-
-    $pdomodel->where("id_datos_paciente", $id_datos_paciente);
-    $pdomodel->where("fecha_solicitud", $fecha_solicitud);
+    $pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud);
     $pdomodel->update("detalle_de_solicitud", array(
+        "fecha_egreso" => $fecha_egreso,
+        "motivo_egreso" => $motivo_egreso,
         "observacion" => $observacion,
         "estado" => "Egresado"
     ));
-
-    $pdomodel->where("id_datos_paciente", $id_datos_paciente);
-    $pdomodel->where("fecha_solicitud_paciente", $fecha_solicitud);
-    $pdomodel->update("diagnostico_antecedentes_paciente", array(
-        "fecha_egreso" => $fecha_egreso,
-        "motivo_egreso" => $motivo_egreso
-    ));
-    
     return $data;
 }
 
