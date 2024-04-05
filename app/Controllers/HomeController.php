@@ -648,6 +648,9 @@ class HomeController
 			$fecha = date('d/m/Y', strtotime($data[0]["fecha"]));
 			$data_fecha = ($fecha != "01/01/1970" && $fecha != "31/12/1969") ? $fecha : 'Sin Fecha';
 
+			$fecha_egreso = date('d/m/Y', strtotime($data[0]["fecha_egreso"]));
+			$data_fecha_egreso = ($fecha_egreso != "01/01/1970" && $fecha_egreso != "31/12/1969") ? $fecha_egreso : 'Sin Fecha';
+
 			if($data[0]["fecha_solicitud"] != "0000-00-00 00:00:00") {
 				$obt = date('d/m/Y', strtotime($data[0]["fecha_solicitud"]));
 			} else {
@@ -769,7 +772,7 @@ class HomeController
 						</tr>
 						<tr>
 							<td><strong>Fecha Egreso</strong></td>
-							<td>".date('d/m/Y', strtotime($data[0]["fecha_egreso"]))."</td>
+							<td>".$data_fecha_egreso."</td>
 						</tr>
 						<tr>
 							<td><strong>Motivo Egreso</strong></td>

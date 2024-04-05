@@ -24,7 +24,7 @@
 
                                         <div class="menu_list" data-intro='Aquí deberás seleccionar los menús que podrá visualizar cada usuario antes de guardar.'>
                                             <ul class="list-none">
-                                            <?php foreach ($menu as $item): ?>                                                 
+                                            <?php foreach ($menu as $item): ?>                                        
                                                 <?php
                                                     // Obtiene submenús
                                                     $submenus = App\Controllers\HomeController::submenuDB($item['id_menu']);
