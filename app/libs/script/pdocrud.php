@@ -314,6 +314,13 @@ function editar_egresar_solicitud($data, $obj) {
     $motivo_egreso = $data['detalle_de_solicitud']['motivo_egreso'];
     $observacion = $data['detalle_de_solicitud']['observacion'];
     $adjuntar = $data["detalle_de_solicitud"]["adjuntar"];
+
+    $extension = pathinfo($adjuntar, PATHINFO_EXTENSION);
+    if($extension != "pdf"){
+        $error_msg = array("message" => "", "error" => "El Archivo Adjunto debe ser un Archivo PDF Válido", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    }
+
     $fecha_solicitud = $data['detalle_de_solicitud']['fecha_solicitud'];
 
     $pdomodel = $obj->getPDOModelObj();
@@ -322,7 +329,7 @@ function editar_egresar_solicitud($data, $obj) {
         "fecha_egreso" => $fecha_egreso,
         "motivo_egreso" => $motivo_egreso,
         "observacion" => $observacion,
-        "adjuntar" => $adjuntar,
+        "adjuntar" => basename($adjuntar),
         "estado" => "Egresado"
     ));
     return $data;

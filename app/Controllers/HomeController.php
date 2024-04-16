@@ -1958,6 +1958,7 @@ class HomeController
 					<td>
 						<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
 						<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
+						<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-o"></i></a>
 						<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
 						<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
 					</td>
@@ -3079,6 +3080,7 @@ class HomeController
 							<td>
 								<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
 								<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
+								<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-o"></i></a>
 								<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
 								<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
 							</td>
@@ -3099,6 +3101,35 @@ class HomeController
 			}
 		}
 	}
+
+	public function mostrar_adjunto(){
+		$request = new Request();
+		$id = $request->get('id');
+		$id_detalle_de_solicitud = $request->get('id_detalle_de_solicitud');
+
+		$pdocrud = DB::PDOCrud(true);
+		$pdomodel = $pdocrud->getPDOModelObj();
+		$data = $pdomodel->executeQuery(
+			"SELECT 
+			dp.id_datos_paciente,
+			ds.id_detalle_de_solicitud,
+			adjuntar
+		FROM 
+			datos_paciente AS dp
+		INNER JOIN
+			detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+		INNER JOIN 
+			diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+		INNER JOIN 
+			profesional AS pro ON pro.id_profesional = dg_p.profesional
+		WHERE 
+			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud AND ds.id_detalle_de_solicitud = ".$id_detalle_de_solicitud
+		);
+
+		$pdf = $_ENV["BASE_URL"] . "/app/libs/script/uploads/" . $data[0]["adjuntar"];
+		echo "<object data='".$pdf."' type='application/pdf' width='100%' height='100%'></object>";
+	}
+	
 
 	/*public function buscar_examenes(){
 		

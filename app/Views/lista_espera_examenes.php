@@ -398,6 +398,12 @@ $(document).on('click', '.imprimir_solicitud', function () {
     window.open("<?=$_ENV["BASE_URL"]?>home/imprimir_solicitud/id/" + id + "/id_detalle_de_solicitud/" + id_detalle_de_solicitud);
 });
 
+$(document).on("click", ".mostrar_adjunto", function(){
+    let id = $(this).data('id');
+    let id_detalle_de_solicitud = $(this).data('solicitud');
+    window.open("<?=$_ENV["BASE_URL"]?>home/mostrar_adjunto/id/" + id + "/id_detalle_de_solicitud/" + id_detalle_de_solicitud);
+});
+
 $(document).on("pdocrud_before_ajax_action", function(event, obj, data){
     $('.titulo_modal').html(`
         <i class="fa fa-file-o"></i> Agregar Nota
