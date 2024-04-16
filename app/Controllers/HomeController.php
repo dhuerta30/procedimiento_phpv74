@@ -2078,6 +2078,7 @@ class HomeController
 
 			$pdocrud->fieldAddOnInfo("fecha", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 			$pdocrud->fieldCssClass("fecha", array("fecha"));
+			$pdocrud->fieldCssClass("estado", array("estado_procedimiento"));
 			$pdocrud->fieldRenameLable("estado", "Cambiar Estado");
 			$pdocrud->fieldRenameLable("fecha", "Fecha Agendada");
 			$pdocrud->fieldTypes("estado", "select");
@@ -2088,18 +2089,16 @@ class HomeController
 				array("nombre"),
 				"db",
 				"-",
-				array(array("nombre", "Egresado", "!="), array("nombre", "Ingresado", "!="))
+				array(array("nombre", "Egresado", "!="), array())
 			);
 
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 
 			$pdocrud->fieldRenameLable("diagnostico", "Diagnóstico CIE-10");
-			$pdocrud->fieldDisplayOrder(array("id_datos_paciente", "estado", "fecha","diagnostico", "fundamento", "adjuntar"));
-			$pdocrud->fieldTypes("adjuntar", "FILE_NEW");
+			$pdocrud->fieldDisplayOrder(array("id_datos_paciente", "estado", "fecha","diagnostico", "fundamento"));
 			$pdocrud->setSettings("hideAutoIncrement", false);
 			$pdocrud->setSettings("encryption", false);
-			$pdocrud->fieldNotMandatory("adjuntar");
 			//$pdocrud->setSettings("required", false);
 			$pdocrud->fieldHideLable("fecha_solicitud");
 			$pdocrud->fieldDataAttr("fecha_solicitud", array("style"=>"display:none"));
@@ -2119,12 +2118,10 @@ class HomeController
 
 			$diagnostico = isset($diagnostico_antecedentes_paciente[0]["diagnostico"]) ? $diagnostico_antecedentes_paciente[0]["diagnostico"] : '';
 			$fundamento = isset($detalle_de_solicitud[0]["fundamento"]) ? $detalle_de_solicitud[0]["fundamento"] : '';
-			$adjuntar = isset($detalle_de_solicitud[0]["adjuntar"]) ? $detalle_de_solicitud[0]["adjuntar"] : '';
 			$pdocrud->fieldDataAttr("diagnostico", array("value"=> $diagnostico));
 			$pdocrud->formFieldValue("fundamento", $fundamento);
-			$pdocrud->fieldDataAttr("adjuntar", array("value"=> $adjuntar));
 
-			$pdocrud->formFields(array("fecha", "id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "diagnostico", "fundamento", "adjuntar", "estado"));
+			$pdocrud->formFields(array("fecha", "id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "diagnostico", "fundamento", "estado"));
 			$pdocrud->setLangData("login", "Guardar");
 			$pdocrud->addCallback("before_select", "editar_procedimientos");
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");

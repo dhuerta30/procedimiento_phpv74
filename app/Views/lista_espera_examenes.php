@@ -425,7 +425,13 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
             }
         });
     }
+});
 
+$(document).on("change", ".estado_procedimiento", function(){
+    let val = $(this).val();
+    if(val == "Ingresado"){
+        $('.fecha').val("");
+    }
 });
 </script>
 <?php require 'layouts/footer.php'; ?>
