@@ -3127,9 +3127,11 @@ class HomeController
 		);
 
 		$pdf = $_ENV["BASE_URL"] . "/app/libs/script/uploads/" . $data[0]["adjuntar"];
-		echo "<object data='".$pdf."' type='application/pdf' width='100%' height='100%'></object>";
+		echo "<object data='".$pdf."' type='application/pdf' width='100%' height='100%'>
+			<p>No hay archivo Adjunto.</p>
+		</object>";
 	}
-	
+
 
 	/*public function buscar_examenes(){
 		
