@@ -1507,6 +1507,7 @@ class HomeController
 		$pdocrud->setLangData("select", "Seleccione sexo");
 		$pdocrud->fieldAttributes("direccion", array("placeholder"=>"Buscar Dirección"));
 		$pdocrud->fieldCssClass("fecha_y_hora_ingreso", array("fecha_y_hora_ingreso"));
+		$pdocrud->formFieldValue("fecha_y_hora_ingreso", $fecha_registro);
 		$pdocrud->fieldAddOnInfo("fecha_y_hora_ingreso", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 		$pdocrud->fieldCssClass("nombres", array("nombres"));
 		$pdocrud->fieldCssClass("apellido_paterno", array("apellido_paterno"));
@@ -1516,11 +1517,12 @@ class HomeController
 		$pdocrud->fieldCssClass("direccion", array("direccion"));
 		$pdocrud->fieldCssClass("sexo", array("sexo"));
 		$pdocrud->fieldCssClass("rut", array("rut"));
-		$pdocrud->formFields(array("rut","nombres","apellido_paterno","apellido_materno", "fecha_nacimiento", "edad", "direccion", "sexo"));
+		$pdocrud->formFields(array("rut","nombres", "telefono", "fecha_y_hora_ingreso", "apellido_paterno","apellido_materno", "fecha_nacimiento", "edad", "direccion", "sexo"));
 		$pdocrud->fieldGroups("Name",array("rut","nombres", "apellido_paterno", "apellido_materno"));
 		$pdocrud->fieldGroups("Name2",array("fecha_nacimiento","edad","direccion", "sexo"));
+		$pdocrud->fieldGroups("Name3", array("fecha_y_hora_ingreso", "telefono"));
 		//$pdocrud->fieldAttributes("edad", array("placeholder"=>"*Verificar Fecha de Nacimiento"));
-		$pdocrud->fieldDisplayOrder(array("rut","nombres", "apellido_paterno", "apellido_materno","fecha_nacimiento", "edad", "direccion", "sexo"));
+		$pdocrud->fieldDisplayOrder(array("rut","nombres", "apellido_paterno", "apellido_materno","fecha_nacimiento", "edad", "direccion", "sexo", "fecha_y_hora_ingreso", "telefono"));
 		$pdocrud->fieldTypes("direccion", "input");
 		$pdocrud->fieldTypes("sexo", "select");
 		$pdocrud->setSettings("required", false);
@@ -1529,18 +1531,6 @@ class HomeController
 		$pdocrud->buttonHide("cancel");
 		$pdocrud->formStaticFields("buscar", "html", "
 			<div class='row'>
-				<div class='col-md-3'>
-					<label class='control-label col-form-label label_Fecha_y_hora_ingreso'>Fecha y hora ingreso</label> 
-					<div class='input-group'>
-					<input type='text' class='form-control pdocrud-form-control pdocrud-text fecha_y_hora_ingreso pdocrud-datetime' value='".$fecha_registro."'>                
-						<div class='input-group-append'>
-							<span class='input-group-text' id='basic-addon1'>
-								<i class='fa fa-calendar'></i>
-							</span>
-						</div> 
-					</div>
-				<p class='pdocrud_help_block help-block form-text with-errors'></p>                
-				</div>
 				<div class='col-md-9 mt-4'>
 					<a href='javascript:;' class='btn btn-primary buscar mt-3' data-intro='Si desea Buscar un Paciente, el botón de Agregar Paciente se ocultará y aparecerá un botón llamado limpiar, que es el encargado de borrar los datos ingresados.'><i class='fa fa-search'></i> Buscar</a>
 					<a href='javascript:;' class='btn btn-danger limpiar d-none mt-3'><i class='fas fa-eraser'></i> Limpiar</a>
