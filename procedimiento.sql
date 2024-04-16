@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-03-2024 a las 19:29:32
+-- Tiempo de generación: 08-04-2024 a las 22:56:38
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 7.4.29
 
@@ -9448,7 +9448,8 @@ INSERT INTO `datos_paciente` (`id_datos_paciente`, `rut`, `nombres`, `apellido_p
 (36, '99999999-9', 'carlos', 'rojas', 'pardo', '99', '08-08-1924', 'Yecora 952, Melipilla, Chile', '1', '2024-03-12 09:01:37'),
 (37, '13675588-9', 'patricio', 'rivas', 'rivas', '57', '10-06-1966', 'Yecora 952, Melipilla, Chile', '1', '2024-03-13 14:54:02'),
 (38, '98311505-5', 'patricio', 'muñoz', 'reyes', '53', '11-09-1970', 'Plaza Manuel Rodríguez, 837 0136 Santiago, Chile', '1', '2024-03-14 09:27:10'),
-(39, '13930717-8', 'Romina', 'Fredes', 'Alvarez', '37', '10-05-1986', 'Yécora, 958 0887 Melipilla, Chile', '2', '2024-03-14 09:39:36');
+(39, '13930717-8', 'Romina', 'Fredes', 'Alvarez', '37', '10-05-1986', 'Yécora, 958 0887 Melipilla, Chile', '2', '2024-03-14 09:39:36'),
+(40, '18776969-8', 'jorge', 'perez', 'perez', '89', '11-08-1934', 'Parque da Cidade, Rua Jardelina de Almeida Lopes, Conjunto Residencial Nova Bertioga, Mogi das Cruzes - SP, Brazil', '1', '2024-03-28 12:03:20');
 
 -- --------------------------------------------------------
 
@@ -9481,30 +9482,22 @@ CREATE TABLE `detalle_de_solicitud` (
   `creatinina` varchar(100) DEFAULT NULL,
   `fecha_solicitud` date DEFAULT NULL,
   `fecha` date DEFAULT NULL,
-  `estado` varchar(100) DEFAULT NULL
+  `estado` varchar(100) DEFAULT NULL,
+  `fecha_egreso` date DEFAULT NULL,
+  `motivo_egreso` varchar(100) DEFAULT NULL,
+  `fundamento` text DEFAULT NULL,
+  `adjuntar` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `detalle_de_solicitud`
 --
 
-INSERT INTO `detalle_de_solicitud` (`id_detalle_de_solicitud`, `id_datos_paciente`, `codigo_fonasa`, `tipo_solicitud`, `tipo_examen`, `examen`, `plano`, `extremidad`, `observacion`, `contraste`, `creatinina`, `fecha_solicitud`, `fecha`, `estado`) VALUES
-(96, 30, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Mano', 'hola', '', '', '2024-03-16', '2024-03-16', 'Agendado'),
-(97, 30, '1101006', 'Procedimientos', 'Procedimientos diagnósticos neurología', 'Electroencefalograma (E.E.G.) standard y/o activado \"sin privación de sueño\" (incluye mono y bipolares, hiperventilación, c/s reactividad auditiva, visual, lumínica, por drogas u otras). Equipo de 8 canales', '', '', 'hola', '', '', '2024-03-16', '2024-03-16', 'Agendado'),
-(98, 30, '1601111', 'Procedimientos', 'Procedimientos dermatología y tegumentos', 'Aplicación de inmunomoduladores, químicos y similares hasta 10 lesiones por sesión', '', '', 'hola', '', '', '2024-03-16', '2024-03-16', 'Agendado'),
-(99, 20, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Medio', 'Hombro', 'asdasdasd', '', '', '2024-03-16', NULL, 'Ingresado'),
-(100, 20, '1101006', 'Procedimientos', 'Procedimientos diagnósticos neurología', 'Electroencefalograma (E.E.G.) standard y/o activado \"sin privación de sueño\" (incluye mono y bipolares, hiperventilación, c/s reactividad auditiva, visual, lumínica, por drogas u otras). Equipo de 8 canales', '', '', 'asdasdada', '', '', '2024-03-16', NULL, 'Ingresado'),
-(101, 30, '0403001', 'Imageneologica', 'Scanner', 'Tomografía Computarizada de cráneo encefálica', '', '', 'werwerwerw', '', '', '2024-03-15', '2023-03-12', 'Egresado'),
-(102, 30, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Brazo', 'werwerwerw', '', '', '2024-03-15', '2023-03-12', 'Egresado'),
-(103, 22, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Derecha', 'Mano', 'sdfsdfsdfsdf', '', '', '2024-03-17', NULL, 'Ingresado'),
-(104, 22, '0405001', 'Imageneologica', 'Resonancia magnética', 'Resonancia Magnética Cráneo Encefálica u Oídos, bilateral', '', '', 'sdfsdfs', '', '', '2024-03-17', NULL, 'Ingresado'),
-(105, 21, '1101006', 'Procedimientos', 'Procedimientos diagnósticos neurología', 'Electroencefalograma (E.E.G.) standard y/o activado \"sin privación de sueño\" (incluye mono y bipolares, hiperventilación, c/s reactividad auditiva, visual, lumínica, por drogas u otras). Equipo de 8 canales', '', '', 'sfsdfsdf', '', '', '2024-03-17', NULL, 'Ingresado'),
-(106, 21, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Brazo', 'asdasdasd', '', '', '2024-03-17', NULL, 'Ingresado'),
-(107, 24, '0403001', 'Imageneologica', 'Scanner', 'Tomografía Computarizada de cráneo encefálica', '', '', 'sdfsdfsdfs', '', '', '2024-03-17', NULL, 'Ingresado'),
-(108, 24, '0404008', 'Imageneologica', 'Ecografía', 'Ecografía para seguimiento de ovulación, procedimiento completo (6 a 8 sesiones)', '', '', 'sdfdsfsfsfs', '', '', '2024-03-17', NULL, 'Ingresado'),
-(109, 35, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Derecha', 'Mano', 'dffdfdf', '', '', '2024-03-17', NULL, 'Ingresado'),
-(110, 35, '0403001', 'Imageneologica', 'Scanner', 'Tomografía Computarizada de cráneo encefálica', '', '', 'fgfgfgfgf', '', '', '2024-03-17', NULL, 'Ingresado'),
-(111, 21, '0401075', 'Imageneologica', 'Radiografía', 'Radiografía de tórax frontal y lateral con equipo móvil fuera del departamento de rayos', 'Izquierda', 'Dedo', 'asdsadasda', '', '', '2024-03-17', NULL, 'Ingresado');
+INSERT INTO `detalle_de_solicitud` (`id_detalle_de_solicitud`, `id_datos_paciente`, `codigo_fonasa`, `tipo_solicitud`, `tipo_examen`, `examen`, `plano`, `extremidad`, `observacion`, `contraste`, `creatinina`, `fecha_solicitud`, `fecha`, `estado`, `fecha_egreso`, `motivo_egreso`, `fundamento`, `adjuntar`) VALUES
+(114, 30, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Mano', 'sadsadsad', '', '', '2024-04-05', '2024-04-02', 'Agendado', '2024-04-05', '2', 'sadsadsad', ''),
+(115, 30, '0404003', 'Imageneologica', 'Ecografía', 'Ecografía abdominal (incluye hígado, vía biliar, vesícula, páncreas, riñones, bazo, retroperitoneo y grandes vasos)', '', '', 'dsadsadsadsad', '', '', '2024-04-05', NULL, 'Ingresado', NULL, NULL, NULL, NULL),
+(116, 35, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Dedo', 'sadsadsadsadsa', '', '', '2024-04-05', NULL, 'Ingresado', NULL, NULL, NULL, NULL),
+(117, 35, '1101004', 'Procedimientos', 'Procedimientos diagnósticos neurología', 'E.E.G. de 16 o más canales (incluye el cód. 11-01-006)', '', '', 'sadasdsadsa', '', '', '2024-04-05', NULL, 'Ingresado', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -9520,10 +9513,6 @@ CREATE TABLE `diagnostico_antecedentes_paciente` (
   `diagnostico` varchar(100) NOT NULL,
   `sintomas_principales` varchar(100) NOT NULL,
   `diagnostico_libre` text NOT NULL,
-  `fundamento` text DEFAULT NULL,
-  `adjuntar` varchar(300) DEFAULT NULL,
-  `fecha_egreso` varchar(100) DEFAULT NULL,
-  `motivo_egreso` varchar(100) DEFAULT NULL,
   `fecha_solicitud_paciente` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -9531,15 +9520,9 @@ CREATE TABLE `diagnostico_antecedentes_paciente` (
 -- Volcado de datos para la tabla `diagnostico_antecedentes_paciente`
 --
 
-INSERT INTO `diagnostico_antecedentes_paciente` (`id_diagnostico_antecedentes_paciente`, `id_datos_paciente`, `especialidad`, `profesional`, `diagnostico`, `sintomas_principales`, `diagnostico_libre`, `fundamento`, `adjuntar`, `fecha_egreso`, `motivo_egreso`, `fecha_solicitud_paciente`) VALUES
-(71, 30, 'Imagenologia', '1', 'A030 - SHIGELOSIS DEBIDA A SHIGELLA DYSENTERIAE', 'asdas', 'dasdasd', 'sdfdfsdfsdfsdf', '', '29-02-2024', '11', '2024-03-16'),
-(72, 20, 'Neurologia', '3', 'R010 - SOPLOS CARDIACOS BENIGNOS O INOCENTES', 'asdas', 'dasdasdad', NULL, NULL, NULL, NULL, NULL),
-(73, 30, 'Imagenologia', '5', 'R010 - SOPLOS CARDIACOS BENIGNOS O INOCENTES', 'ertret', 'erterter', NULL, NULL, '17-03-2024', '8', '2024-03-15'),
-(74, 22, 'Neurologia', '2', 'A010 - FIEBRE TIFOIDEA', 'sds', 'dsdsds', NULL, NULL, NULL, NULL, '2024-03-17'),
-(75, 21, 'Cardiología', '6', 'G020 - MENINGITIS EN ENFERMEDADES VIRALES CLASIFICADAS EN OTRA PARTE (*)', 'dfgdf', 'gdfgdfg', NULL, NULL, NULL, NULL, '2024-03-17'),
-(76, 24, 'Imagenologia', '2', 'T010 - HERIDAS QUE AFECTAN LA CABEZA CON EL CUELLO', 'dfgdfg', 'dfgdfgd', NULL, NULL, NULL, NULL, '2024-03-17'),
-(77, 35, 'Dermatologia y tegumentos', '2', 'T010 - HERIDAS QUE AFECTAN LA CABEZA CON EL CUELLO', 'fdf', 'dfdfdfd', NULL, NULL, NULL, NULL, '2024-03-17'),
-(78, 21, 'Oftalmología', '4', 'R010 - SOPLOS CARDIACOS BENIGNOS O INOCENTES', 'sadas', 'dasda', NULL, NULL, NULL, NULL, '2024-03-17');
+INSERT INTO `diagnostico_antecedentes_paciente` (`id_diagnostico_antecedentes_paciente`, `id_datos_paciente`, `especialidad`, `profesional`, `diagnostico`, `sintomas_principales`, `diagnostico_libre`, `fecha_solicitud_paciente`) VALUES
+(80, 30, 'Imagenologia', '1', 'R010 - SOPLOS CARDIACOS BENIGNOS O INOCENTES', 'sadsa', 'dsadsad', '2024-04-05'),
+(81, 35, 'Neurologia', '3', 'T010 - HERIDAS QUE AFECTAN LA CABEZA CON EL CUELLO', 'asdsadsad', 'saddsadsa', '2024-04-05');
 
 -- --------------------------------------------------------
 
@@ -9583,15 +9566,16 @@ CREATE TABLE `menu` (
 INSERT INTO `menu` (`id_menu`, `nombre_menu`, `url_menu`, `icono_menu`, `submenu`, `orden_menu`) VALUES
 (1, 'Datos Paciente', '/home/datos_paciente', 'fas fa-procedures', 'No', 1),
 (2, 'Lista Espera Exámenes', '/home/lista_espera_examenes', 'fas fa-syringe', 'No', 2),
-(3, 'Mantenedor Prestaciones', '/home/carga_masiva_prestaciones', 'fas fa-user-md', 'No', 3),
-(4, 'usuarios', '/home/usuarios', 'fas fa-users', 'No', 6),
-(5, 'Perfil', '/home/perfil', 'far fa-user', 'No', 7),
-(6, 'Respalda tus Datos', '/home/respaldos', 'fas fa-database', 'No', 10),
-(7, 'Salir', '/login/salir', 'fas fa-sign-out-alt', 'No', 11),
-(8, 'Reportes', '#', 'fas fa-filter', 'Si', 4),
-(9, 'Mantenedor CIE-10', '/home/codigo', 'fas fa-stethoscope', 'No', 5),
-(10, 'Mantenedor Menu', '/home/menu', 'fas fa-bars', 'No', 9),
-(18, 'Acceso Menus', '/home/acceso_menus', 'fas fa-outdent', 'No', 8);
+(3, 'Mantenedor Prestaciones', '/home/carga_masiva_prestaciones', 'fas fa-hospital-user', 'No', 3),
+(4, 'usuarios', '/home/usuarios', 'fas fa-users', 'No', 7),
+(5, 'Perfil', '/home/perfil', 'far fa-user', 'No', 8),
+(6, 'Respalda tus Datos', '/home/respaldos', 'fas fa-database', 'No', 11),
+(7, 'Salir', '/login/salir', 'fas fa-sign-out-alt', 'No', 12),
+(8, 'Reportes', '#', 'fas fa-filter', 'Si', 5),
+(9, 'Mantenedor CIE-10', '/home/codigo', 'fas fa-stethoscope', 'No', 6),
+(10, 'Mantenedor Menu', '/home/menu', 'fas fa-bars', 'No', 10),
+(18, 'Acceso Menus', '/home/acceso_menus', 'fas fa-outdent', 'No', 9),
+(19, 'Mantenedor Profesionales', '/home/profesionales', 'fas fa-user-md', 'No', 4);
 
 -- --------------------------------------------------------
 
@@ -9760,7 +9744,7 @@ INSERT INTO `prestaciones` (`id_prestaciones`, `tipo_solicitud`, `especialidad`,
 (841, 'IMAGENOLOGICA', 'IMAGENOLOGIA', 'RESONANCIA MAGNÉTICA', NULL, '0405037', 'Resonancia magnética de cara, macizo facial y/o cavidades paranasales'),
 (842, 'IMAGENOLOGICA', 'IMAGENOLOGIA', 'RESONANCIA MAGNÉTICA', NULL, '0405042', 'Resonancia Magnética de cuello'),
 (843, 'PROCEDIMIENTOS', 'NEUROLOGÍA     ', 'PROCEDIMIENTOS DIAGNOSTICOS NEUROLOGÍA                        ', NULL, '1101004', 'E.E.G. de 16 o más canales (incluye el cód. 11-01-006)'),
-(844, 'PROCEDIMIENTOS', 'NEUROLOGÍA     ', 'PROCEDIMIENTOS DIAGNOSTICOS NEUROLOGÍA                        ', NULL, '1101006', 'Electroencefalograma (E.E.G.) standard y/o activado \"sin privación de sueño\" (incluye mono y bipolares, hiperventilación, c/s reactividad auditiva, visual, lumínica, por drogas u otras). Equipo de 8 canales'),
+(844, 'PROCEDIMIENTOS', 'NEUROLOGÍA     ', 'PROCEDIMIENTOS DIAGNOSTICOS NEUROLOGÍA                        ', NULL, '1101006', 'Electroencefalograma (E.E.G.) standard y/o activado sin privación de sueño (incluye mono y bipolares, hiperventilación, c/s reactividad auditiva, visual, lumínica, por drogas u otras). Equipo de 8 canales'),
 (845, 'PROCEDIMIENTOS', 'NEUROLOGÍA     ', 'PROCEDIMIENTOS DIAGNOSTICOS NEUROLOGÍA                        ', NULL, '1101010', 'Electromiografías cualquier región, por ej.: músculos faciales, faringe, paravertebrales, vejiga y periné, test  de miastenia (incluye el estudio clínico y muestreo suficientes para diagnosticar naturaleza del trastorno y estado evolutivo), c/u'),
 (846, 'PROCEDIMIENTOS', 'OFTALMOLOGÍA', 'PROCEDIMIENTOS DE OFTALMOLOGÍA', NULL, '1201044', 'Tomografía coherencia óptica, c/ ojo '),
 (847, 'PROCEDIMIENTOS', 'OFTALMOLOGÍA', 'PROCEDIMIENTOS DE OFTALMOLOGÍA', NULL, '1201042', 'Campimetría computarizada, unilateral '),
@@ -10096,7 +10080,8 @@ INSERT INTO `usuario_menu` (`id_usuario_menu`, `id_usuario`, `id_menu`, `visibil
 (1173, 20, 8, 'Mostrar'),
 (1174, 20, 9, 'Mostrar'),
 (1175, 20, 10, 'Mostrar'),
-(1184, 1, 18, 'Mostrar');
+(1184, 1, 18, 'Mostrar'),
+(1185, 1, 19, 'Mostrar');
 
 -- --------------------------------------------------------
 
@@ -10321,7 +10306,7 @@ ALTER TABLE `codigo`
 -- AUTO_INCREMENT de la tabla `datos_paciente`
 --
 ALTER TABLE `datos_paciente`
-  MODIFY `id_datos_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id_datos_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de la tabla `demo4`
@@ -10333,13 +10318,13 @@ ALTER TABLE `demo4`
 -- AUTO_INCREMENT de la tabla `detalle_de_solicitud`
 --
 ALTER TABLE `detalle_de_solicitud`
-  MODIFY `id_detalle_de_solicitud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `id_detalle_de_solicitud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 
 --
 -- AUTO_INCREMENT de la tabla `diagnostico_antecedentes_paciente`
 --
 ALTER TABLE `diagnostico_antecedentes_paciente`
-  MODIFY `id_diagnostico_antecedentes_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id_diagnostico_antecedentes_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT de la tabla `estado_procedimiento`
@@ -10351,7 +10336,7 @@ ALTER TABLE `estado_procedimiento`
 -- AUTO_INCREMENT de la tabla `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `modulos`
@@ -10417,7 +10402,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `usuario_menu`
 --
 ALTER TABLE `usuario_menu`
-  MODIFY `id_usuario_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1185;
+  MODIFY `id_usuario_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1186;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_submenu`
