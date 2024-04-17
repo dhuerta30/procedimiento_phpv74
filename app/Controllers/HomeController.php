@@ -2360,6 +2360,8 @@ class HomeController
 			$pdocrud->fieldHideLable("id_datos_paciente");
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
 
+			$pdocrud->formStaticFields("listado_empresas_en_convenio", "html", "<label class='label_empresas_en_convenio mb-0'>Empresas en Convenio</label>");
+
 			$pdocrud->fieldHideLable("empresas_en_convenio");
 			$pdocrud->fieldHideLable("fecha_solicitud");
 			$pdocrud->fieldDataAttr("fecha_solicitud", array("style"=>"display:none"));
@@ -2379,7 +2381,7 @@ class HomeController
 			$pdocrud->fieldTypes("empresas_en_convenio", "select");
 			$pdocrud->fieldDataBinding("empresas_en_convenio", array("San Agustin"=> "San Agustin","Clinica maitenes" => "Clinica maitenes", "Red salud" => "Red salud", "Imared"=> "Imared", "Atryx"=> "Atryx"), "", "","array");
 			$pdocrud->fieldDataBinding("compra_servicio", array("1"=> "si","2" => "no"), "", "","array");
-			$pdocrud->fieldDisplayOrder(array("id_datos_paciente","fecha_egreso","motivo_egreso","compra_servicio", "empresas_en_convenio", "observacion"));
+			$pdocrud->fieldDisplayOrder(array("id_datos_paciente","fecha_egreso","motivo_egreso","compra_servicio", "listado_empresas_en_convenio", "empresas_en_convenio", "observacion"));
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->fieldCssClass("fecha_egreso", array("fecha_egreso"));

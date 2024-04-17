@@ -198,8 +198,10 @@ $(document).on('change', '.compra_servicio', function(){
     var valorSeleccionado = $('.compra_servicio:checked').val();
     
     if(valorSeleccionado == "2"){
+        $('.label_empresas_en_convenio').hide();
         $('.empresas_en_convenio').hide();
     } else {
+        $('.label_empresas_en_convenio').show();
         $('.empresas_en_convenio').show();
     }
 });
@@ -228,8 +230,10 @@ $(document).on("click", ".egresar_solicitud", function(){
             //$('input[value="2"].compra_servicio').prop('checked', true);
             var valorSeleccionado = $('.compra_servicio:checked').val();
             if(valorSeleccionado == "2" || valorSeleccionado === undefined){
+                $('.label_empresas_en_convenio').hide();
                 $('.empresas_en_convenio').hide();
             } else {
+                $('.label_empresas_en_convenio').show();
                 $('.empresas_en_convenio').show();
             }
 
