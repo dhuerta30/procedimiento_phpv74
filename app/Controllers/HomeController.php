@@ -1507,6 +1507,7 @@ class HomeController
 		$pdocrud->setLangData("select", "Seleccione sexo");
 		$pdocrud->fieldAttributes("direccion", array("placeholder"=>"Buscar Dirección"));
 		$pdocrud->fieldCssClass("fecha_y_hora_ingreso", array("fecha_y_hora_ingreso"));
+		$pdocrud->fieldCssClass("telefono", array("telefono"));
 		$pdocrud->formFieldValue("fecha_y_hora_ingreso", $fecha_registro);
 		$pdocrud->fieldAddOnInfo("fecha_y_hora_ingreso", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 		$pdocrud->fieldCssClass("nombres", array("nombres"));
@@ -3283,6 +3284,7 @@ class HomeController
 		if ($request->getMethod() === 'POST') {
 
 			$sexo = $request->post('sexo');
+			$telefono = $request->post('telefono');
 			$fecha_nacimiento = $request->post("fecha_nacimiento");
 			$edad = $request->post('edad');
 			$rut = $request->post('rut');
@@ -3330,6 +3332,10 @@ class HomeController
 				$mensaje = 'El campo Sexo es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
+			} else if(empty($telefono)){
+				$mensaje = 'El campo Telefono es Obligatorio';
+				echo json_encode(['error' => $telefono]);
+				return;
 			} 
 
 			$pdomodel->where("rut", $rut, "=", "AND");
@@ -3339,7 +3345,8 @@ class HomeController
 			$pdomodel->where("fecha_nacimiento", $fecha_nacimiento, "=", "AND");
 			$pdomodel->where("edad", $edad, "=", "AND");
 			$pdomodel->where("direccion", $direccion, "=", "AND");
-			$pdomodel->where("sexo", $sexo);
+			$pdomodel->where("sexo", $sexo, "=", "AND");
+			$pdomodel->where("sexo", $telefono);
 			$datos_paciente_exists = $pdomodel->select("datos_paciente");
 
 			if (!empty($datos_paciente_exists)) {
@@ -3349,6 +3356,7 @@ class HomeController
 				$pdomodel->insert("datos_paciente", array(
 					"rut" => $rut,
 					"nombres" => $nombres,
+					"telefono" => $telefono,
 					"apellido_paterno" => $apellido_paterno,
 					"apellido_materno" => $apellido_materno,
 					"fecha_nacimiento" => $fecha_nacimiento,
@@ -3374,6 +3382,7 @@ class HomeController
 
 			$paciente = $request->post('paciente');
 			$sexo = $request->post('sexo');
+			$telefono = $request->post('telefono');
 			$fecha_nacimiento = $request->post("fecha_nacimiento");
 			$edad = $request->post('edad');
 			$rut = $request->post('rut');
@@ -3426,7 +3435,8 @@ class HomeController
 			$pdomodel->where("fecha_nacimiento", $fecha_nacimiento, "=", "AND");
 			$pdomodel->where("edad", $edad, "=", "AND");
 			$pdomodel->where("direccion", $direccion, "=", "AND");
-			$pdomodel->where("sexo", $sexo);
+			$pdomodel->where("sexo", $sexo, "=", "AND");
+			$pdomodel->where("sexo", $telefono);
 			$datos_paciente_exists = $pdomodel->select("datos_paciente");
 			
 			$id = $datos_paciente_exists[0]['id_datos_paciente'];

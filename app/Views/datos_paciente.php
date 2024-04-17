@@ -418,6 +418,7 @@
             let edad = $('.edad').val();
             let direccion = $('.direccion').val();
             let sexo = $('.sexo').val();
+            let telefono = $('.telefono').val();
 
             //Diagnóstico y antecedentes clínicos del paciente
             let especialidad = $('.especialidad').val();
@@ -442,6 +443,7 @@
                     edad: edad,
                     direccion: direccion,
                     sexo: sexo,
+                    telefono: telefono,
                     especialidad: especialidad,
                     profesional: profesional,
                     diagnostico: diagnostico,
