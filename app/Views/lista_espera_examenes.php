@@ -225,9 +225,9 @@ $(document).on("click", ".egresar_solicitud", function(){
             $('.cargar_modal').html(data);
             $('#egresar_solicitud').modal('show');
 
-            $('input[value="2"].compra_servicio').prop('checked', true);
+            //$('input[value="2"].compra_servicio').prop('checked', true);
             var valorSeleccionado = $('.compra_servicio:checked').val();
-            if(valorSeleccionado == "2"){
+            if(valorSeleccionado == "2" || valorSeleccionado === undefined){
                 $('.empresas_en_convenio').hide();
             } else {
                 $('.empresas_en_convenio').show();
