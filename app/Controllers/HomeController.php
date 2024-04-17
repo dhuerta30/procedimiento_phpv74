@@ -3933,10 +3933,6 @@ class HomeController
 				<thead class="bg-primary">
 					<tr>
 						<th>Código Fonasa</th>
-						<th>Paciente</th>
-						<th>Rut</th>
-						<th>Fecha Solicitud</th>
-						<th>Diagnóstico CIE-10</th>
 						<th>Exámen</th>
 						<th>Estado</th>
 						<th>Tipo de Exámen</th>
@@ -3961,10 +3957,6 @@ class HomeController
 			$html .= '
 				<tr>
 					<td>' . $row['codigo_fonasa'] . '</td>
-					<td>' . ucwords($nombre_completo) . '</td>
-					<td>' . $row["rut"] . '</td>
-					<td>' . date('d-m-Y', strtotime($row["fecha_solicitud"])) . '</td>
-					<td>' . $row["diagnostico"] . '</td>
 					<td>' . $row["examen"] . '</td>
 					<td>' . $row["estado"] . '</td>
 					<td>' . $row["tipo_examen"] . '</td>
