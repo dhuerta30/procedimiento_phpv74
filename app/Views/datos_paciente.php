@@ -336,6 +336,7 @@
         $(document).on("click", ".buscar", function(){
             let rut = $('.rut').val();
             let nombres = $('.nombres').val();
+            let telefono = $('.telefono').val();
             let apellido_paterno = $('.apellido_paterno').val();
             let apellido_materno = $('.apellido_materno').val();
             let fecha_nacimiento = $('.fecha_nacimiento').val();
@@ -351,6 +352,7 @@
                 data: {
                     rut: rut,
                     nombres: nombres,
+                    telefono: telefono,
                     apellido_materno: apellido_materno,
                     apellido_paterno: apellido_paterno,
                     fecha_nacimiento: fecha_nacimiento,
@@ -369,6 +371,7 @@
                         $('.limpiar').removeClass('d-none');
                         $(".rut").val(data["data"][0]["rut"]);
                         $(".nombres").val(data["data"][0]["nombres"]);
+                        $(".telefono").val(data["data"][0]["telefono"]);
                         $(".apellido_paterno").val(data["data"][0]["apellido_paterno"]);
                         $(".apellido_materno").val(data["data"][0]["apellido_materno"]);
                         $(".fecha_nacimiento").val(data["data"][0]["fecha_nacimiento"]);
@@ -386,6 +389,7 @@
                     } else {
                         $(".rut").val("");
                         $(".nombres").val("");
+                        $(".telefono").val("");
                         $(".apellido_paterno").val("");
                         $(".apellido_materno").val("");
                         $(".fecha_nacimiento").val("");
