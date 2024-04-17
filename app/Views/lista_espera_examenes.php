@@ -66,7 +66,7 @@ function datatable(){
                     return 'reportes';
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Define las columnas a exportar
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Define las columnas a exportar
                 }
             }
         ],
@@ -194,6 +194,17 @@ $(document).on("click", ".limpiar_filtro", function(){
 });
 
 
+$(document).on('change', '.compra_servicio', function(){
+    var valorSeleccionado = $('.compra_servicio:checked').val();
+    
+    if(valorSeleccionado == "2"){
+        $('.empresas_en_convenio').hide();
+    } else {
+        $('.empresas_en_convenio').show();
+    }
+});
+
+
 $(document).on("click", ".egresar_solicitud", function(){
     let id = $(this).data('id');
     let id_detalle_de_solicitud = $(this).data('solicitud');
@@ -213,6 +224,14 @@ $(document).on("click", ".egresar_solicitud", function(){
             $("#pdocrud-ajax-loader").hide();
             $('.cargar_modal').html(data);
             $('#egresar_solicitud').modal('show');
+
+            $('input[value="2"].compra_servicio').prop('checked', true);
+            var valorSeleccionado = $('.compra_servicio:checked').val();
+            if(valorSeleccionado == "2"){
+                $('.empresas_en_convenio').hide();
+            } else {
+                $('.empresas_en_convenio').show();
+            }
 
             $(".fecha_egreso").flatpickr({
                 dateFormat: "Y-m-d",

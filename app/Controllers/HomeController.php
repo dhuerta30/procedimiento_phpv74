@@ -2360,6 +2360,7 @@ class HomeController
 			$pdocrud->fieldHideLable("id_datos_paciente");
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
 
+			$pdocrud->fieldHideLable("empresas_en_convenio");
 			$pdocrud->fieldHideLable("fecha_solicitud");
 			$pdocrud->fieldDataAttr("fecha_solicitud", array("style"=>"display:none"));
 
