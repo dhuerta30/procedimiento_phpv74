@@ -2384,6 +2384,8 @@ class HomeController
 			$pdocrud->fieldCssClass("fecha_egreso", array("fecha_egreso"));
 			$pdocrud->fieldCssClass("observacion", array("observacion"));
 			$pdocrud->fieldCssClass("motivo_egreso", array("motivo_egreso"));
+			$pdocrud->fieldCssClass("compra_servicio", array("compra_servicio"));
+			$pdocrud->fieldCssClass("empresas_en_convenio", array("empresas_en_convenio"));
 
 			//$pdomodel->where("id_datos_paciente", $id);
 			//$observacion = $pdomodel->select("detalle_de_solicitud");
