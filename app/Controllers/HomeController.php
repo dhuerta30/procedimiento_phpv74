@@ -1865,6 +1865,7 @@ class HomeController
 			ds.id_detalle_de_solicitud,
 			dp.rut,
 			dp.nombres,
+			dp.telefono,
 			dp.apellido_paterno,
 			dp.apellido_materno,
 			dp.edad,
@@ -1896,6 +1897,7 @@ class HomeController
 						<th>Rut</th>
 						<th>Paciente</th>
 						<th>Edad</th>
+						<th>Teléfono</th>
 						<th>Fecha Solicitud</th>
 						<th>Estado</th>
 						<th>Fecha Egreso</th>
@@ -1938,6 +1940,7 @@ class HomeController
 					<td>' . $row['rut'] . '</td>
 					<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
 					<td>' . $row["edad"] . '</td>
+					<td>' . $row["telefono"] . '</td>
 					<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
 					<td>' . $row["estado"] . '</td>
 					<td>' . $fecha_egreso . '</td>
@@ -2982,6 +2985,7 @@ class HomeController
 					ds.id_detalle_de_solicitud,
 					dp.rut,
 					dp.nombres,
+					dp.telefono,
 					dp.apellido_paterno,
 					dp.apellido_materno,
 					dp.edad,
@@ -3019,6 +3023,7 @@ class HomeController
 								<th>Rut</th>
 								<th>Paciente</th>
 								<th>Edad</th>
+								<th>Teléfono</th>
 								<th>Fecha Solicitud</th>
 								<th>Estado</th>
 								<th>Fecha Egreso</th>
@@ -3060,6 +3065,7 @@ class HomeController
 							<td>' . $row['rut'] . '</td>
 							<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
 							<td>' . $row["edad"] . '</td>
+							<td>' . $row["telefono"] . '</td>
 							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
 							<td>' . $row["estado"] . '</td>
 							<td>' . $fecha_egreso . '</td>
