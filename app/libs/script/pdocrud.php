@@ -313,6 +313,8 @@ function editar_egresar_solicitud($data, $obj) {
     $fecha_egreso = $data['detalle_de_solicitud']['fecha_egreso'];
     $motivo_egreso = $data['detalle_de_solicitud']['motivo_egreso'];
     $observacion = $data['detalle_de_solicitud']['observacion'];
+    $compra_servicio = $data["detalle_de_solicitud"]["compra_servicio"];
+    $empresas_en_convenio = $data["detalle_de_solicitud"]["empresas_en_convenio"];
     $adjuntar = $data["detalle_de_solicitud"]["adjuntar"];
 
     $extension = pathinfo($adjuntar, PATHINFO_EXTENSION);
@@ -329,6 +331,8 @@ function editar_egresar_solicitud($data, $obj) {
         "fecha_egreso" => $fecha_egreso,
         "motivo_egreso" => $motivo_egreso,
         "observacion" => $observacion,
+        "compra_servicio" => $compra_servicio,
+        "empresas_en_convenio" => isset($empresas_en_convenio) ? $empresas_en_convenio : null,
         "adjuntar" => basename($adjuntar),
         "estado" => "Egresado"
     ));
