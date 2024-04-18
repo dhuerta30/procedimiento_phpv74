@@ -1918,8 +1918,8 @@ class HomeController
 	
 		foreach ($data as $row) {
 
-			$fecha = date('d/m/Y', strtotime($row["fecha"]));
-			$data_fecha = ($fecha != "01/01/1970" && $fecha != "31/12/1969") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
+			$fecha = date('d/m/Y H:i:s', strtotime($row["fecha"]));
+			$data_fecha = ($fecha != "01/01/1970 01:00:00" && $fecha != "31/12/1969 01:00:00") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
 
 			$codigos = explode(',', $row["codigo"]);
 
@@ -3061,8 +3061,8 @@ class HomeController
 			
 				foreach ($data as $row) {
 
-					$fecha = date('d/m/Y', strtotime($row["fecha"]));
-					$data_fecha = ($fecha != "01/01/1970" && $fecha != "31/12/1969") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
+					$fecha = date('d/m/Y H:i:s', strtotime($row["fecha"]));
+					$data_fecha = ($fecha != "01/01/1970 01:00:00" && $fecha != "31/12/1969 01:00:00") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
 		
 					$codigos = explode(',', $row["codigo"]);
 		

@@ -315,9 +315,11 @@ $(document).on("click", ".procedimientos", function(){
             $('#procedimientos').modal('show');
 
             $(".fecha").flatpickr({
-                dateFormat: "Y-m-d",
+                enableTime: true,
+                enableSeconds: true,
+                altFormat: "d m Y H:i:S",
                 allowInput: true,
-                //defaultDate: new Date(),
+                defaultDate: new Date(),
                 locale: {
                     firstDayOfWeek: 1, // Lunes como primer día de la semana
                     weekdays: {
