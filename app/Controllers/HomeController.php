@@ -1612,6 +1612,7 @@ class HomeController
 		$crud->fieldCssClass("codigo_fonasa", array("codigo_fonasa"));
 		$crud->fieldCssClass("plano", array("plano"));
 		$crud->fieldCssClass("extremidad", array("extremidad"));
+		$crud->fieldCssClass("procedencia", array("procedencia"));
 		$crud->fieldCssClass("tipo_solicitud", array("tipo_solicitud"));
 		$crud->fieldCssClass("examen", array("examen"));
 		$crud->fieldCssClass("observacion", array("observacion"));
@@ -3481,6 +3482,7 @@ class HomeController
 					$sql['examen'] = $sesionVal['examen'];
 					$sql['plano'] = $sesionVal['plano'];
 					$sql['extremidad'] = $sesionVal['extremidad'];
+					$sql['procedencia'] = $sesionVal['procedencia'];
 					$sql['observacion'] = $sesionVal['observacion'];
 					$sql['contraste'] = $sesionVal['contraste'];
 					$sql['creatinina'] = $sesionVal['creatinina'];
@@ -3533,6 +3535,7 @@ class HomeController
 			$examen = $request->post('examen');
 			$plano = $request->post('plano');
 			$extremidad = $request->post('extremidad');
+			$procedencia = $request->post('procedencia');
 			$observacion = $request->post('observacion');
 			$contraste = $request->post('contraste');
 			$contrasteValue = isset($contraste) ? (array)$contraste : [];
@@ -3603,6 +3606,7 @@ class HomeController
 					"examen" => $examen,
 					"plano" => $plano,
 					"extremidad" => $extremidad,
+					"procedencia" => $procedencia,
 					"observacion" => $observacion,
 					"contraste" => implode(", ", $contrasteValue),
 					"creatinina" => $creatinina,

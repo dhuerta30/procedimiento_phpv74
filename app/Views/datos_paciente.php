@@ -572,6 +572,7 @@
             let examen = $('.examen').val();
             let plano = $('.plano').val();
             let extremidad = $('.extremidad').val();
+            let procedencia = $('.procedencia').val();
             let observacion = $('.observacion').val();
             let contraste = [];
             $('.contraste:checked').each(function() {
@@ -596,6 +597,7 @@
                     examen: examen,
                     plano: plano,
                     extremidad: extremidad,
+                    procedencia: procedencia,
                     observacion: observacion,
                     contraste: contraste,
                     creatinina: creatinina
@@ -624,6 +626,7 @@
                                     <td>${(dato.contraste != "") ? dato.contraste : '<div class="badge badge-danger">Sin Contraste</div>'}</td>
                                     <td>${(dato.plano != "") ? dato.plano : '<div class="badge badge-danger">Sin Plano</div>'}</td>
                                     <td>${(dato.extremidad) ? dato.extremidad : '<div class="badge badge-danger">Sin Extremidad</div>'}</td>
+                                    <td>${(dato.procedencia) ? dato.procedencia : '<div class="badge badge-danger">Sin Procedencia</div>'}</td>
                                     <td>
                                         <a class="btn-danger btn-sm eliminar_dato" href="javascript:;" title="Eliminar" data-id="${dato.codigo_fonasa}"><i class="fa fa-times fa-fw"></i></a>
                                     </td>
@@ -650,6 +653,8 @@
                         $('.extremidad').val("");
                         $('.extremidad').chosen('destroy');
                         $('.extremidad').chosen();
+
+                        $('.procedencia').val("");
 
                         $('.observacion').val("");
                         $('.contraste').prop('checked', false);
