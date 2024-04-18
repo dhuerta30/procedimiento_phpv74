@@ -2415,6 +2415,7 @@ class HomeController
 			GROUP_CONCAT(DISTINCT ds.examen) AS examen,
 			ds.codigo_fonasa,
 			ds.fecha_solicitud,
+			ds.procedencia,
 			GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
 			GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
 			dp.nombres,
@@ -2445,6 +2446,7 @@ class HomeController
 				<thead class="bg-primary">
 					<tr>
 						<th>Código Fonasa</th>
+						<th>Procedencia</th>
 						<th>Exámen</th>
 						<th>Estado</th>
 						<th>Tipo de Exámen</th>
@@ -2467,6 +2469,7 @@ class HomeController
 			$html .= '
 				<tr style="white-space: nowrap;">
 					<td>' . $row['codigo_fonasa'] . '</td>
+					<td>' . $row['procedencia'] . '</td>
 					<td>' . $row["examen"] . '</td>
 					<td>' . $row["estado"] . '</td>
 					<td>' . $row["tipo_examen"] . '</td>
@@ -2864,6 +2867,7 @@ class HomeController
 				"ds.examen",
 				"ds.codigo_fonasa",
 				"ds.fecha_solicitud",
+				"ds.procedencia",
 				"ds.tipo_examen",
 				"dg_p.diagnostico",
 				"dp.nombres",
@@ -2886,6 +2890,8 @@ class HomeController
 				$pdomodel->whereYear("ds.fecha_solicitud", $ano_hasta);
 				$pdomodel->andOrOperator = "OR";
 				$pdomodel->whereYearBetween('ds.fecha_solicitud', $ano_desde, $ano_hasta);
+				$pdomodel->andOrOperator = "AND";
+				$pdomodel->where("ds.procedencia", "Ambulatorio");
 			}
 	
 			$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha_solicitud");
@@ -2904,6 +2910,7 @@ class HomeController
 					<thead class="bg-primary">
 						<tr>
 							<th>Código Fonasa</th>
+							<th>Procedencia</th>
 							<th>Exámen</th>
 							<th>Tipo de Exámen</th>
 							<th>Año</th>
@@ -2925,6 +2932,7 @@ class HomeController
 				$html .= '
 					<tr>
 						<td>' . $row['codigo_fonasa'] . '</td>
+						<td>' . $row['procedencia'] . '</td>
 						<td>' . $row["examen"] . '</td>
 						<td>' . $row["tipo_examen"] . '</td>
 						<td>' . $year . '</td>
@@ -3928,6 +3936,7 @@ class HomeController
 			"ds.fecha_solicitud",
 			"dg_p.diagnostico",
 			"dp.nombres",
+			"ds.procedencia",
 			"dp.apellido_paterno",
 			"dp.apellido_materno",
 			"ds.estado",
@@ -3942,6 +3951,7 @@ class HomeController
 		$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha");
 		$pdomodel->where("ds.estado", "Agendado", "!=");
 		$pdomodel->andOrOperator = "AND";
+		$pdomodel->where("ds.procedencia", "Ambulatorio");
 		$data = $pdomodel->select("datos_paciente as dp");
 
 		$html = '
@@ -3949,6 +3959,7 @@ class HomeController
 				<thead class="bg-primary">
 					<tr>
 						<th>Código Fonasa</th>
+						<th>Procedencia</th>
 						<th>Exámen</th>
 						<th>Estado</th>
 						<th>Tipo de Exámen</th>
@@ -3973,6 +3984,7 @@ class HomeController
 			$html .= '
 				<tr>
 					<td>' . $row['codigo_fonasa'] . '</td>
+					<td>' . $row['procedencia'] . '</td>
 					<td>' . $row["examen"] . '</td>
 					<td>' . $row["estado"] . '</td>
 					<td>' . $row["tipo_examen"] . '</td>
