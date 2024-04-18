@@ -729,6 +729,7 @@
             $(".fecha_nacimiento").val("");
             $(".edad").val("");
             $(".direccion").val("");
+            $(".telefono").val("");
             $(".sexo").val("");
             $('.paciente').val("");
             $('.paciente').trigger('chosen:updated');
