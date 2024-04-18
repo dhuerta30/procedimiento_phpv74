@@ -937,6 +937,7 @@
             let direccion = $('.direccion').val();
             let sexo = $('.sexo').val();
             let fecha_y_hora_ingreso = $('.fecha_y_hora_ingreso').val();
+            let telefono = $('.telefono').val();
 
             $.ajax({
                 type: "POST",
@@ -951,7 +952,8 @@
                     edad: edad,
                     direccion: direccion,
                     sexo: sexo,
-                    fecha_y_hora_ingreso: fecha_y_hora_ingreso
+                    fecha_y_hora_ingreso: fecha_y_hora_ingreso,
+                    telefono: telefono
                 },
                 beforeSend: function() {
                     $("#pdocrud-ajax-loader").show();
