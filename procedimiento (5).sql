@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-04-2024 a las 23:00:01
+-- Tiempo de generación: 18-04-2024 a las 22:34:59
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 7.4.29
 
@@ -9478,29 +9478,32 @@ CREATE TABLE `detalle_de_solicitud` (
   `examen` text NOT NULL,
   `plano` varchar(100) NOT NULL,
   `extremidad` varchar(100) NOT NULL,
+  `procedencia` varchar(100) NOT NULL,
   `observacion` text NOT NULL,
   `contraste` varchar(100) NOT NULL,
   `creatinina` varchar(100) DEFAULT NULL,
   `fecha_solicitud` date DEFAULT NULL,
-  `fecha` date DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
   `estado` varchar(100) DEFAULT NULL,
   `fecha_egreso` date DEFAULT NULL,
   `motivo_egreso` varchar(100) DEFAULT NULL,
   `fundamento` text DEFAULT NULL,
   `adjuntar` varchar(300) DEFAULT NULL,
   `compra_servicio` int(11) DEFAULT NULL,
-  `empresas_en_convenio` varchar(100) DEFAULT NULL
+  `empresas_en_convenio` varchar(100) DEFAULT NULL,
+  `usuario` varchar(100) DEFAULT NULL,
+  `fecha_ingreso` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `detalle_de_solicitud`
 --
 
-INSERT INTO `detalle_de_solicitud` (`id_detalle_de_solicitud`, `id_datos_paciente`, `codigo_fonasa`, `tipo_solicitud`, `tipo_examen`, `examen`, `plano`, `extremidad`, `observacion`, `contraste`, `creatinina`, `fecha_solicitud`, `fecha`, `estado`, `fecha_egreso`, `motivo_egreso`, `fundamento`, `adjuntar`, `compra_servicio`, `empresas_en_convenio`) VALUES
-(114, 30, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Mano', 'sadsadsad', '', '', '2024-04-05', '2024-04-02', 'Egresado', '2024-04-05', '2', 'sadsadsad', '1713295912_basica.pdf', NULL, NULL),
-(115, 30, '0404003', 'Imageneologica', 'Ecografía', 'Ecografía abdominal (incluye hígado, vía biliar, vesícula, páncreas, riñones, bazo, retroperitoneo y grandes vasos)', '', '', 'dsadsadsadsad', '', '', '2024-04-05', NULL, 'Ingresado', NULL, NULL, NULL, NULL, NULL, NULL),
-(116, 35, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Dedo', 'sadsadsadsadsa', '', '', '2024-04-05', NULL, 'Ingresado', NULL, NULL, NULL, NULL, NULL, NULL),
-(117, 35, '1101004', 'Procedimientos', 'Procedimientos diagnósticos neurología', 'E.E.G. de 16 o más canales (incluye el cód. 11-01-006)', '', '', 'sadasdsadsa', '', '', '2024-04-05', NULL, 'Ingresado', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `detalle_de_solicitud` (`id_detalle_de_solicitud`, `id_datos_paciente`, `codigo_fonasa`, `tipo_solicitud`, `tipo_examen`, `examen`, `plano`, `extremidad`, `procedencia`, `observacion`, `contraste`, `creatinina`, `fecha_solicitud`, `fecha`, `estado`, `fecha_egreso`, `motivo_egreso`, `fundamento`, `adjuntar`, `compra_servicio`, `empresas_en_convenio`, `usuario`, `fecha_ingreso`) VALUES
+(114, 30, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Mano', 'Ambulatorio', 'sadsadsad', '', '', '2024-04-05', '2024-04-18 10:58:32', 'Egresado', '2024-04-05', '2', 'sadsadsad', '1713295912_basica.pdf', 1, 'San Agustin', '', NULL),
+(115, 30, '0404003', 'Imageneologica', 'Ecografía', 'Ecografía abdominal (incluye hígado, vía biliar, vesícula, páncreas, riñones, bazo, retroperitoneo y grandes vasos)', '', '', 'Ambulatorio', 'dsadsadsadsad', '', '', '2024-04-05', '2024-04-18 10:56:34', 'Agendado', NULL, NULL, 'asdsasadasd', NULL, NULL, NULL, '', NULL),
+(116, 35, '0401002', 'Imageneologica', 'Radiografía', 'Radiografía de partes blandas, laringe lateral, cavum rinofaríngeo (rinofarinx). ', 'Izquierda', 'Dedo', 'Ambulatorio', 'sadsadsadsadsa', '', '', '2024-04-05', NULL, 'Ingresado', NULL, NULL, NULL, NULL, NULL, NULL, '', NULL),
+(117, 35, '1101004', 'Procedimientos', 'Procedimientos diagnósticos neurología', 'E.E.G. de 16 o más canales (incluye el cód. 11-01-006)', '', '', 'Ambulatorio', 'sadasdsadsa', '', '', '2024-04-05', NULL, 'Ingresado', NULL, NULL, NULL, NULL, NULL, NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -9570,15 +9573,16 @@ INSERT INTO `menu` (`id_menu`, `nombre_menu`, `url_menu`, `icono_menu`, `submenu
 (1, 'Datos Paciente', '/home/datos_paciente', 'fas fa-procedures', 'No', 1),
 (2, 'Lista Espera Exámenes', '/home/lista_espera_examenes', 'fas fa-syringe', 'No', 2),
 (3, 'Mantenedor Prestaciones', '/home/carga_masiva_prestaciones', 'fas fa-hospital-user', 'No', 3),
-(4, 'usuarios', '/home/usuarios', 'fas fa-users', 'No', 7),
-(5, 'Perfil', '/home/perfil', 'far fa-user', 'No', 8),
-(6, 'Respalda tus Datos', '/home/respaldos', 'fas fa-database', 'No', 11),
-(7, 'Salir', '/login/salir', 'fas fa-sign-out-alt', 'No', 12),
+(4, 'usuarios', '/home/usuarios', 'fas fa-users', 'No', 8),
+(5, 'Perfil', '/home/perfil', 'far fa-user', 'No', 9),
+(6, 'Respalda tus Datos', '/home/respaldos', 'fas fa-database', 'No', 12),
+(7, 'Salir', '/login/salir', 'fas fa-sign-out-alt', 'No', 13),
 (8, 'Reportes', '#', 'fas fa-filter', 'Si', 5),
-(9, 'Mantenedor CIE-10', '/home/codigo', 'fas fa-stethoscope', 'No', 6),
-(10, 'Mantenedor Menu', '/home/menu', 'fas fa-bars', 'No', 10),
-(18, 'Acceso Menus', '/home/acceso_menus', 'fas fa-outdent', 'No', 9),
-(19, 'Mantenedor Profesionales', '/home/profesionales', 'fas fa-user-md', 'No', 4);
+(9, 'Mantenedor CIE-10', '/home/codigo', 'fas fa-stethoscope', 'No', 7),
+(10, 'Mantenedor Menu', '/home/menu', 'fas fa-bars', 'No', 11),
+(18, 'Acceso Menus', '/home/acceso_menus', 'fas fa-outdent', 'No', 10),
+(19, 'Mantenedor Profesionales', '/home/profesionales', 'fas fa-user-md', 'No', 4),
+(20, 'Histórico Exámenes', '/historico_examenes/index', 'fas fa-history', 'No', 6);
 
 -- --------------------------------------------------------
 
@@ -10084,7 +10088,8 @@ INSERT INTO `usuario_menu` (`id_usuario_menu`, `id_usuario`, `id_menu`, `visibil
 (1174, 20, 9, 'Mostrar'),
 (1175, 20, 10, 'Mostrar'),
 (1184, 1, 18, 'Mostrar'),
-(1185, 1, 19, 'Mostrar');
+(1185, 1, 19, 'Mostrar'),
+(1186, 1, 20, 'Mostrar');
 
 -- --------------------------------------------------------
 
@@ -10339,7 +10344,7 @@ ALTER TABLE `estado_procedimiento`
 -- AUTO_INCREMENT de la tabla `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `modulos`
@@ -10405,7 +10410,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `usuario_menu`
 --
 ALTER TABLE `usuario_menu`
-  MODIFY `id_usuario_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1186;
+  MODIFY `id_usuario_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1187;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_submenu`
