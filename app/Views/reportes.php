@@ -75,7 +75,7 @@ function datatable(){
                     return 'reportes';
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5] // Define las columnas a exportar
+                    columns: [0, 1, 2, 3, 4, 5, 6] // Define las columnas a exportar
                 }
             }
         ],
