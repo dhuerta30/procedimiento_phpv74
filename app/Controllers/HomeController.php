@@ -2356,6 +2356,9 @@ class HomeController
 			$pdocrud->formFieldValue("adjuntar", $detalle_de_solicitud[0]["adjuntar"]);
 			$pdocrud->formFieldValue("observacion", $detalle_de_solicitud[0]["observacion"]);
 
+			$pdocrud->formFieldValue("compra_servicio", $detalle_de_solicitud[0]["compra_servicio"]);
+			$pdocrud->formFieldValue("empresas_en_convenio", $detalle_de_solicitud[0]["empresas_en_convenio"]);
+
 			$pdocrud->formFieldValue("id_detalle_de_solicitud", $detalle_de_solicitud[0]["id_detalle_de_solicitud"]);
 			
 			$pdocrud->fieldHideLable("id_detalle_de_solicitud");
