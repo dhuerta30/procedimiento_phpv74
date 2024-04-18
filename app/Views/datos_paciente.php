@@ -654,8 +654,6 @@
                         $('.extremidad').chosen('destroy');
                         $('.extremidad').chosen();
 
-                        $('.procedencia').val("");
-
                         $('.observacion').val("");
                         $('.contraste').prop('checked', false);
 
