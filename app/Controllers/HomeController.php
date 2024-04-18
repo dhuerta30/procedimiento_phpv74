@@ -3410,6 +3410,9 @@ class HomeController
 
 		if ($request->getMethod() === 'POST') {
 
+			date_default_timezone_set('America/Santiago');
+			$fecha_ingreso = date('Y-m-d H:i:s');
+
 			$paciente = $request->post('paciente');
 			$sexo = $request->post('sexo');
 			$telefono = $request->post('telefono');
@@ -3498,6 +3501,8 @@ class HomeController
 					$sql['contraste'] = $sesionVal['contraste'];
 					$sql['creatinina'] = $sesionVal['creatinina'];
 					$sql['estado'] = $sesionVal['estado'];
+					$sql['usuario'] = $id = $_SESSION['usuario'][0]["usuario"];
+					$sql['fecha_ingreso'] = $fecha_ingreso;
 					$pdomodel->insertBatch("detalle_de_solicitud", array($sql));
 				}
 				unset($_SESSION['detalle_de_solicitud']);
