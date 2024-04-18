@@ -1604,8 +1604,8 @@ class HomeController
 		$crud->fieldTypes("examen", "input");
 		//$crud->fieldTypes("id_datos_paciente", "select");
 		//$crud->fieldDataBinding("id_datos_paciente", "datos_paciente", "id_datos_paciente", array("nombres","apellido_paterno", "apellido_materno"), "db", " ");
-		$crud->formFields(array("id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "observacion", "contraste", "fecha_solicitud"));
-		$crud->fieldDisplayOrder(array("codigo_fonasa","id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "observacion", "contraste"));
+		$crud->formFields(array("id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "procedencia", "observacion", "contraste", "fecha_solicitud"));
+		$crud->fieldDisplayOrder(array("codigo_fonasa","id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "procedencia", "observacion", "contraste"));
 		$crud->fieldAddOnInfo("examen", "after", '<div class="input-group-append eliminar_examen"><span class="btn btn-default border eliminar_examen" id="basic-addon1"><i class="fa fa-remove"></i></span></div>');
 		$crud->fieldCssClass("id_datos_paciente", array("paciente"));
 		$crud->fieldCssClass("tipo_examen", array("tipo_examen"));
@@ -1653,8 +1653,11 @@ class HomeController
 			"Procedimientos de traumatología" => "Procedimientos de traumatología",
 			"Exámenes imagenológicos odontológica" => "Exámenes imagenológicos odontológica"
 		), "", "","array");*/
+		$crud->fieldTypes("procedencia", "select");
+		$crud->fieldDataBinding("procedencia", array("Hospitalizado" => "Hospitalizado", "Urgencia" => "Urgencia", "Ambulatorio" => "Ambulatorio"), "", "","array");
+		$crud->formFieldValue("procedencia", "Ambulatorio");
 		$crud->fieldGroups("Name",array("tipo_solicitud","tipo_examen", "examen"));
-		$crud->fieldGroups("Name2",array("plano","extremidad"));
+		$crud->fieldGroups("Name2",array("plano","extremidad", "procedencia"));
 		$crud->fieldGroups("Name3",array("observacion","contraste"));
 		$crud->fieldTypes("contraste", "checkbox");
 		$crud->fieldDataBinding("contraste", array(
