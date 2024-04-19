@@ -2434,6 +2434,7 @@ class HomeController
 			detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
 		INNER JOIN 
 			diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+		WHERE ds.estado != 'Egresado'
 		GROUP BY
 			dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
 		ORDER BY 
@@ -2865,40 +2866,47 @@ class HomeController
 	
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->columns = array(
-				"count(ds.examen) AS total_examen",
-				"ds.examen",
-				"ds.codigo_fonasa",
-				"ds.fecha_solicitud",
-				"ds.procedencia",
-				"ds.tipo_examen",
-				"dg_p.diagnostico",
-				"dp.nombres",
-				"dp.apellido_paterno",
-				"dp.apellido_materno",
-				"dp.rut",
-				"dp.fecha_y_hora_ingreso",
-				"ds.fecha"
-			);
-	
-			$pdomodel->joinTables("detalle_de_solicitud as ds", "ds.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
-			$pdomodel->joinTables("diagnostico_antecedentes_paciente as dg_p", "dg_p.id_datos_paciente = dp.id_datos_paciente", "INNER JOIN");
-
+		
+			$where = "";
 			$ano_desde = $request->post('ano_desde');
 			$ano_hasta = $request->post('ano_hasta');
-
+			
 			if (!empty($ano_desde) || !empty($ano_hasta)) {
-				$pdomodel->whereYear("ds.fecha_solicitud", $ano_desde);
-				$pdomodel->andOrOperator = "OR";
-				$pdomodel->whereYear("ds.fecha_solicitud", $ano_hasta);
-				$pdomodel->andOrOperator = "OR";
-				$pdomodel->whereYearBetween('ds.fecha_solicitud', $ano_desde, $ano_hasta);
-				$pdomodel->andOrOperator = "AND";
-				$pdomodel->where("ds.procedencia", "Ambulatorio");
+				$where .= "(YEAR(ds.fecha_solicitud) = '$ano_desde' OR ";
+				$where .= "YEAR(ds.fecha_solicitud) = '$ano_hasta' OR ";
+				$where .= "YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' )";
+			
+				$data = $pdomodel->executeQuery(
+					"SELECT 
+						dp.id_datos_paciente,
+						COUNT(ds.examen) AS total_examen,
+						GROUP_CONCAT(DISTINCT ds.examen) AS examen,
+						ds.codigo_fonasa,
+						ds.fecha_solicitud,
+						ds.procedencia,
+						GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
+						GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
+						dp.nombres,
+						dp.apellido_paterno,
+						dp.apellido_materno,
+						GROUP_CONCAT(ds.estado) AS estado,
+						dp.rut,
+						dp.fecha_y_hora_ingreso,
+						GROUP_CONCAT(ds.fecha) AS fecha
+					FROM 
+						datos_paciente AS dp
+					INNER JOIN 
+						detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+					INNER JOIN 
+						diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+					WHERE 
+						". $where ." AND (ds.procedencia = 'Ambulatorio') AND ds.estado != 'Egresado'   
+					GROUP BY
+						dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
+					ORDER BY 
+					ds.fecha ASC");
 			}
-	
-			$pdomodel->groupByCols = array("dp.nombres", "dp.rut", "ds.fecha_solicitud");
-			$data = $pdomodel->select("datos_paciente as dp");
+			
 			//echo $pdomodel->getLastQuery();
 			//die();
 	
@@ -2915,6 +2923,7 @@ class HomeController
 							<th>Código Fonasa</th>
 							<th>Procedencia</th>
 							<th>Exámen</th>
+							<th>Estado</th>
 							<th>Tipo de Exámen</th>
 							<th>Año</th>
 							<th>Total Exámenes</th>
@@ -2937,6 +2946,7 @@ class HomeController
 						<td>' . $row['codigo_fonasa'] . '</td>
 						<td>' . $row['procedencia'] . '</td>
 						<td>' . $row["examen"] . '</td>
+						<td>' . $row["estado"] . '</td>
 						<td>' . $row["tipo_examen"] . '</td>
 						<td>' . $year . '</td>
 						<td>' . $row["total_examen"] . '</td>
