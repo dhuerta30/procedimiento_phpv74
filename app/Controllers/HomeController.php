@@ -2455,6 +2455,8 @@ class HomeController
 						<th>Estado</th>
 						<th>Tipo de Exámen</th>
 						<th>Año</th>
+						<th>Mínima</th>
+						<th>Máxima</th>
 						<th>Total Exámenes</th>
 					</tr>
 				</thead>
@@ -2478,6 +2480,8 @@ class HomeController
 					<td>' . $row["estado"] . '</td>
 					<td>' . $row["tipo_examen"] . '</td>
 					<td>' . $year . '</td>
+					<td>Mínima</td>
+					<td>Máxima</td>
 					<td>' . $row["total_examen"] . '</td>
 				</tr>
 			';
@@ -2919,6 +2923,8 @@ class HomeController
 							<th>Estado</th>
 							<th>Tipo de Exámen</th>
 							<th>Año</th>
+							<th>Mínima</th>
+							<th>Máxima</th>
 							<th>Total Exámenes</th>
 						</tr>
 					</thead>
@@ -2942,6 +2948,8 @@ class HomeController
 						<td>' . $row["estado"] . '</td>
 						<td>' . $row["tipo_examen"] . '</td>
 						<td>' . $year . '</td>
+						<td>Mínima</td>
+						<td>Máxima</td>
 						<td>' . $row["total_examen"] . '</td>
 					</tr>
 				';

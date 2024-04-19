@@ -57,7 +57,15 @@ function eliminar_menu($data, $obj){
     $id_menu_db = $pdomodel->select("submenu");
 
     if($id_menu_db){
+        $pdomodel->where("id_submenu", $id_menu_db[0]["id_submenu"]);
+        $pdomodel->delete("submenu");
 
+        $pdomodel->where("id_menu", $id_menu);
+        $pdomodel->where("id_usuario", $id_usuario_session);
+        $pdomodel->delete("usuario_submenu");
+    }
+
+    if(!$id_menu_db){
         $pdomodel->where("id_menu", $id_menu_db[0]["id_menu"]);
         $pdomodel->update("menu", array("submenu" => "No"));
 
