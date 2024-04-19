@@ -2877,46 +2877,39 @@ class HomeController
 				$where .= "YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' )";
 			
 				$data = $pdomodel->executeQuery(
-					"SELECT 
-						dp.id_datos_paciente,
-						COUNT(ds.examen) AS total_examen,
-						GROUP_CONCAT(DISTINCT ds.examen) AS examen,
-						ds.codigo_fonasa,
-						ds.fecha_solicitud,
-						ds.procedencia,
-						GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
-						GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
-						dp.nombres,
-						dp.apellido_paterno,
-						dp.apellido_materno,
-						GROUP_CONCAT(ds.estado) AS estado,
-						dp.rut,
-						dp.fecha_y_hora_ingreso,
-						GROUP_CONCAT(ds.fecha) AS fecha
-					FROM 
-						datos_paciente AS dp
-					INNER JOIN 
-						detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-					INNER JOIN 
-						diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-					WHERE 
-						". $where ." AND (ds.procedencia = 'Ambulatorio') AND ds.estado != 'Egresado'   
-					GROUP BY
-						dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
-					ORDER BY 
-					ds.fecha ASC");
-			}
-			
-			//echo $pdomodel->getLastQuery();
-			//die();
-	
-			if (empty($ano_desde) && empty($ano_hasta)) {
-				$grilla_reportes = $this->reportes_all();
-				echo json_encode(['error' => 'No se encontraron resultados', 'default' => $grilla_reportes]);
-            	return;
-			}
+				"SELECT 
+					dp.id_datos_paciente,
+					COUNT(ds.examen) AS total_examen,
+					GROUP_CONCAT(DISTINCT ds.examen) AS examen,
+					ds.codigo_fonasa,
+					ds.fecha_solicitud,
+					ds.procedencia,
+					GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
+					GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
+					dp.nombres,
+					dp.apellido_paterno,
+					dp.apellido_materno,
+					GROUP_CONCAT(ds.estado) AS estado,
+					dp.rut,
+					dp.fecha_y_hora_ingreso,
+					GROUP_CONCAT(ds.fecha) AS fecha
+				FROM 
+					datos_paciente AS dp
+				INNER JOIN 
+					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+				WHERE 
+					". $where ." AND (ds.procedencia = 'Ambulatorio') AND ds.estado != 'Egresado'   
+				GROUP BY
+					dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
+				ORDER BY 
+				ds.fecha ASC");
 
-			$html = '
+				//echo $pdomodel->getLastQuery();
+				//die();
+
+				$html = '
 				<table class="table table-striped tabla_reportes text-center" style="width:100%">
 					<thead class="bg-primary">
 						<tr>
@@ -2930,9 +2923,9 @@ class HomeController
 						</tr>
 					</thead>
 					<tbody>
-			';
-		
-			foreach ($data as $row) {
+				';
+
+				foreach ($data as $row) {
 				$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
 				$ano = date('Y', strtotime($row["fecha_solicitud"]));
 				$year = "";
@@ -2952,17 +2945,22 @@ class HomeController
 						<td>' . $row["total_examen"] . '</td>
 					</tr>
 				';
-			}
-		
-			$html .= '
+				}
+
+				$html .= '
 					</tbody>
 				</table>
-			';
-		
-			$html_data = array($html);
-		
-			$render = $pdocrud->render("HTML", $html_data);
-			echo json_encode(['render' => $render]);
+				';
+
+				$html_data = array($html);
+
+				$render = $pdocrud->render("HTML", $html_data);
+				echo json_encode(['render' => $render]);
+			} else {
+				$grilla_reportes = $this->reportes_all();
+				echo json_encode(['error' => 'No se encontraron resultados', 'default' => $grilla_reportes]);
+            	return;
+			}
 		}
 	}	
 
