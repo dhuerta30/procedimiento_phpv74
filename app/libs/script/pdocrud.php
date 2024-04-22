@@ -143,7 +143,6 @@ function carga_masiva_pacientes_insertar($data, $obj){
                 $sql_diag['diagnostico'] = $Excelval["diagnostico"];
                 $sql_diag['sintomas_principales'] = $Excelval['Síntomas Principales'];
                 $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
-                $sql_diag['type'] = 'Servicios';
                 $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
             }
             $data["carga_masiva_pacientes"]["archivo"] = basename($data["carga_masiva_pacientes"]["archivo"]);
