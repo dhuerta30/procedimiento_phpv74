@@ -92,6 +92,66 @@ function eliminar_submenu($data, $obj){
     return $data;
 }
 
+function carga_masiva_pacientes_insertar($data, $obj){
+    $archivo = basename($data["carga_masiva_pacientes"]["archivo"]);
+    $extension = pathinfo($archivo, PATHINFO_EXTENSION);
+
+    $pdomodel = $obj->getPDOModelObj();
+
+    if (empty($archivo)) { 
+        $error_msg = array("message" => "", "error" => "No se ha subido ningún Archivo", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else {
+        if ($extension != "xlsx") { /* comprobamos si la extensión del archivo es diferente de excel */
+            //unlink(__DIR__ . "/uploads/".$archivo); /* eliminamos el archivo que se subió */
+            $error_msg = array("message" => "", "error" => "El Archivo Subido no es un Archivo Excel Válido", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        } else {
+
+            $records = $pdomodel->excelToArray("uploads/".$archivo); /* Acá capturamos el nombre del archivo excel a importar */
+
+            $sql = array();
+            foreach ($records as $Excelval) {
+
+                $existingClient = $pdomodel->executeQuery("SELECT * FROM datos_paciente WHERE nombres = :nombres", ['nombres' => $Excelval['nombres']]);
+               
+                if (!$existingClient) {
+                    $sql['rut'] = $Excelval['rut'];
+                    $sql['nombres'] = $Excelval['nombres'];
+                    $sql['telefono'] = $Excelval['telefono'];
+                    $sql['apellido_paterno'] = $Excelval['apellido_paterno'];
+                    $sql['apellido_materno'] = $Excelval['apellido_materno'];
+                    $sql['edad'] = $Excelval['edad'];
+                    $sql['fecha_nacimiento'] = $Excelval['fecha_nacimiento'];
+                    $sql['direccion'] = $Excelval['direccion'];
+                    $sql['sexo'] = $Excelval['sexo'];
+                    $sql['fecha_y_hora_ingreso'] = $Excelval['fecha_y_hora_ingreso'];
+                    $pdomodel->insertBatch("datos_paciente", array($sql));
+
+                    $id_datos_paciente = $pdomodel->lastInsertId;
+                } else {
+                    $id_clients = $existingClient[0]["id_datos_paciente"];
+                }
+
+                $sql_diag = array();
+                $sql_diag['id_datos_paciente'] = $id_clients;
+                $sql_diag['especialidad'] = $Excelval["especialidad"];
+                $sql_diag['emited'] = $fecha_fija;
+                $fecha_solicitud_paciente = date('Y-m-d', strtotime($fecha_fija));
+                $sql_diag['fecha_solicitud_paciente'] = $fecha_solicitud_paciente;
+                $sql_diag['profesional'] = $Excelval["profesional"];
+                $sql_diag['diagnostico'] = $Excelval["diagnostico"];
+                $sql_diag['sintomas_principales'] = $Excelval['Síntomas Principales'];
+                $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
+                $sql_diag['type'] = 'Servicios';
+                $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
+            }
+            $data["carga_masiva_pacientes"]["archivo"] = basename($data["carga_masiva_pacientes"]["archivo"]);
+        }
+    }
+    return $data;
+}
+
 function carga_masiva_codigo_insertar($data, $obj){
     $archivo = basename($data["carga_masiva_codigo"]["archivo"]);
     $extension = pathinfo($archivo, PATHINFO_EXTENSION);
