@@ -2427,14 +2427,39 @@ class HomeController
 			GROUP_CONCAT(ds.estado) AS estado,
 			dp.rut,
 			dp.fecha_y_hora_ingreso,
-			GROUP_CONCAT(ds.fecha) AS fecha
+			GROUP_CONCAT(ds.fecha) AS fecha,
+			(SELECT COUNT(*) 
+			 FROM detalle_de_solicitud AS ds2 
+			 WHERE ds2.id_datos_paciente = dp.id_datos_paciente 
+			 GROUP BY ds2.id_datos_paciente
+			 ORDER BY COUNT(*) ASC
+			 LIMIT 1) AS cantidad_minima,
+			(SELECT COUNT(*) 
+			 FROM detalle_de_solicitud AS ds3 
+			 WHERE ds3.id_datos_paciente = dp.id_datos_paciente 
+			 GROUP BY ds3.id_datos_paciente
+			 ORDER BY COUNT(*) DESC
+			 LIMIT 1) AS cantidad_maxima,
+			(SELECT COUNT(*) 
+			 FROM prestaciones AS p2 
+			 INNER JOIN detalle_de_solicitud AS ds2 ON p2.glosa = ds2.examen
+			 WHERE ds2.id_datos_paciente = dp.id_datos_paciente 
+			 AND MONTH(ds2.fecha) = MONTH(CURRENT_DATE())) AS cantidad_mes_actual,
+			(SELECT COUNT(*) 
+			 FROM prestaciones AS p3 
+			 INNER JOIN detalle_de_solicitud AS ds3 ON p3.glosa = ds3.examen
+			 WHERE ds3.id_datos_paciente = dp.id_datos_paciente 
+			 AND ds3.fecha >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)) AS cantidad_ultimos_30_dias
 		FROM 
 			datos_paciente AS dp
 		INNER JOIN 
 			detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
 		INNER JOIN 
 			diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-		WHERE ds.estado != 'Egresado'
+		INNER JOIN 
+			prestaciones AS pres ON pres.glosa = ds.examen
+		WHERE 
+			ds.estado != 'Egresado'
 		GROUP BY
 			dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
 		ORDER BY 
@@ -2455,7 +2480,7 @@ class HomeController
 						<th>Estado</th>
 						<th>Tipo de Exámen</th>
 						<th>Año</th>
-						<th>Mínima</th>
+						<th>Minima</th>
 						<th>Máxima</th>
 						<th>Total Exámenes</th>
 					</tr>
@@ -2480,8 +2505,8 @@ class HomeController
 					<td>' . $row["estado"] . '</td>
 					<td>' . $row["tipo_examen"] . '</td>
 					<td>' . $year . '</td>
-					<td>Mínima</td>
-					<td>Máxima</td>
+					<td>'. $row['cantidad_minima'] .'</td>
+					<td>'. $row['cantidad_maxima'] .'</td>
 					<td>' . $row["total_examen"] . '</td>
 				</tr>
 			';
@@ -2882,33 +2907,45 @@ class HomeController
 			
 				$data = $pdomodel->executeQuery(
 				"SELECT 
-					dp.id_datos_paciente,
-					COUNT(ds.examen) AS total_examen,
-					GROUP_CONCAT(DISTINCT ds.examen) AS examen,
-					ds.codigo_fonasa,
-					ds.fecha_solicitud,
-					ds.procedencia,
-					GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
-					GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
-					dp.nombres,
-					dp.apellido_paterno,
-					dp.apellido_materno,
-					GROUP_CONCAT(ds.estado) AS estado,
-					dp.rut,
-					dp.fecha_y_hora_ingreso,
-					GROUP_CONCAT(ds.fecha) AS fecha
-				FROM 
-					datos_paciente AS dp
-				INNER JOIN 
-					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-				INNER JOIN 
-					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-				WHERE 
-					". $where ." AND (ds.procedencia = 'Ambulatorio') AND ds.estado != 'Egresado'   
-				GROUP BY
-					dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
-				ORDER BY 
-				ds.fecha ASC");
+				dp.id_datos_paciente,
+				COUNT(ds.examen) AS total_examen,
+				GROUP_CONCAT(DISTINCT ds.examen) AS examen,
+				ds.codigo_fonasa,
+				ds.fecha_solicitud,
+				ds.procedencia,
+				GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
+				GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
+				dp.nombres,
+				dp.apellido_paterno,
+				dp.apellido_materno,
+				GROUP_CONCAT(ds.estado) AS estado,
+				dp.rut,
+				dp.fecha_y_hora_ingreso,
+				GROUP_CONCAT(ds.fecha) AS fecha,
+				(SELECT COUNT(*) 
+				 FROM detalle_de_solicitud AS ds2 
+				 WHERE ds2.id_datos_paciente = dp.id_datos_paciente 
+				 GROUP BY ds2.id_datos_paciente
+				 ORDER BY COUNT(*) ASC
+				 LIMIT 1) AS cantidad_minima,
+				(SELECT COUNT(*) 
+				 FROM detalle_de_solicitud AS ds3 
+				 WHERE ds3.id_datos_paciente = dp.id_datos_paciente 
+				 GROUP BY ds3.id_datos_paciente
+				 ORDER BY COUNT(*) DESC
+				 LIMIT 1) AS cantidad_maxima
+			FROM 
+				datos_paciente AS dp
+			INNER JOIN 
+				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+			WHERE 
+				". $where ." AND (ds.procedencia = 'Ambulatorio') AND ds.estado != 'Egresado'   
+			GROUP BY
+				dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
+			ORDER BY 
+				ds.fecha ASC;");
 
 				//echo $pdomodel->getLastQuery();
 				//die();
