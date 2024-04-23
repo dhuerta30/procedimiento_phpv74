@@ -2464,7 +2464,7 @@ class HomeController
 			dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
 		ORDER BY 
 			ds.fecha ASC;"
-		);		
+		);
 
 		//echo $pdomodel->getLastQuery();
 		//die();
