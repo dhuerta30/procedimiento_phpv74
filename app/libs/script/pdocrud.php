@@ -145,6 +145,7 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $sql_diag = array();
                     $sql_diag['id_datos_paciente'] = $id_datos_paciente;
                     $sql_diag['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                    $sql_diag['profesional'] = $Excelval['Profesional'];
                     $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
                     $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
 
@@ -160,9 +161,9 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $sql_detalle['contraste'] = $Excelval['Contraste'];
                     $sql_detalle['creatinina'] = $Excelval['Cratinina'];
                     $sql_detalle['fecha_solicitud'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
-                    $sql_detalle['fecha'] = $Excelval['Fecha Agendada'];
+                    $sql_detalle['fecha'] = date("Y-m-d", strtotime($Excelval['Fecha Agendada']));
                     $sql_detalle['estado'] = $Excelval['Estado'];
-                    $sql_detalle['fecha_egreso'] = $Excelval['Fecha Egreso'];
+                    $sql_detalle['fecha_egreso'] = date("Y-m-d", strtotime($Excelval['Fecha Egreso']));
                     $sql_detalle['motivo_egreso'] = $Excelval['Motivo Egreso'];
                     $sql_detalle['usuario'] = $usuario;
                     $sql_detalle['fecha_ingreso'] = $fecha_actual;
