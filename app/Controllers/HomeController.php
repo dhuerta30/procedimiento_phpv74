@@ -1899,7 +1899,7 @@ class HomeController
 		WHERE 
 			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud"
 		);
-		
+
 		$html = '
 			<table class="table table-striped tabla_reportes text-center" style="width:100%">
 				<thead class="bg-primary">

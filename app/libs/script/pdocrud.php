@@ -116,12 +116,18 @@ function carga_masiva_pacientes_insertar($data, $obj){
                 $existingPacient = $pdomodel->executeQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => $Excelval['Rut']]);
                
                 if (!$existingPacient) {
+
+                    $fecha_nacimiento = new DateTime($Excelval['Fecha Nacimiento']);
+                    $fecha_actual = new DateTime();
+                    $diferencia = $fecha_actual->diff($fecha_nacimiento);
+                    $edad = $diferencia->y; // Obtiene solo los años
+
                     $sql['rut'] = $Excelval['Rut'];
-                    $sql['nombres'] = $Excelval['Nombres'];
+                    $sql['nombres'] = $Excelval['Nombre'];
                     $sql['telefono'] = $Excelval['Teléfono'];
                     $sql['apellido_paterno'] = $Excelval['Apellido Paterno'];
                     $sql['apellido_materno'] = $Excelval['Apellido Materno'];
-                    $sql['edad'] = $Excelval['edad'];
+                    $sql['edad'] = $edad;
                     $sql['fecha_nacimiento'] = $Excelval['Fecha Nacimiento'];
                     $sql['direccion'] = $Excelval['Dirección'];
                     $sql['sexo'] = $Excelval['Sexo'];
@@ -129,6 +135,8 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $pdomodel->insertBatch("datos_paciente", array($sql));
 
                     $id_datos_paciente = $pdomodel->lastInsertId;
+                } else {
+                    $id_datos_paciente = $existingPacient[0]["id_datos_paciente"];
 
                     date_default_timezone_set('America/Santiago');
                     $fecha_actual = date('Y-m-d');
@@ -136,11 +144,7 @@ function carga_masiva_pacientes_insertar($data, $obj){
 
                     $sql_diag = array();
                     $sql_diag['id_datos_paciente'] = $id_datos_paciente;
-                    $sql_diag['especialidad'] = $Excelval["Especialidad"];
-                    $sql_diag['fecha_solicitud_paciente'] = $fecha_actual;
-                    $sql_diag['profesional'] = $Excelval["Profesional"];
-                    $sql_diag['diagnostico'] = $Excelval["Diagnóstico"];
-                    $sql_diag['sintomas_principales'] = $Excelval['Síntomas Principales'];
+                    $sql_diag['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
                     $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
                     $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
 
@@ -152,24 +156,17 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $sql_detalle['examen'] = $Excelval["Exámen"];
                     $sql_detalle['plano'] = $Excelval['Plano'];
                     $sql_detalle['extremidad'] = $Excelval['Extremidad'];
-                    $sql_detalle['procedencia'] = $Excelval['Procedencia'];
                     $sql_detalle['observacion'] = $Excelval['Observación'];
                     $sql_detalle['contraste'] = $Excelval['Contraste'];
                     $sql_detalle['creatinina'] = $Excelval['Cratinina'];
-                    $sql_detalle['fecha_solicitud'] = $fecha_actual;
+                    $sql_detalle['fecha_solicitud'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
                     $sql_detalle['fecha'] = $Excelval['Fecha Agendada'];
                     $sql_detalle['estado'] = $Excelval['Estado'];
                     $sql_detalle['fecha_egreso'] = $Excelval['Fecha Egreso'];
                     $sql_detalle['motivo_egreso'] = $Excelval['Motivo Egreso'];
-                    $sql_detalle['fundamento'] = $Excelval['Fundamento'];
-                    $sql_detalle['compra_servicio'] = $Excelval['Compra Servicio'];
-                    $sql_detalle['empresas_en_convenio'] = $Excelval['Empresas en Convenio'];
                     $sql_detalle['usuario'] = $usuario;
                     $sql_detalle['fecha_ingreso'] = $fecha_actual;
                     $pdomodel->insertBatch("detalle_de_solicitud", array($sql_detalle));
-                } else {
-                    $error_msg = array("message" => "", "error" => "El Rut Ingresado ya existe", "redirectionurl" => "");
-                    die(json_encode($error_msg));
                 }
             }
             $data["carga_masiva_pacientes"]["archivo"] = basename($data["carga_masiva_pacientes"]["archivo"]);
