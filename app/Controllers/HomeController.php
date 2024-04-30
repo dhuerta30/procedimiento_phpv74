@@ -606,7 +606,7 @@ class HomeController
 		$pdocrud->formDisplayInPopup();
 		$pdocrud->fieldCssClass("rut_profesional", array("rut_profesional"));
 		$pdocrud->colRename("id_profesional", "ID");
-		$pdocrud->setSearchCols(array("nombre_profesional","apellido_profesional"));
+		$pdocrud->setSearchCols(array("nombre_profesional","apellido_profesional", "rut_profesional"));
 		$pdocrud->buttonHide("submitBtnSaveBack");
 		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setSettings("printBtn", false);
