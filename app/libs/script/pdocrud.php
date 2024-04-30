@@ -162,12 +162,14 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $sql_detalle['fecha_egreso'] = $Excelval['Fecha Egreso'];
                     $sql_detalle['motivo_egreso'] = $Excelval['Motivo Egreso'];
                     $sql_detalle['fundamento'] = $Excelval['Fundamento'];
-                    //$sql_detalle['adjuntar'] = $Excelval['Adjuntar'];
                     $sql_detalle['compra_servicio'] = $Excelval['Compra Servicio'];
                     $sql_detalle['empresas_en_convenio'] = $Excelval['Empresas en Convenio'];
                     $sql_detalle['usuario'] = $usuario;
                     $sql_detalle['fecha_ingreso'] = $fecha_actual;
                     $pdomodel->insertBatch("detalle_de_solicitud", array($sql_detalle));
+                } else {
+                    $error_msg = array("message" => "", "error" => "El Rut Ingresado ya existe", "redirectionurl" => "");
+                    die(json_encode($error_msg));
                 }
             }
             $data["carga_masiva_pacientes"]["archivo"] = basename($data["carga_masiva_pacientes"]["archivo"]);
