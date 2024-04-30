@@ -908,6 +908,7 @@
                     $("#pdocrud-ajax-loader").hide();
                     $('.cargar_modal').html(data);
                     $('#Profesional').modal('show');
+                    $(".rut_profesional").inputmask({ mask:'9{1,2}9{3}9{2,3}-9|K|k', casing:'upper'});
                 }
             });
         });

@@ -602,7 +602,9 @@ class HomeController
 
 	public function profesionales(){
 		$pdocrud = DB::PDOCrud();
+		$pdocrud->addPlugin("bootstrap-inputmask");
 		$pdocrud->formDisplayInPopup();
+		$pdocrud->fieldCssClass("rut_profesional", array("rut_profesional"));
 		$pdocrud->colRename("id_profesional", "ID");
 		$pdocrud->setSearchCols(array("nombre_profesional","apellido_profesional"));
 		$pdocrud->buttonHide("submitBtnSaveBack");
@@ -612,9 +614,11 @@ class HomeController
 		$pdocrud->setSettings("csvBtn", false);
 		$pdocrud->setSettings("excelBtn", false);
 		$render = $pdocrud->dbTable("profesional")->render();
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut_profesional", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
 		View::render(
 			'profesional',[
-				'render' => $render
+				'render' => $render,
+				'mask' => $mask
 			]
 		);
 	}
@@ -2028,6 +2032,8 @@ class HomeController
 	public function agregar_profesional(){
 		if($_SERVER["REQUEST_METHOD"] === 'POST'){
 			$pdocrud = DB::PDOCrud(true);
+			$pdocrud->addPlugin("bootstrap-inputmask");
+			$pdocrud->fieldCssClass("rut_profesional", array("rut_profesional"));
 			$pdocrud->addCallback("before_insert", "agregar_profesional");
 			$pdocrud->fieldGroups("Name",array("nombre_profesional","apellido_profesional"));
 			$render = $pdocrud->dbTable("profesional")->render("insertform");

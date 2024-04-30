@@ -6,6 +6,7 @@
         <div class="card">
             <div class="card-body">
                 <?=$render?>
+                <?=$mask;?>
             </div>
         </div>
     </section>
