@@ -903,6 +903,12 @@ function formatTableSubMenu($data, $obj){
 function agregar_profesional($data, $obj){
     $nombre_profesional = $data["profesional"]["nombre_profesional"];
     $apellido_profesional = $data["profesional"]["apellido_profesional"];
+    $rut_profesional = $data["profesional"]["rut_profesional"];
+
+    if (!App\Controllers\HomeController::validaRut($rut_profesional)) {
+        echo "RUT inválido";
+        die();
+    }
 
     $obj->setLangData("success", "Profesional Agregado con éxito");
 
