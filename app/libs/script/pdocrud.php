@@ -113,7 +113,7 @@ function carga_masiva_pacientes_insertar($data, $obj){
             $sql = array();
             foreach ($records as $Excelval) {
 
-                $existingPacient = $pdomodel->executeQuery("SELECT * FROM datos_paciente WHERE nombres = :nombres", ['nombres' => $Excelval['nombres']]);
+                $existingPacient = $pdomodel->executeQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => $Excelval['Rut']]);
                
                 if (!$existingPacient) {
                     $sql['rut'] = $Excelval['Rut'];
@@ -129,48 +129,46 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $pdomodel->insertBatch("datos_paciente", array($sql));
 
                     $id_datos_paciente = $pdomodel->lastInsertId;
-                } else {
-                    $id_datos_paciente = $existingPacient[0]["id_datos_paciente"];
+
+                    date_default_timezone_set('America/Santiago');
+                    $fecha_actual = date('Y-m-d');
+                    $usuario = $_SESSION['usuario'][0]["usuario"];
+
+                    $sql_diag = array();
+                    $sql_diag['id_datos_paciente'] = $id_datos_paciente;
+                    $sql_diag['especialidad'] = $Excelval["Especialidad"];
+                    $sql_diag['fecha_solicitud_paciente'] = $fecha_actual;
+                    $sql_diag['profesional'] = $Excelval["Profesional"];
+                    $sql_diag['diagnostico'] = $Excelval["Diagnóstico"];
+                    $sql_diag['sintomas_principales'] = $Excelval['Síntomas Principales'];
+                    $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
+                    $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
+
+                    $sql_detalle = array();
+                    $sql_detalle['id_datos_paciente'] = $id_datos_paciente;
+                    $sql_detalle['codigo_fonasa'] = $Excelval["Codigo Fonasa"];
+                    $sql_detalle['tipo_solicitud'] = $Excelval["Tipo Solicitud"];
+                    $sql_detalle['tipo_examen'] = $Excelval["Tipo Exámen"];
+                    $sql_detalle['examen'] = $Excelval["Exámen"];
+                    $sql_detalle['plano'] = $Excelval['Plano'];
+                    $sql_detalle['extremidad'] = $Excelval['Extremidad'];
+                    $sql_detalle['procedencia'] = $Excelval['Procedencia'];
+                    $sql_detalle['observacion'] = $Excelval['Observación'];
+                    $sql_detalle['contraste'] = $Excelval['Contraste'];
+                    $sql_detalle['creatinina'] = $Excelval['Cratinina'];
+                    $sql_detalle['fecha_solicitud'] = $fecha_actual;
+                    $sql_detalle['fecha'] = $Excelval['Fecha Agendada'];
+                    $sql_detalle['estado'] = $Excelval['Estado'];
+                    $sql_detalle['fecha_egreso'] = $Excelval['Fecha Egreso'];
+                    $sql_detalle['motivo_egreso'] = $Excelval['Motivo Egreso'];
+                    $sql_detalle['fundamento'] = $Excelval['Fundamento'];
+                    //$sql_detalle['adjuntar'] = $Excelval['Adjuntar'];
+                    $sql_detalle['compra_servicio'] = $Excelval['Compra Servicio'];
+                    $sql_detalle['empresas_en_convenio'] = $Excelval['Empresas en Convenio'];
+                    $sql_detalle['usuario'] = $usuario;
+                    $sql_detalle['fecha_ingreso'] = $fecha_actual;
+                    $pdomodel->insertBatch("detalle_de_solicitud", array($sql_detalle));
                 }
-
-                date_default_timezone_set('America/Santiago');
-                $fecha_actual = date('Y-m-d');
-                $usuario = $_SESSION['usuario'][0]["usuario"];
-
-                $sql_diag = array();
-                $sql_diag['id_datos_paciente'] = $id_datos_paciente;
-                $sql_diag['especialidad'] = $Excelval["Especialidad"];
-                $sql_diag['fecha_solicitud_paciente'] = $fecha_actual;
-                $sql_diag['profesional'] = $Excelval["Profesional"];
-                $sql_diag['diagnostico'] = $Excelval["Diagnóstico"];
-                $sql_diag['sintomas_principales'] = $Excelval['Síntomas Principales'];
-                $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
-                $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
-
-                $sql_detalle = array();
-                $sql_detalle['id_datos_paciente'] = $id_datos_paciente;
-                $sql_detalle['codigo_fonasa'] = $Excelval["Codigo Fonasa"];
-                $sql_detalle['tipo_solicitud'] = $Excelval["Tipo Solicitud"];
-                $sql_detalle['tipo_examen'] = $Excelval["Tipo Exámen"];
-                $sql_detalle['examen'] = $Excelval["Exámen"];
-                $sql_detalle['plano'] = $Excelval['Plano'];
-                $sql_detalle['extremidad'] = $Excelval['Extremidad'];
-                $sql_detalle['procedencia'] = $Excelval['Procedencia'];
-                $sql_detalle['observacion'] = $Excelval['Observación'];
-                $sql_detalle['contraste'] = $Excelval['Contraste'];
-                $sql_detalle['creatinina'] = $Excelval['Cratinina'];
-                $sql_detalle['fecha_solicitud'] = $fecha_actual;
-                $sql_detalle['fecha'] = $Excelval['Fecha Agendada'];
-                $sql_detalle['estado'] = $Excelval['Estado'];
-                $sql_detalle['fecha_egreso'] = $Excelval['Fecha Egreso'];
-                $sql_detalle['motivo_egreso'] = $Excelval['Motivo Egreso'];
-                $sql_detalle['fundamento'] = $Excelval['Fundamento'];
-                //$sql_detalle['adjuntar'] = $Excelval['Adjuntar'];
-                $sql_detalle['compra_servicio'] = $Excelval['Compra Servicio'];
-                $sql_detalle['empresas_en_convenio'] = $Excelval['Empresas en Convenio'];
-                $sql_detalle['usuario'] = $usuario;
-                $sql_detalle['fecha_ingreso'] = $fecha_actual;
-                $pdomodel->insertBatch("detalle_de_solicitud", array($sql_detalle));
             }
             $data["carga_masiva_pacientes"]["archivo"] = basename($data["carga_masiva_pacientes"]["archivo"]);
         }
