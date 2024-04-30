@@ -26,7 +26,7 @@
                     <?=$mask;?>
 				</div>
 
-                <div class="datos_search p-3"></div>
+                <div class="datos_search p-0"></div>
                 <div class="resultados">
                     <div class='table-responsive'>
                         <?=$render_crud;?>
@@ -54,8 +54,8 @@ function datatable(){
     $('.tabla_reportes').DataTable({
         searching: false,
         scrollX: true,
-        lengthMenu: [5],
-        paging: ($('.tabla_reportes tbody tr').length > 5) ? true : false,
+        lengthMenu: [10],
+        paging: ($('.tabla_reportes tbody tr').length > 10) ? true : false,
         dom: 'Bfrtip',
         buttons: [
             {
