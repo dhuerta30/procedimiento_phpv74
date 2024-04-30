@@ -614,6 +614,7 @@ class HomeController
 		$pdocrud->setSettings("csvBtn", false);
 		$pdocrud->setSettings("excelBtn", false);
 		$pdocrud->addCallback("before_insert", "agregar_profesional");
+		$pdocrud->addCallback("before_update", "modificar_profesional");
 		$render = $pdocrud->dbTable("profesional")->render();
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut_profesional", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
 		View::render(

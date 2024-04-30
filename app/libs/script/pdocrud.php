@@ -915,6 +915,21 @@ function agregar_profesional($data, $obj){
     return $data;
 }
 
+function modificar_profesional($data, $obj){
+    $nombre_profesional = $data["profesional"]["nombre_profesional"];
+    $apellido_profesional = $data["profesional"]["apellido_profesional"];
+    $rut_profesional = $data["profesional"]["rut_profesional"];
+
+    if (!App\Controllers\HomeController::validaRut($rut_profesional)) {
+        echo "RUT inválido";
+        die();
+    }
+
+    $obj->setLangData("success", "Profesional Actualizado con éxito");
+
+    return $data;
+}
+
 function resetloginCallback($data, $obj)
 {   
     $email = htmlspecialchars($data['usuario']['email']);
