@@ -8,7 +8,7 @@
 
                 <div class="row procedimiento">
                     <div class="col-md-12">
-                        <h5>Carga Masiva Pacientes</h5>
+                        <h5>Carga Masiva Exámenes Pacientes</h5>
                         
                         <?=$render;?>
                     
