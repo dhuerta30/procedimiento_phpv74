@@ -147,7 +147,7 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $sql_diag = array();
                     $sql_diag['id_datos_paciente'] = $id_datos_paciente;
                     if (!empty($Excelval['Fecha Solicitud'])) {
-                        $sql_detalle['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                        $sql_diag['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
                     }
                     $sql_diag['profesional'] = $Excelval['Profesional'];
                     $sql_diag['especialidad'] = $Excelval['Especialidad'];
