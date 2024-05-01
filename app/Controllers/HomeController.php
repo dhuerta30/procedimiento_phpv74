@@ -1897,7 +1897,9 @@ class HomeController
 		INNER JOIN 
 			profesional AS pro ON pro.id_profesional = dg_p.profesional
 		WHERE 
-			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud"
+			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+		GROUP BY 
+			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
 		);
 
 		$html = '
@@ -3092,8 +3094,8 @@ class HomeController
 				INNER JOIN 
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
-				/*GROUP BY 
-					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud;*/"
+				GROUP BY 
+				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
 			);
 
 			//echo $pdomodel->getLastQuery();
