@@ -131,7 +131,9 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $sql['fecha_nacimiento'] = $Excelval['Fecha Nacimiento'];
                     $sql['direccion'] = $Excelval['Dirección'];
                     $sql['sexo'] = $Excelval['Sexo'];
-                    $sql['fecha_y_hora_ingreso'] = $Excelval['Fecha y hora Ingreso'];
+                    if (!empty($Excelval['Fecha y hora Ingreso'])) {
+                        $sql_detalle['fecha_y_hora_ingreso'] = date("Y-m-d", strtotime($Excelval['Fecha y hora Ingreso']));
+                    }
                     $pdomodel->insertBatch("datos_paciente", array($sql));
 
                     $id_datos_paciente = $pdomodel->lastInsertId;
@@ -144,7 +146,9 @@ function carga_masiva_pacientes_insertar($data, $obj){
 
                     $sql_diag = array();
                     $sql_diag['id_datos_paciente'] = $id_datos_paciente;
-                    $sql_diag['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                    if (!empty($Excelval['Fecha Solicitud'])) {
+                        $sql_detalle['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                    }
                     $sql_diag['profesional'] = $Excelval['Profesional'];
                     $sql_diag['especialidad'] = $Excelval['Especialidad'];
                     $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
@@ -161,9 +165,11 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $sql_detalle['observacion'] = $Excelval['Observación'];
                     $sql_detalle['contraste'] = $Excelval['Contraste'];
                     $sql_detalle['creatinina'] = $Excelval['Cratinina'];
-                    $sql_detalle['fecha_solicitud'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                    if (!empty($Excelval['Fecha Solicitud'])) {
+                        $sql_detalle['fecha_solicitud'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                    }
                     if (!empty($Excelval['Fecha Agendada']) || !empty($Excelval['Hora'])) {
-                        $sql_detalle['fecha'] = date("Y-m-d", strtotime($Excelval['Fecha Agendada'] . " " . $Excelval['Hora']));
+                        $sql_detalle['fecha'] = date("Y-m-d H:i:s", strtotime($Excelval['Fecha Agendada'] . " " . $Excelval['Hora']));
                     }
                     $sql_detalle['estado'] = $Excelval['Estado'];
                     if (!empty($Excelval['Fecha Egreso'])) {
