@@ -162,9 +162,13 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $sql_detalle['contraste'] = $Excelval['Contraste'];
                     $sql_detalle['creatinina'] = $Excelval['Cratinina'];
                     $sql_detalle['fecha_solicitud'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
-                    $sql_detalle['fecha'] = date("Y-m-d H:i:s", strtotime($Excelval['Fecha Agendada'] . " " . $Excelval['Hora']));
+                    if (!empty($Excelval['Fecha Agendada']) || !empty($Excelval['Hora'])) {
+                        $sql_detalle['fecha'] = date("Y-m-d", strtotime($Excelval['Fecha Agendada'] . " " . $Excelval['Hora']));
+                    }
                     $sql_detalle['estado'] = $Excelval['Estado'];
-                    $sql_detalle['fecha_egreso'] = date("Y-m-d", strtotime($Excelval['Fecha Egreso']));
+                    if (!empty($Excelval['Fecha Egreso'])) {
+                        $sql_detalle['fecha_egreso'] = date("Y-m-d", strtotime($Excelval['Fecha Egreso']));
+                    }
                     $sql_detalle['motivo_egreso'] = $Excelval['Motivo Egreso'];
                     $sql_detalle['usuario'] = $usuario;
                     $sql_detalle['fecha_ingreso'] = $fecha_actual;

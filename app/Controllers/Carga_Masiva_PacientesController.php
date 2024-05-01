@@ -32,7 +32,7 @@ class Carga_Masiva_PacientesController
 		$pdocrud->fieldTypes("archivo", "FILE_NEW");
 		$pdocrud->addCallback("before_insert", "carga_masiva_pacientes_insertar");
 		$render = $pdocrud->dbTable("carga_masiva_pacientes")->render("insertform");
-        View::render('carga_masiva_pacientes',[
+        View::render('carga_masiva_pacientes', [
             'render' => $render
         ]);
     }
