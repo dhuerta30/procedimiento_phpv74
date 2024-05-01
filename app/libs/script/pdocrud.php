@@ -146,7 +146,7 @@ function carga_masiva_pacientes_insertar($data, $obj){
                     $sql_diag['id_datos_paciente'] = $id_datos_paciente;
                     $sql_diag['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
                     $sql_diag['profesional'] = $Excelval['Profesional'];
-                    $sql_diag['espacialidad'] = $Excelval['Especialidad'];
+                    $sql_diag['especialidad'] = $Excelval['Especialidad'];
                     $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
                     $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
 
