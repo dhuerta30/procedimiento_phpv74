@@ -1874,7 +1874,7 @@ class HomeController
 			dp.id_datos_paciente,
 			ds.id_detalle_de_solicitud,
 			dp.rut,
-			dp.nombres,
+			CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
 			dp.telefono,
 			dp.apellido_paterno,
 			dp.apellido_materno,
@@ -1905,7 +1905,6 @@ class HomeController
 		/*$html = '
 			
 		';
-	
 		foreach ($data as $row) {
 
 			$fecha = date('d/m/Y H:i:s', strtotime($row["fecha"]));

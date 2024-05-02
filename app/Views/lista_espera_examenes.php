@@ -74,6 +74,7 @@
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/flatpickr.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/moment.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
@@ -85,7 +86,6 @@ function datatable(){
         searching: false,
         scrollX: true,
         lengthMenu: [10],
-        //paging: (data.length > 10) ? true : false,
         dom: 'Bfrtip',
         buttons: [
             {
@@ -129,14 +129,47 @@ function datatable(){
             { data: 'estado' },
             { data: 'especialidad' },
             { data: 'rut' },
-            { data: 'nombres' },
+            { data: 'paciente' },
             { data: 'telefono' },
             { data: 'edad' },
             { data: 'codigo' },
             { data: 'examen' },
-            { data: 'fecha_solicitud' },
-            { data: 'fecha' },
-            { data: 'fecha_egreso' },
+            { data: 'fecha_solicitud',
+                render: function(data, type, row, meta){
+                    var fecha = moment(data);
+
+                    if (!fecha.isValid()) {
+                        return "<div class='badge badge-danger'>Sin Fecha</div>";
+                    }
+                    // Formatear la fecha en el formato deseado (d/m/y)
+                    var fechaFormateada = fecha.format('DD/MM/Y');
+                    return fechaFormateada;
+                } 
+            },
+            { data: 'fecha',
+                render: function(data, type, row, meta){
+                    var fecha = moment(data);
+
+                    if (!fecha.isValid()) {
+                        return "<div class='badge badge-danger'>Sin Fecha</div>";
+                    }
+                    // Formatear la fecha en el formato deseado (d/m/y)
+                    var fechaFormateada = fecha.format('DD/MM/Y');
+                    return fechaFormateada;
+                } 
+            },
+            { data: 'fecha_egreso',
+                render: function(data, type, row, meta){
+                    var fecha = moment(data);
+
+                    if (!fecha.isValid()) {
+                        return "<div class='badge badge-danger'>Sin Fecha</div>";
+                    }
+                    // Formatear la fecha en el formato deseado (d/m/y)
+                    var fechaFormateada = fecha.format('DD/MM/Y');
+                    return fechaFormateada;
+                } 
+             },
             { data: 'profesional' },
             {
                 render: function(data, type, row) {
