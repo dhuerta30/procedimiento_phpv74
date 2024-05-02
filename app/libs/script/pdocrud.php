@@ -413,10 +413,12 @@ function editar_egresar_solicitud($data, $obj) {
     $empresas_en_convenio = $data["detalle_de_solicitud"]["empresas_en_convenio"];
     $adjuntar = $data["detalle_de_solicitud"]["adjuntar"];
 
-    $extension = pathinfo($adjuntar, PATHINFO_EXTENSION);
-    if($extension != "pdf"){
-        $error_msg = array("message" => "", "error" => "El Archivo Adjunto debe ser un Archivo PDF Válido", "redirectionurl" => "");
-        die(json_encode($error_msg));
+    if (!empty($adjuntar)) {
+        $extension = pathinfo($adjuntar, PATHINFO_EXTENSION);
+        if($extension != "pdf"){
+            $error_msg = array("message" => "", "error" => "El Archivo Adjunto debe ser un Archivo PDF Válido", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        }
     }
 
     $fecha_solicitud = $data['detalle_de_solicitud']['fecha_solicitud'];
