@@ -3086,7 +3086,7 @@ class HomeController
 			if (isset($run)) {
 				$html = '
 				<div class="table-responsive">
-					<table class="table table-striped tabla_reportes text-center" style="width:100%">
+					<table class="table table-striped tabla_reportes_search text-center" style="width:100%">
 						<thead class="bg-primary">
 							<tr>
 								<th>Estado</th>
