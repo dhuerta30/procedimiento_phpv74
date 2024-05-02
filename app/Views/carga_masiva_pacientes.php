@@ -11,6 +11,9 @@
                         <h5>Carga Masiva Exámenes Pacientes</h5>
                         
                         <?=$render;?>
+
+                        <br>
+                        <a class="btn btn-primary" href="<?=$_ENV["BASE_URL"]?>app/libs/script/uploads/datos_paciente.xlsx"><i class="fa fa-download"></i> Descargar Excel para Carga Masiva</a>
                     
                     </div>
                 </div>
