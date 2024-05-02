@@ -1949,7 +1949,6 @@ class HomeController
 
 			$html .= '
 				<tr style="white-space: nowrap;">
-				
 					<td>' . $row["estado"] . '</td>
 					<td>' . $especialidad . '</td>
 					<td>' . $row['rut'] . '</td>
@@ -3108,17 +3107,17 @@ class HomeController
 					<table class="table table-striped tabla_reportes text-center" style="width:100%">
 						<thead class="bg-primary">
 							<tr>
+								<th>Estado</th>
+								<th>Especialidad</th>
 								<th>Rut</th>
 								<th>Paciente</th>
-								<th>Edad</th>
 								<th>Teléfono</th>
-								<th>Fecha Solicitud</th>
-								<th>Estado</th>
-								<th>Fecha Egreso</th>
+								<th>Edad</th>
 								<th>Código</th>
 								<th>Exámen</th>
+								<th>Fecha Solicitud</th>
 								<th>Fecha Agendada</th>
-								<th>Especialidad</th>
+								<th>Fecha Egreso</th>
 								<th>Profesional</th>
 								<th>Acciones</th>
 							</tr>
@@ -3150,17 +3149,17 @@ class HomeController
 
 					$html .= '
 						<tr style="white-space: nowrap;">
+							<td>' . $row["estado"] . '</td>
+							<td>' . $especialidad . '</td>
 							<td>' . $row['rut'] . '</td>
 							<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
-							<td>' . $row["edad"] . '</td>
 							<td>' . $row["telefono"] . '</td>
-							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
-							<td>' . $row["estado"] . '</td>
-							<td>' . $fecha_egreso . '</td>
+							<td>' . $row["edad"] . '</td>
 							<td>'. $code .'</td>
 							<td>' . $row["examen"] . '</td>
+							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
 							<td>' . $data_fecha . '</td>
-							<td>' . $especialidad . '</td>
+							<td>' . $fecha_egreso . '</td>
 							<td>' . $profesional . '</td>
 							<td>
 								<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
