@@ -3533,7 +3533,7 @@ class HomeController
 			$pdomodel->where("edad", $edad, "=", "AND");
 			$pdomodel->where("direccion", $direccion, "=", "AND");
 			$pdomodel->where("sexo", $sexo, "=", "AND");
-			$pdomodel->where("sexo", $telefono);
+			$pdomodel->where("telefono", $telefono);
 			$datos_paciente_exists = $pdomodel->select("datos_paciente");
 			
 			$id = $datos_paciente_exists[0]['id_datos_paciente'];
