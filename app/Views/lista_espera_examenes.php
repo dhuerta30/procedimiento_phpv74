@@ -139,7 +139,11 @@ function datatable(){
             { data: 'paciente' },
             { data: 'telefono' },
             { data: 'edad' },
-            { data: 'codigo' },
+            { data: 'codigo',
+                render: function(data, type, row, meta){
+                    return "<div class='badge badge-info'>"+ data +"</div>";
+                }
+            },
             { data: 'examen' },
             { data: 'fecha_solicitud',
                 render: function(data, type, row, meta){
