@@ -1866,7 +1866,7 @@ class HomeController
 		}
 	}
 
-	private function mostrar_grilla_lista_espera(){
+	public function mostrar_grilla_lista_espera(){
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
 		$data = $pdomodel->executeQuery(
@@ -1902,26 +1902,8 @@ class HomeController
 			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
 		);
 
-		$html = '
-			<table class="table table-striped tabla_reportes text-center" style="width:100%">
-				<thead class="bg-primary">
-					<tr>
-						<th>Estado</th>
-						<th>Especialidad</th>
-						<th>Rut</th>
-						<th>Paciente</th>
-						<th>Teléfono</th>
-						<th>Edad</th>
-						<th>Código</th>
-						<th>Exámen</th>
-						<th>Fecha Solicitud</th>
-						<th>Fecha Agendada</th>
-						<th>Fecha Egreso</th>
-						<th>Profesional</th>
-						<th>Acciones</th>
-					</tr>
-				</thead>
-				<tbody>
+		/*$html = '
+			
 		';
 	
 		foreach ($data as $row) {
@@ -1979,7 +1961,8 @@ class HomeController
 
 		$html_data = array($html);
 		$render_crud = $crud->render("HTML", $html_data);
-		return $render_crud;
+		return $render_crud;*/
+		echo json_encode(['data' => $data]);
 	}
 
 	public function lista_espera_examenes(){
@@ -2021,14 +2004,14 @@ class HomeController
 		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
 
-		$render_crud = $this->mostrar_grilla_lista_espera();
+		//$render_crud = $this->mostrar_grilla_lista_espera();
 		
 		View::render(
 			'lista_espera_examenes',
 			[
 				'render' => $render,
-				'mask' => $mask,
-				'render_crud' => $render_crud
+				'mask' => $mask
+				//'render_crud' => $render_crud
 			]
 		);
 	}

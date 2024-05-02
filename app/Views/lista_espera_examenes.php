@@ -11,6 +11,15 @@
     .pdocrud-search {
         display: none!important;
     }
+
+    .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td {
+        white-space: nowrap;
+    }
+    
+    .btn:not(:disabled):not(.disabled) {
+        cursor: pointer;
+        margin: 3px;
+    }
 </style>
 <div class="content-wrapper">
 	<section class="content">
@@ -29,7 +38,28 @@
                 <div class="datos_search p-0"></div>
                 <div class="resultados">
                     <div class='table-responsive'>
-                        <?=$render_crud;?>
+                        <table class="table table-striped tabla_reportes text-center" style="width:100%">
+                            <thead class="bg-primary">
+                                <tr>
+                                    <th>Estado</th>
+                                    <th>Especialidad</th>
+                                    <th>Rut</th>
+                                    <th>Paciente</th>
+                                    <th>Teléfono</th>
+                                    <th>Edad</th>
+                                    <th>Código</th>
+                                    <th>Exámen</th>
+                                    <th>Fecha Solicitud</th>
+                                    <th>Fecha Agendada</th>
+                                    <th>Fecha Egreso</th>
+                                    <th>Profesional</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -55,7 +85,7 @@ function datatable(){
         searching: false,
         scrollX: true,
         lengthMenu: [10],
-        paging: ($('.tabla_reportes tbody tr').length > 10) ? true : false,
+        //paging: (data.length > 10) ? true : false,
         dom: 'Bfrtip',
         buttons: [
             {
@@ -89,7 +119,37 @@ function datatable(){
                 "next": "Siguiente",
                 "previous": "Anterior"
             }
-        }
+        },
+        ajax: {
+            url: "<?=$_ENV["BASE_URL"]?>home/mostrar_grilla_lista_espera",
+            type: "POST",
+            dataType: "json"
+        },
+        columns: [
+            { data: 'estado' },
+            { data: 'especialidad' },
+            { data: 'rut' },
+            { data: 'nombres' },
+            { data: 'telefono' },
+            { data: 'edad' },
+            { data: 'codigo' },
+            { data: 'examen' },
+            { data: 'fecha_solicitud' },
+            { data: 'fecha' },
+            { data: 'fecha_egreso' },
+            { data: 'profesional' },
+            {
+                render: function(data, type, row) {
+                    return '<td>' +
+                                '<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'+ row.id_datos_paciente +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-file-o"></i></a>' +
+                                '<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-arrow-right"></i></a>' +
+                                '<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-o"></i></a>' +
+                                '<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-pdf"></i></a>' +
+                                '<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-folder"></i></a>' +
+                            '</td>';
+                }
+            }
+        ]
     });
 }
 
