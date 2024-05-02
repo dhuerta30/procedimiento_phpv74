@@ -82,8 +82,14 @@ function eliminar_submenu($data, $obj){
     $pdomodel->where("id_submenu", $id_submenu);
     $id_menu = $pdomodel->select("submenu");
 
-    $pdomodel->where("id_menu", $id_menu[0]["id_menu"]);
-    $pdomodel->update("menu", array("submenu" => "No"));
+    $result = $pdomodel->executeQuery("SELECT COUNT(*) AS total FROM submenu WHERE id_menu = :id_menu", [":id_menu" => $id_menu[0]["id_menu"]]);
+
+    $num_submenus = $result[0]["total"];
+
+    if ($num_submenus == 0) {
+        $pdomodel->where("id_menu", $id_menu[0]["id_menu"]);
+        $pdomodel->update("menu", array("submenu" => "No"));
+    }
 
     $pdomodel->where("id_submenu", $id_submenu);
     $pdomodel->where("id_usuario", $id_usuario_session);
