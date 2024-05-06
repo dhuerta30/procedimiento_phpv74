@@ -604,7 +604,7 @@ class HomeController
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->colRename("tipo_exportacion", "Tipo Exportación");
 		$pdocrud->colRename("fecha_exportacion", "Fecha Exportación");
-		$pdocrud->tableHeading("Exportación Ingreso/Egreso");
+		$pdocrud->tableHeading("Descarga Ingreso/Egreso");
 		$pdocrud->setSettings("deleteMultipleBtn", false);
 		$pdocrud->setSettings("checkboxCol", false);
 		$pdocrud->setSettings("addbtn", false);
