@@ -118,10 +118,15 @@ function carga_masiva_pacientes_insertar($data, $obj){
 
             $sql = array();
             foreach ($records as $Excelval) {
-
+                $rut = $Excelval['Rut'];
                 $existingPacient = $pdomodel->executeQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => $Excelval['Rut']]);
                
                 if (!$existingPacient) {
+
+                    if(!App\Controllers\HomeController::validaRut($rut)){
+                        $error_msg = array("message" => "", "error" => "RUT inválido: $rut", "redirectionurl" => "");
+                        die(json_encode($error_msg));
+                    }
 
                     $fecha_nacimiento = new DateTime($Excelval['Fecha Nacimiento']);
                     $fecha_actual = new DateTime();
