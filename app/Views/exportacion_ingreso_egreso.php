@@ -100,11 +100,15 @@
             $.ajax({
                 type: "POST",
                 url: "<?=$_ENV["BASE_URL"]?>home/consultar_datos_examenes",
+                data: {
+                    val: val
+                },
                 dataType: "json",
                 beforeSend: function() {
                     $("#pdocrud-ajax-loader").show();
                 },
                 success: function(data){
+                    $("#pdocrud-ajax-loader").hide();
                     console.log(data);
                 }
             });
