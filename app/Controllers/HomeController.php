@@ -600,6 +600,27 @@ class HomeController
 		}
 	}
 
+	public function exportacion_ingreso_egreso(){
+		$pdocrud = DB::PDOCrud();
+		$pdocrud->colRename("tipo_exportacion", "Tipo Exportación");
+		$pdocrud->colRename("fecha_exportacion", "Fecha Exportación");
+		$pdocrud->tableHeading("Exportación Ingreso/Egreso");
+		$pdocrud->setSettings("deleteMultipleBtn", false);
+		$pdocrud->setSettings("checkboxCol", false);
+		$pdocrud->setSettings("addbtn", false);
+		$pdocrud->setSettings("printBtn", false);
+		$pdocrud->setSettings("pdfBtn", false);
+		$pdocrud->setSettings("csvBtn", false);
+		$pdocrud->setSettings("excelBtn", false);
+		$pdocrud->setLangData("actions", "Acción");
+		$pdocrud->setSearchCols(array("folio","tipo_exportacion", "fecha_corte", "cantidad_de_registros", "fecha_exportacion", "usuario_exporta"));
+		$pdocrud->crudRemoveCol(array("id_exportacion_ingreso_egreso"));
+		$render = $pdocrud->dbTable("exportacion_ingreso_egreso")->render();
+		View::render('exportacion_ingreso_egreso', [
+			'render' => $render
+		]);
+	}
+
 	public function profesionales(){
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->addPlugin("bootstrap-inputmask");
@@ -610,6 +631,7 @@ class HomeController
 		$pdocrud->buttonHide("submitBtnSaveBack");
 		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setSettings("printBtn", false);
+		$pdocrud->where("apellido_profesional", "y apellido no especificado", "!=");
 		$pdocrud->setSettings("pdfBtn", false);
 		$pdocrud->setSettings("csvBtn", false);
 		$pdocrud->setSettings("excelBtn", false);
@@ -618,7 +640,7 @@ class HomeController
 		$render = $pdocrud->dbTable("profesional")->render();
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut_profesional", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
 		View::render(
-			'profesional',[
+			'profesional', [
 				'render' => $render,
 				'mask' => $mask
 			]
