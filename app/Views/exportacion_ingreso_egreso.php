@@ -33,7 +33,7 @@
                         <h6 class="text-center">Exportar Ingresos Procedimientos</h6>
                         <div class="card-group">
                             <div class="card">
-                                <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Periodo</h6>
+                                <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Período</h6>
                                 <div class="card-body">
                                     <input type="date" class="form-control">
                                 </div>
@@ -52,11 +52,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-4">
                         <h6 class="text-center">Exportar Egresos Procedimientos</h6>
                         <div class="card-group">
                             <div class="card">
-                                <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Periodo</h6>
+                                <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Período</h6>
                                 <div class="card-body">
                                     <input type="date" class="form-control">
                                 </div>

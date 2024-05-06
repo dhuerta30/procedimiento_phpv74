@@ -613,6 +613,7 @@ class HomeController
 		$pdocrud->setSettings("csvBtn", false);
 		$pdocrud->setSettings("excelBtn", false);
 		$pdocrud->setLangData("actions", "Acción");
+		$pdocrud->setLangData("no_data", "No hay Datos Exportados");
 		$pdocrud->setSearchCols(array("folio","tipo_exportacion", "fecha_corte", "cantidad_de_registros", "fecha_exportacion", "usuario_exporta"));
 		$pdocrud->crudRemoveCol(array("id_exportacion_ingreso_egreso"));
 		$render = $pdocrud->dbTable("exportacion_ingreso_egreso")->render();
