@@ -2905,7 +2905,7 @@ class HomeController
 			$ano_desde = $request->post('ano_desde');
 			$ano_hasta = $request->post('ano_hasta');
 	
-			if (!empty($ano_desde) || !empty($ano_hasta)) {
+			if (isset($ano_desde) || isset($ano_hasta)) {
 				$where .= " YEAR(ds.fecha_solicitud) = '$ano_desde' OR ";
 				$where .= " YEAR(ds.fecha_solicitud) = '$ano_hasta' OR ";
 				$where .= " YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' ";
@@ -2919,12 +2919,12 @@ class HomeController
 					ds.codigo_fonasa,
 					ds.fecha_solicitud,
 					ds.procedencia,
-					GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
+					GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
 					GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
 					dp.nombres,
 					dp.apellido_paterno,
 					dp.apellido_materno,
-					GROUP_CONCAT(ds.estado) AS estado,
+					GROUP_CONCAT(DISTINCT ds.estado) AS estado,
 					dp.rut,
 					dp.fecha_y_hora_ingreso,
 					GROUP_CONCAT(ds.fecha) AS fecha
@@ -2941,57 +2941,56 @@ class HomeController
 				GROUP BY
 					dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
 				ORDER BY 
-					ds.fecha ASC;"
+					ds.fecha ASC"
 			);
 
 			//echo $pdomodel->getLastQuery();
 			//die();
 
-			$html = '
-				<table class="table table-striped tabla_reportes_search text-center" style="width:100%">
-					<thead class="bg-primary">
-						<tr>
-							<th>Código Fonasa</th>
-							<th>Procedencia</th>
-							<th>Exámen</th>
-							<th>Estado</th>
-							<th>Tipo de Exámen</th>
-							<th>Año</th>
-							<th>Mínima</th>
-							<th>Máxima</th>
-							<th>Total Exámenes</th>
-						</tr>
-					</thead>
-					<tbody>
-			';
-	
-			foreach ($data as $row) {
-				$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
-				$ano = ($row["fecha_solicitud"] != null) ? date('Y', strtotime($row["fecha_solicitud"])) : "Sin Año";
-				$html .= '
-					<tr>
-						<td>' . $row['codigo_fonasa'] . '</td>
-						<td>' . $row['procedencia'] . '</td>
-						<td>' . $row["examen"] . '</td>
-						<td>' . $row["estado"] . '</td>
-						<td>' . $row["tipo_examen"] . '</td>
-						<td>' . $ano . '</td>
-						<td>Mínima</td>
-						<td>Máxima</td>
-						<td>' . $row["total_examen"] . '</td>
-					</tr>
+			if($data){
+				$html = '
+					<table class="table table-striped tabla_reportes_search text-center" style="width:100%">
+						<thead class="bg-primary">
+							<tr>
+								<th>Código Fonasa</th>
+								<th>Procedencia</th>
+								<th>Exámen</th>
+								<th>Estado</th>
+								<th>Tipo de Exámen</th>
+								<th>Año</th>
+								<th>Mínima</th>
+								<th>Máxima</th>
+								<th>Total Exámenes</th>
+							</tr>
+						</thead>
+						<tbody>
 				';
+		
+				foreach ($data as $row) {
+					$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
+					$ano = ($row["fecha_solicitud"] != null) ? date('Y', strtotime($row["fecha_solicitud"])) : "Sin Año";
+					$html .= '
+						<tr>
+							<td>' . $row['codigo_fonasa'] . '</td>
+							<td>' . $row['procedencia'] . '</td>
+							<td>' . $row["examen"] . '</td>
+							<td>' . $row["estado"] . '</td>
+							<td>' . $row["tipo_examen"] . '</td>
+							<td>' . $ano . '</td>
+							<td>Mínima</td>
+							<td>Máxima</td>
+							<td>' . $row["total_examen"] . '</td>
+						</tr>
+					';
+				}
+		
+				$html .= '
+						</tbody>
+					</table>
+				';
+				$html_data = array($html);
+				echo $pdocrud->render("HTML", $html_data);
 			}
-	
-			$html .= '
-					</tbody>
-				</table>
-			';
-	
-			$html_data = array($html);
-			echo $pdocrud->render("HTML", $html_data);
-		} else {
-			echo $this->reportes_all();
 		}
 	}
 		
@@ -3154,8 +3153,6 @@ class HomeController
 	
 				$html_data = array($html);
 				echo $pdocrud->render("HTML", $html_data);
-			} else {
-				echo $this->mostrar_grilla_lista_espera();
 			}
 		}
 	}

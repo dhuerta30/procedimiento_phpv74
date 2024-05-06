@@ -228,6 +228,7 @@ $(document).on("click", ".btn_search", function(){
         success: function(data){
             $("#pdocrud-ajax-loader").hide();
             $(".reportes").hide();
+            $('.resultados').show();
             $('.resultados').html(data);
             $('.btn_limpiar').removeClass('d-none');
             datatable_search();
@@ -301,7 +302,8 @@ function ComboAno() {
 $(document).on("click", ".btn_limpiar", function(){
 
     $('.btn_limpiar').addClass('d-none');
-
+    $(".reportes").show();
+    $('.resultados').hide();
     $('#rut').val("");
     $('.ano_desde').select2('destroy');
     $('.ano_desde').val("");
@@ -313,7 +315,7 @@ $(document).on("click", ".btn_limpiar", function(){
     $('.ano_hasta').select2();
     $('.ano_hasta').html('<option value="0">Seleccionar Año Hasta</option>');
     ComboAno();
-    $('.btn_search').click();
+    //$('.btn_search').click();
 });
 
 $(document).on("click", ".btn_search", function(){
