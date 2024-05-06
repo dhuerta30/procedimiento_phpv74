@@ -1,7 +1,7 @@
 <?php require "layouts/header.php"; ?>
 <?php require 'layouts/sidebar.php'; ?>
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/buttons.dataTables.min.css">
 <link href="<?=$_ENV["BASE_URL"]?>css/sweetalert2.min.css" rel="stylesheet">
 <style>
     .page-title.clearfix.card-header.pdocrud-table-heading, .row.pdocrud-options-files {
@@ -36,7 +36,25 @@
                         <?=$select2?>
 
                        <div class="reportes">
-                        <?=$render_crud;?>
+                        <table class="table table-striped tabla_reportes text-center" style="width:100%">
+                            <thead class="bg-primary">
+                                <tr>
+                                    <th>Código Fonasa</th>
+                                    <th>Procedencia</th>
+                                    <th>Exámen</th>
+                                    <th>Estado</th>
+                                    <th>Tipo de Exámen</th>
+                                    <th>Año</th>
+                                    <th>Mínima</th>
+                                    <th>Máxima</th>
+                                    <th>Total Exámenes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+
                        </div>
                        
                     </div>
@@ -50,21 +68,20 @@
     <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>js/flatpickr.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/moment.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/dataTables.buttons.min.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/jszip.min.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/pdfmake.min.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/buttons.html5.min.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/buttons.print.min.js"></script>
 <script>
 function datatable(){
     $('.tabla_reportes').DataTable({
         searching: false,
         scrollX: true,
-        lengthMenu: [5],
-        paging: ($('.tabla_reportes tbody tr').length > 5) ? true : false,
-        order: [[0, 'desc']],
+        lengthMenu: [10],
         dom: 'Bfrtip',
         buttons: [
             {
@@ -98,7 +115,33 @@ function datatable(){
                 "next": "Siguiente",
                 "previous": "Anterior"
             }
-        }
+        },
+        ajax: {
+            url: "<?=$_ENV["BASE_URL"]?>home/reportes_all",
+            type: "POST",
+            dataType: "json"
+        },
+        columns: [
+            { data: 'codigo_fonasa' },
+            { data: 'procedencia' },
+            { data: 'examen' },
+            { data: 'estado' },
+            { data: 'tipo_examen' },
+            { data: 'fecha_solicitud', 
+                render: function(data, type, row, meta){
+                    var fecha = moment(data);
+
+                    if (!fecha.isValid()) {
+                        return "<div class='badge badge-danger'>Sin Año</div>";
+                    }
+                    var fechaFormateada = fecha.format('Y');
+                    return fechaFormateada;
+                }
+             },
+            { data: 'cantidad_minima' },
+            { data: 'cantidad_maxima' },
+            { data: 'total_examen' }
+        ]
     });
 }
 

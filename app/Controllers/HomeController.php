@@ -623,7 +623,11 @@ class HomeController
 	}
 
 	public function consultar_datos_examenes(){
-		
+		$request = new Request();
+
+		 if ($request->getMethod() === 'POST') {
+			$val = $request->post('val');
+		 }
 	}
 
 	public function profesionales(){
@@ -2427,7 +2431,7 @@ class HomeController
 		}
 	}
 
-	private function reportes_all(){
+	public function reportes_all(){
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
 		$data = $pdomodel->executeQuery(
@@ -2488,23 +2492,8 @@ class HomeController
 		//echo $pdomodel->getLastQuery();
 		//die();
 
-		$html = '
-			<div class="table-responsive">
-			<table class="table table-striped tabla_reportes text-center" style="width:100%">
-				<thead class="bg-primary">
-					<tr>
-						<th>Código Fonasa</th>
-						<th>Procedencia</th>
-						<th>Exámen</th>
-						<th>Estado</th>
-						<th>Tipo de Exámen</th>
-						<th>Año</th>
-						<th>Minima</th>
-						<th>Máxima</th>
-						<th>Total Exámenes</th>
-					</tr>
-				</thead>
-				<tbody>
+		/*$html = '
+			
 		';
 	
 		foreach ($data as $row) {
@@ -2539,12 +2528,11 @@ class HomeController
 	
 		$html_data = array($html);
 	
-		$render_crud = $crud->render("HTML", $html_data);
-		return $render_crud;
+		$render_crud = $crud->render("HTML", $html_data);*/
+		echo json_encode(['data' => $data]);
 	}
 
 	public function reportes(){
-
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->addPlugin("select2");
 		$pdocrud->addPlugin("bootstrap-inputmask");
@@ -2586,14 +2574,14 @@ class HomeController
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
 		$select2 = $pdocrud->loadPluginJsCode("select2",".ano_desde, .ano_hasta");
 
-		$render_crud = $this->reportes_all();
+		//$render_crud = $this->reportes_all();
 
 		View::render(
 			"reportes",[
 				'render' => $render,
 				'mask' => $mask,
-				'select2' => $select2,
-				'render_crud' => $render_crud
+				'select2' => $select2
+				//'render_crud' => $render_crud
 			]
 		);
 	}
@@ -3107,9 +3095,6 @@ class HomeController
 				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
 			);
 
-			//echo $pdomodel->getLastQuery();
-			//die();
-
 			if (isset($run)) {
 				$html = '
 				<div class="table-responsive">
@@ -3436,7 +3421,7 @@ class HomeController
 				return;
 			} else if(empty($telefono)){
 				$mensaje = 'El campo Telefono es Obligatorio';
-				echo json_encode(['error' => $telefono]);
+				echo json_encode(['error' => $mensaje]);
 				return;
 			} 
 
@@ -3448,7 +3433,7 @@ class HomeController
 			$pdomodel->where("edad", $edad, "=", "AND");
 			$pdomodel->where("direccion", $direccion, "=", "AND");
 			$pdomodel->where("sexo", $sexo, "=", "AND");
-			$pdomodel->where("sexo", $telefono);
+			$pdomodel->where("telefono", $telefono);
 			$datos_paciente_exists = $pdomodel->select("datos_paciente");
 
 			if (!empty($datos_paciente_exists)) {
