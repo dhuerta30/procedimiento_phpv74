@@ -622,6 +622,10 @@ class HomeController
 		]);
 	}
 
+	public function consultar_datos_examenes(){
+		
+	}
+
 	public function profesionales(){
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->addPlugin("bootstrap-inputmask");

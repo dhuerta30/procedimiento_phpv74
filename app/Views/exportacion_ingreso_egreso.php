@@ -1,6 +1,7 @@
 
 <?php require "layouts/header.php"; ?>
 <?php require "layouts/sidebar.php"; ?>
+<link href="<?=$_ENV["BASE_URL"]?>css/sweetalert2.min.css" rel="stylesheet">
 <style>
     .h-custom {
         height: 118px;
@@ -35,7 +36,7 @@
                             <div class="card">
                                 <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Período</h6>
                                 <div class="card-body">
-                                    <input type="date" class="form-control">
+                                    <input type="date" class="form-control periodo_ingreso">
                                 </div>
                             </div>
                             <div class="card">
@@ -47,7 +48,7 @@
                             <div class="card">
                                 <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Acción</h6>
                                 <div class="card-body text-center">
-                                    <button class="btn btn-info btn-sm previsualizar_ingreso">Previsualizar Ingreso</button>
+                                    <button class="btn btn-info btn-sm previsualizar_ingreso"><i class="fa fa-eye"></i> Previsualizar Ingreso</button>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +59,7 @@
                             <div class="card">
                                 <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Período</h6>
                                 <div class="card-body">
-                                    <input type="date" class="form-control">
+                                    <input type="date" class="form-control periodo_egreso">
                                 </div>
                             </div>
                             <div class="card">
@@ -70,7 +71,7 @@
                             <div class="card">
                                 <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Acción</h6>
                                 <div class="card-body text-center">
-                                    <button class="btn btn-info btn-sm previsualizar_egreso">Previsualizar Egreso</button>
+                                    <button class="btn btn-info btn-sm previsualizar_egreso"><i class="fa fa-eye"></i> Previsualizar Egreso</button>
                                 </div>
                             </div>
                         </div>
@@ -90,4 +91,32 @@
 <div id="pdocrud-ajax-loader">
     <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
+<script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
+<script>
+    $(document).on("click", ".previsualizar_ingreso", function(){
+        let val = $('.periodo_ingreso').val();
+        
+        if(val != ""){
+            $.ajax({
+                type: "POST",
+                url: "<?=$_ENV["BASE_URL"]?>home/consultar_datos_examenes",
+                dataType: "json",
+                beforeSend: function() {
+                    $("#pdocrud-ajax-loader").show();
+                },
+                success: function(data){
+                    console.log(data);
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Lo siento!',
+                text: 'Ingrese un Período para realizar la exportación',
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                allowOutsideClick: false
+            });
+        }
+    });
+</script>
 <?php require "layouts/footer.php"; ?>
