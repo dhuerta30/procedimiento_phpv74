@@ -2895,70 +2895,60 @@ class HomeController
 	
 
 	public function buscar_por_ano() {
-		
 		$request = new Request();
-
-   		if ($request->getMethod() === 'POST') {
 	
+		if ($request->getMethod() === 'POST') {
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
-		
+	
 			$where = "";
 			$ano_desde = $request->post('ano_desde');
 			$ano_hasta = $request->post('ano_hasta');
-			
+	
 			if (!empty($ano_desde) || !empty($ano_hasta)) {
-				$where .= "(YEAR(ds.fecha_solicitud) = '$ano_desde' OR ";
-				$where .= "YEAR(ds.fecha_solicitud) = '$ano_hasta' OR ";
-				$where .= "YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' )";
-			
-				$data = $pdomodel->executeQuery(
+				$where .= " YEAR(ds.fecha_solicitud) = '$ano_desde' OR ";
+				$where .= " YEAR(ds.fecha_solicitud) = '$ano_hasta' OR ";
+				$where .= " YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' ";
+			}
+	
+			$data = $pdomodel->executeQuery(
 				"SELECT 
-				dp.id_datos_paciente,
-				COUNT(ds.examen) AS total_examen,
-				GROUP_CONCAT(DISTINCT ds.examen) AS examen,
-				ds.codigo_fonasa,
-				ds.fecha_solicitud,
-				ds.procedencia,
-				GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
-				GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
-				dp.nombres,
-				dp.apellido_paterno,
-				dp.apellido_materno,
-				GROUP_CONCAT(ds.estado) AS estado,
-				dp.rut,
-				dp.fecha_y_hora_ingreso,
-				GROUP_CONCAT(ds.fecha) AS fecha,
-				(SELECT COUNT(*) 
-				 FROM detalle_de_solicitud AS ds2 
-				 WHERE ds2.id_datos_paciente = dp.id_datos_paciente 
-				 GROUP BY ds2.id_datos_paciente
-				 ORDER BY COUNT(*) ASC
-				 LIMIT 1) AS cantidad_minima,
-				(SELECT COUNT(*) 
-				 FROM detalle_de_solicitud AS ds3 
-				 WHERE ds3.id_datos_paciente = dp.id_datos_paciente 
-				 GROUP BY ds3.id_datos_paciente
-				 ORDER BY COUNT(*) DESC
-				 LIMIT 1) AS cantidad_maxima
-			FROM 
-				datos_paciente AS dp
-			INNER JOIN 
-				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-			INNER JOIN 
-				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-			WHERE 
-				". $where ." AND (ds.procedencia = 'Ambulatorio') AND ds.estado != 'Egresado'   
-			GROUP BY
-				dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
-			ORDER BY 
-				ds.fecha ASC;");
+					dp.id_datos_paciente,
+					COUNT(ds.examen) AS total_examen,
+					GROUP_CONCAT(DISTINCT ds.examen) AS examen,
+					ds.codigo_fonasa,
+					ds.fecha_solicitud,
+					ds.procedencia,
+					GROUP_CONCAT(ds.tipo_examen) AS tipo_examen,
+					GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
+					dp.nombres,
+					dp.apellido_paterno,
+					dp.apellido_materno,
+					GROUP_CONCAT(ds.estado) AS estado,
+					dp.rut,
+					dp.fecha_y_hora_ingreso,
+					GROUP_CONCAT(ds.fecha) AS fecha
+				FROM 
+					datos_paciente AS dp
+				INNER JOIN 
+					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+				WHERE 
+					ds.procedencia = 'Ambulatorio' AND 
+					ds.estado != 'Egresado' AND
+					".$where."
+				GROUP BY
+					dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
+				ORDER BY 
+					ds.fecha ASC;"
+			);
 
-				//echo $pdomodel->getLastQuery();
-				//die();
+			//echo $pdomodel->getLastQuery();
+			//die();
 
-				$html = '
-				<table class="table table-striped tabla_reportes text-center" style="width:100%">
+			$html = '
+				<table class="table table-striped tabla_reportes_search text-center" style="width:100%">
 					<thead class="bg-primary">
 						<tr>
 							<th>Código Fonasa</th>
@@ -2973,17 +2963,11 @@ class HomeController
 						</tr>
 					</thead>
 					<tbody>
-				';
-
-				foreach ($data as $row) {
+			';
+	
+			foreach ($data as $row) {
 				$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
-				$ano = date('Y', strtotime($row["fecha_solicitud"]));
-				$year = "";
-				if($ano != "1970"){
-					$year = $ano;
-				} else {
-					$year = "Sin Año";
-				}
+				$ano = ($row["fecha_solicitud"] != null) ? date('Y', strtotime($row["fecha_solicitud"])) : "Sin Año";
 				$html .= '
 					<tr>
 						<td>' . $row['codigo_fonasa'] . '</td>
@@ -2991,30 +2975,26 @@ class HomeController
 						<td>' . $row["examen"] . '</td>
 						<td>' . $row["estado"] . '</td>
 						<td>' . $row["tipo_examen"] . '</td>
-						<td>' . $year . '</td>
+						<td>' . $ano . '</td>
 						<td>Mínima</td>
 						<td>Máxima</td>
 						<td>' . $row["total_examen"] . '</td>
 					</tr>
 				';
-				}
-
-				$html .= '
+			}
+	
+			$html .= '
 					</tbody>
 				</table>
-				';
-
-				$html_data = array($html);
-
-				$render = $pdocrud->render("HTML", $html_data);
-				echo json_encode(['render' => $render]);
-			} else {
-				$grilla_reportes = $this->reportes_all();
-				echo json_encode(['error' => 'No se encontraron resultados', 'default' => $grilla_reportes]);
-            	return;
-			}
+			';
+	
+			$html_data = array($html);
+			echo $pdocrud->render("HTML", $html_data);
+		} else {
+			echo $this->reportes_all();
 		}
-	}	
+	}
+		
 
 	public function buscar_examenes(){
 		

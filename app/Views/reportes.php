@@ -56,6 +56,14 @@
                         </table>
 
                        </div>
+
+
+                       <div class="resultados">
+                            <div class='table-responsive'>
+
+                            </div>
+                        </div>
+
                        
                     </div>
                 </div>
@@ -123,7 +131,15 @@ function datatable(){
         },
         columns: [
             { data: 'codigo_fonasa' },
-            { data: 'procedencia' },
+            { data: 'procedencia',
+                render: function(data, type, row, meta){
+                    if(!data){
+                        return "<div class='badge badge-danger'>Sin Procedencia</div>";
+                    } else {
+                        return data;
+                    }
+                }
+             },
             { data: 'examen' },
             { data: 'estado' },
             { data: 'tipo_examen' },
@@ -145,6 +161,50 @@ function datatable(){
     });
 }
 
+
+function datatable_search(){
+    $('.tabla_reportes_search').DataTable({
+        searching: false,
+        scrollX: true,
+        lengthMenu: [10],
+        paging: ($('.tabla_reportes_search tbody tr').length > 10) ? true : false,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excel',
+                text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+                className: 'btn btn-light',
+                filename: function(){
+                    return 'reportes';
+                },
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] // Define las columnas a exportar
+                }
+            }
+        ],
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Entradas",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        }
+    });
+}
+
 $(document).ready(function(){
     datatable();
     ComboAno();
@@ -157,7 +217,7 @@ $(document).on("click", ".btn_search", function(){
     $.ajax({
         type: "POST",
         url: "<?=$_ENV["BASE_URL"]?>home/buscar_por_ano",
-        dataType: "json",
+        dataType: "html",
         data: {
             ano_desde: ano_desde,
             ano_hasta: ano_hasta
@@ -166,17 +226,11 @@ $(document).on("click", ".btn_search", function(){
             $("#pdocrud-ajax-loader").show();
         },
         success: function(data){
-            if(data['render']){
-                $("#pdocrud-ajax-loader").hide();
-                $('.reportes').html("<div class='table-responsive'>"+ data['render'] +"</div>");
-                datatable();
-                $('.btn_limpiar').removeClass('d-none');
-            } else {
-                $("#pdocrud-ajax-loader").hide();
-                $('.reportes').html("<div class='table-responsive'>"+ data['default'] +"</div>");
-                datatable();
-                $('.btn_limpiar').addClass('d-none');
-            }
+            $("#pdocrud-ajax-loader").hide();
+            $(".reportes").hide();
+            $('.resultados').html(data);
+            $('.btn_limpiar').removeClass('d-none');
+            datatable_search();
         }
     });
 });
@@ -247,7 +301,7 @@ function ComboAno() {
 $(document).on("click", ".btn_limpiar", function(){
 
     $('.btn_limpiar').addClass('d-none');
-    
+
     $('#rut').val("");
     $('.ano_desde').select2('destroy');
     $('.ano_desde').val("");
