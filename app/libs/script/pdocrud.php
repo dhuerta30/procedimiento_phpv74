@@ -104,6 +104,8 @@ function carga_masiva_pacientes_insertar($data, $obj){
 
     $pdomodel = $obj->getPDOModelObj();
 
+    $rutInvalidos = [];
+
     if (empty($archivo)) { 
         $error_msg = array("message" => "", "error" => "No se ha subido ningún Archivo", "redirectionurl" => "");
         die(json_encode($error_msg));
@@ -119,78 +121,83 @@ function carga_masiva_pacientes_insertar($data, $obj){
             $sql = array();
             foreach ($records as $Excelval) {
                 $rut = $Excelval['Rut'];
-                $existingPacient = $pdomodel->executeQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => $Excelval['Rut']]);
-               
-                if (!$existingPacient) {
 
-                    if(!App\Controllers\HomeController::validaRut($rut)){
-                        $error_msg = array("message" => "", "error" => "RUT inválido: $rut", "redirectionurl" => "");
-                        die(json_encode($error_msg));
-                    }
-
-                    $fecha_nacimiento = new DateTime($Excelval['Fecha Nacimiento']);
-                    $fecha_actual = new DateTime();
-                    $diferencia = $fecha_actual->diff($fecha_nacimiento);
-                    $edad = $diferencia->y; // Obtiene solo los años
-
-                    $sql['rut'] = $Excelval['Rut'];
-                    $sql['nombres'] = $Excelval['Nombre'];
-                    $sql['telefono'] = $Excelval['Teléfono'];
-                    $sql['apellido_paterno'] = $Excelval['Apellido Paterno'];
-                    $sql['apellido_materno'] = $Excelval['Apellido Materno'];
-                    $sql['edad'] = $edad;
-                    $sql['fecha_nacimiento'] = $Excelval['Fecha Nacimiento'];
-                    $sql['direccion'] = $Excelval['Dirección'];
-                    $sql['sexo'] = $Excelval['Sexo'];
-                    if (!empty($Excelval['Fecha y hora Ingreso'])) {
-                        $sql_detalle['fecha_y_hora_ingreso'] = date("Y-m-d", strtotime($Excelval['Fecha y hora Ingreso']));
-                    }
-                    $pdomodel->insertBatch("datos_paciente", array($sql));
-
-                    $id_datos_paciente = $pdomodel->lastInsertId;
+                if(!App\Controllers\HomeController::validaRut($rut)){
+                    // Almacenar el RUT inválido
+                    $rutInvalidos[] = $rut;
                 } else {
-                    $id_datos_paciente = $existingPacient[0]["id_datos_paciente"];
+                    $existingPacient = $pdomodel->executeQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => $Excelval['Rut']]);
+                
+                    if (!$existingPacient) {
+                        $fecha_nacimiento = new DateTime($Excelval['Fecha Nacimiento']);
+                        $fecha_actual = new DateTime();
+                        $diferencia = $fecha_actual->diff($fecha_nacimiento);
+                        $edad = $diferencia->y; // Obtiene solo los años
 
-                    date_default_timezone_set('America/Santiago');
-                    $fecha_actual = date('Y-m-d');
-                    $usuario = $_SESSION['usuario'][0]["usuario"];
+                        $sql['rut'] = $Excelval['Rut'];
+                        $sql['nombres'] = $Excelval['Nombre'];
+                        $sql['telefono'] = $Excelval['Teléfono'];
+                        $sql['apellido_paterno'] = $Excelval['Apellido Paterno'];
+                        $sql['apellido_materno'] = $Excelval['Apellido Materno'];
+                        $sql['edad'] = $edad;
+                        $sql['fecha_nacimiento'] = $Excelval['Fecha Nacimiento'];
+                        $sql['direccion'] = $Excelval['Dirección'];
+                        $sql['sexo'] = $Excelval['Sexo'];
+                        if (!empty($Excelval['Fecha y hora Ingreso'])) {
+                            $sql_detalle['fecha_y_hora_ingreso'] = date("Y-m-d", strtotime($Excelval['Fecha y hora Ingreso']));
+                        }
+                        $pdomodel->insertBatch("datos_paciente", array($sql));
 
-                    $sql_diag = array();
-                    $sql_diag['id_datos_paciente'] = $id_datos_paciente;
-                    if (!empty($Excelval['Fecha Solicitud'])) {
-                        $sql_diag['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
-                    }
-                    $sql_diag['profesional'] = $Excelval['Profesional'];
-                    $sql_diag['especialidad'] = $Excelval['Especialidad'];
-                    $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
-                    $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
+                        $id_datos_paciente = $pdomodel->lastInsertId;
+                    } else {
+                        $id_datos_paciente = $existingPacient[0]["id_datos_paciente"];
 
-                    $sql_detalle = array();
-                    $sql_detalle['id_datos_paciente'] = $id_datos_paciente;
-                    $sql_detalle['codigo_fonasa'] = $Excelval["Codigo Fonasa"];
-                    $sql_detalle['tipo_solicitud'] = $Excelval["Tipo Solicitud"];
-                    $sql_detalle['tipo_examen'] = $Excelval["Tipo Exámen"];
-                    $sql_detalle['examen'] = $Excelval["Exámen"];
-                    $sql_detalle['plano'] = $Excelval['Plano'];
-                    $sql_detalle['extremidad'] = $Excelval['Extremidad'];
-                    $sql_detalle['observacion'] = $Excelval['Observación'];
-                    $sql_detalle['contraste'] = $Excelval['Contraste'];
-                    $sql_detalle['creatinina'] = $Excelval['Cratinina'];
-                    if (!empty($Excelval['Fecha Solicitud'])) {
-                        $sql_detalle['fecha_solicitud'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                        date_default_timezone_set('America/Santiago');
+                        $fecha_actual = date('Y-m-d');
+                        $usuario = $_SESSION['usuario'][0]["usuario"];
+
+                        $sql_diag = array();
+                        $sql_diag['id_datos_paciente'] = $id_datos_paciente;
+                        if (!empty($Excelval['Fecha Solicitud'])) {
+                            $sql_diag['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                        }
+                        $sql_diag['profesional'] = $Excelval['Profesional'];
+                        $sql_diag['especialidad'] = $Excelval['Especialidad'];
+                        $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
+                        $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
+
+                        $sql_detalle = array();
+                        $sql_detalle['id_datos_paciente'] = $id_datos_paciente;
+                        $sql_detalle['codigo_fonasa'] = $Excelval["Codigo Fonasa"];
+                        $sql_detalle['tipo_solicitud'] = $Excelval["Tipo Solicitud"];
+                        $sql_detalle['tipo_examen'] = $Excelval["Tipo Exámen"];
+                        $sql_detalle['examen'] = $Excelval["Exámen"];
+                        $sql_detalle['plano'] = $Excelval['Plano'];
+                        $sql_detalle['extremidad'] = $Excelval['Extremidad'];
+                        $sql_detalle['observacion'] = $Excelval['Observación'];
+                        $sql_detalle['contraste'] = $Excelval['Contraste'];
+                        $sql_detalle['creatinina'] = $Excelval['Cratinina'];
+                        if (!empty($Excelval['Fecha Solicitud'])) {
+                            $sql_detalle['fecha_solicitud'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                        }
+                        if (!empty($Excelval['Fecha Agendada']) || !empty($Excelval['Hora'])) {
+                            $sql_detalle['fecha'] = date("Y-m-d H:i:s", strtotime($Excelval['Fecha Agendada'] . " " . $Excelval['Hora']));
+                        }
+                        $sql_detalle['estado'] = $Excelval['Estado'];
+                        if (!empty($Excelval['Fecha Egreso'])) {
+                            $sql_detalle['fecha_egreso'] = date("Y-m-d", strtotime($Excelval['Fecha Egreso']));
+                        }
+                        $sql_detalle['motivo_egreso'] = $Excelval['Motivo Egreso'];
+                        $sql_detalle['usuario'] = $usuario;
+                        $sql_detalle['fecha_ingreso'] = $fecha_actual;
+                        $pdomodel->insertBatch("detalle_de_solicitud", array($sql_detalle));
                     }
-                    if (!empty($Excelval['Fecha Agendada']) || !empty($Excelval['Hora'])) {
-                        $sql_detalle['fecha'] = date("Y-m-d H:i:s", strtotime($Excelval['Fecha Agendada'] . " " . $Excelval['Hora']));
-                    }
-                    $sql_detalle['estado'] = $Excelval['Estado'];
-                    if (!empty($Excelval['Fecha Egreso'])) {
-                        $sql_detalle['fecha_egreso'] = date("Y-m-d", strtotime($Excelval['Fecha Egreso']));
-                    }
-                    $sql_detalle['motivo_egreso'] = $Excelval['Motivo Egreso'];
-                    $sql_detalle['usuario'] = $usuario;
-                    $sql_detalle['fecha_ingreso'] = $fecha_actual;
-                    $pdomodel->insertBatch("detalle_de_solicitud", array($sql_detalle));
                 }
+            }
+
+            if (!empty($rutInvalidos)) {
+                $error_msg = array("message" => "", "error" => "RUTs inválidos: " . implode(", ", $rutInvalidos), "redirectionurl" => "");
+                die(json_encode($error_msg));
             }
             $data["carga_masiva_pacientes"]["archivo"] = basename($data["carga_masiva_pacientes"]["archivo"]);
         }
