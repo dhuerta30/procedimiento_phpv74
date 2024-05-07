@@ -139,5 +139,53 @@
             });
         }
     });
+
+
+    $(document).on("click", ".previsualizar_egreso", function(){
+        let val = $('.periodo_egreso').val();
+        
+        if(val != ""){
+            $.ajax({
+                type: "POST",
+                url: "<?=$_ENV["BASE_URL"]?>home/consultar_datos_examenes_egresados",
+                data: {
+                    val: val
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $("#pdocrud-ajax-loader").show();
+                },
+                success: function(data){
+                    $("#pdocrud-ajax-loader").hide();
+                    if(data['mensaje']){
+                        $("#pdocrud_search_btn").click();
+                        Swal.fire({
+                            title: 'Genial!',
+                            text: data["mensaje"],
+                            icon: 'success',
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Lo siento!',
+                            text: data["error"],
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false
+                        });
+                    }
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Lo siento!',
+                text: 'Ingrese un Período para realizar la exportación',
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                allowOutsideClick: false
+            });
+        }
+    });
 </script>
 <?php require "layouts/footer.php"; ?>

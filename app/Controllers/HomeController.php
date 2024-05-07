@@ -689,7 +689,72 @@ class HomeController
 				));
 				echo json_encode(['mensaje' => 'Datos Exportados con éxito']);
 			} else {
-				echo json_encode(['error' => 'Ha ocurrido un error al exportar los Datos']);
+				echo json_encode(['error' => 'No se econtraron Datos para exportar']);
+			}
+		}
+	}	
+
+	public function consultar_datos_examenes_egresados(){
+		$request = new Request();
+	
+		if ($request->getMethod() === 'POST') {
+			$hasta = $request->post('val');
+	
+			$crud = DB::PDOCrud();
+			$pdomodel = $crud->getPDOModelObj();
+			$data = $pdomodel->executeQuery("
+				SELECT 
+					dp.id_datos_paciente,
+					ds.id_detalle_de_solicitud,
+					dp.rut,
+					CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+					dp.telefono,
+					dp.apellido_paterno,
+					dp.apellido_materno,
+					dp.edad,
+					ds.fecha_egreso,
+					ds.motivo_egreso,
+					fecha_solicitud as fecha_solicitud,
+					ds.estado AS estado,
+					codigo_fonasa AS codigo,
+					examen,
+					ds.fecha as fecha,
+					especialidad,
+					CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+				FROM 
+					datos_paciente AS dp
+				INNER JOIN
+					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					profesional AS pro ON pro.id_profesional = dg_p.profesional
+				WHERE 
+					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Egresado'
+				GROUP BY 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen", 
+				[':hasta' => $hasta]
+			);
+	
+			// Contar la cantidad de registros
+			date_default_timezone_set('America/Santiago');
+			$total_registros = count($data);
+			$sesionUsuario = $_SESSION["usuario"][0]["usuario"];
+			$fecha_exportacion = date('Y-m-d');
+
+			if($data){
+				$pdomodel->insert("exportacion_ingreso_egreso", array(
+					"folio" => "",
+					"tipo_exportacion" => "Ingreso",
+					"fecha_corte" => $hasta,
+					"cantidad_de_registros" => $total_registros,
+					"fecha_exportacion" => $fecha_exportacion,
+					"usuario_exporta" => $sesionUsuario
+				));
+				echo json_encode(['mensaje' => 'Datos Exportados con éxito']);
+			} else {
+				echo json_encode(['error' => 'No se econtraron Datos para exportar']);
 			}
 		}
 	}	
