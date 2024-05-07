@@ -236,7 +236,7 @@ $(document).ready(function(){
                  $.pdocrud_actions.actions(this, data, instance, "");
             });
 
-            $(document).on("focus", ".pdocrud-date", function (evt) {
+            /*$(document).on("focus", ".pdocrud-date", function (evt) {
                 $(this).datepicker({
                     dateFormat: pdocrud_js.date.date_format,
                     changeMonth: pdocrud_js.date.change_month,
@@ -246,7 +246,7 @@ $(document).ready(function(){
                     maxDate: pdocrud_js.date.max_date,
                     minDate: pdocrud_js.date.min_date
                 });
-            });
+            });*/
             
             if ($(".pdocrud_tabs").length > 0) {
                 $(".pdocrud_tabs").tabs();
