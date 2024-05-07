@@ -427,8 +427,8 @@ function editar_egresar_solicitud($data, $obj) {
     $fecha_egreso = $data['detalle_de_solicitud']['fecha_egreso'];
     $motivo_egreso = $data['detalle_de_solicitud']['motivo_egreso'];
     $observacion = $data['detalle_de_solicitud']['observacion'];
-    $compra_servicio = $data["detalle_de_solicitud"]["compra_servicio"];
-    $empresas_en_convenio = $data["detalle_de_solicitud"]["empresas_en_convenio"];
+    $compra_servicio = isset($data["detalle_de_solicitud"]["compra_servicio"]) ? $data["detalle_de_solicitud"]["compra_servicio"] : "2";
+    $empresas_en_convenio = isset($data["detalle_de_solicitud"]["empresas_en_convenio"]) ? $data["detalle_de_solicitud"]["empresas_en_convenio"] : null;
     $adjuntar = $data["detalle_de_solicitud"]["adjuntar"];
 
     if (!empty($adjuntar)) {
@@ -448,7 +448,7 @@ function editar_egresar_solicitud($data, $obj) {
         "motivo_egreso" => $motivo_egreso,
         "observacion" => $observacion,
         "compra_servicio" => $compra_servicio,
-        "empresas_en_convenio" => isset($empresas_en_convenio) ? $empresas_en_convenio : null,
+        "empresas_en_convenio" => $empresas_en_convenio,
         "adjuntar" => basename($adjuntar),
         "estado" => "Egresado"
     ));
