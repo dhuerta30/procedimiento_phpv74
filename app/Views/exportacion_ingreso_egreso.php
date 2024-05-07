@@ -214,9 +214,10 @@
     });
 
     $(document).on("click", ".descargar_excel", function(){
-        let folio = $(this).data("folio");
+        let folio = $(this).data("id");
         let fechacorte = $(this).data("fechacorte");
         let estado = $(this).data("estado");
+        window.open("<?=$_ENV["BASE_URL"]?>home/descargar_excel/folio/" + folio + "/fechacorte/" + fechacorte + "/estado/" + estado);
     });
 </script>
 <?php require "layouts/footer.php"; ?>

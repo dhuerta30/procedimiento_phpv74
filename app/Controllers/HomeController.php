@@ -634,7 +634,7 @@ class HomeController
 		$request = new Request();
 	
 		if ($request->getMethod() === 'POST') {
-			$hasta = $request->post('val');
+			$hasta = date("Y-m-d", strtotime($request->post('val')));
 	
 			$crud = DB::PDOCrud();
 			$pdomodel = $crud->getPDOModelObj();
@@ -704,11 +704,60 @@ class HomeController
 		}
 	}	
 
+	public function descargar_excel(){
+		$request = new Request();
+		$folio = $request->get('folio');
+		$fechacorte = $request->get('fechacorte');
+		$estado = $request->get('estado');
+
+		$pdocrud = DB::PDOCrud();
+		$pdomodel = $pdocrud->getPDOModelObj();
+		$data = $pdomodel->executeQuery("
+				SELECT 
+				dp.id_datos_paciente,
+				ds.id_detalle_de_solicitud,
+				dp.rut,
+				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+				dp.telefono,
+				dp.apellido_paterno,
+				dp.apellido_materno,
+				dp.edad,
+				ds.folio,
+				ds.fecha_egreso,
+				ds.motivo_egreso,
+				fecha_solicitud as fecha_solicitud,
+				ds.estado AS estado,
+				codigo_fonasa AS codigo,
+				examen,
+				ds.fecha as fecha,
+				especialidad,
+				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+			FROM 
+				datos_paciente AS dp
+			INNER JOIN
+				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				profesional AS pro ON pro.id_profesional = dg_p.profesional
+			WHERE 
+				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+				AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(':fechacorte', '%Y-%m') AND ds.estado = ':estado'
+			GROUP BY 
+				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
+			[':fechacorte' => $fechacorte, ':estado' => $estado]
+		);
+
+		print_r($data);
+		//echo $pdomodel->getLastQuery();
+		die();
+	}
+
 	public function consultar_datos_examenes_egresados(){
 		$request = new Request();
 	
 		if ($request->getMethod() === 'POST') {
-			$hasta = $request->post('val');
+			$hasta = date("Y-m-d", strtotime($request->post('val')));
 	
 			$crud = DB::PDOCrud();
 			$pdomodel = $crud->getPDOModelObj();
