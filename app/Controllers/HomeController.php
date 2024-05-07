@@ -622,7 +622,6 @@ class HomeController
 		$pdocrud->tableColFormatting("fecha_exportacion", "date",array("format" =>"d/m/Y"));
 		$pdocrud->setLangData("no_data", "No hay Datos Exportados");
 		$pdocrud->setSearchCols(array("folio","tipo_exportacion", "fecha_corte", "cantidad_de_registros", "fecha_exportacion", "usuario_exporta"));
-		$pdocrud->crudRemoveCol(array("id_exportacion_ingreso_egreso"));
 		$render = $pdocrud->dbTable("exportacion_ingreso_egreso")->render();
 		View::render('exportacion_ingreso_egreso', [
 			'render' => $render
@@ -680,7 +679,6 @@ class HomeController
 
 			if($data){
 				$pdomodel->insert("exportacion_ingreso_egreso", array(
-					"folio" => "",
 					"tipo_exportacion" => "Ingreso",
 					"fecha_corte" => $hasta,
 					"cantidad_de_registros" => $total_registros,
@@ -745,7 +743,6 @@ class HomeController
 
 			if($data){
 				$pdomodel->insert("exportacion_ingreso_egreso", array(
-					"folio" => "",
 					"tipo_exportacion" => "Ingreso",
 					"fecha_corte" => $hasta,
 					"cantidad_de_registros" => $total_registros,
