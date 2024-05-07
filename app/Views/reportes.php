@@ -214,26 +214,37 @@ $(document).on("click", ".btn_search", function(){
     let ano_desde = $('#ano_desde').val();
     let ano_hasta = $('#ano_hasta').val();
 
-    $.ajax({
-        type: "POST",
-        url: "<?=$_ENV["BASE_URL"]?>home/buscar_por_ano",
-        dataType: "html",
-        data: {
-            ano_desde: ano_desde,
-            ano_hasta: ano_hasta
-        },
-        beforeSend: function() {
-            $("#pdocrud-ajax-loader").show();
-        },
-        success: function(data){
-            $("#pdocrud-ajax-loader").hide();
-            $(".reportes").hide();
-            $('.resultados').show();
-            $('.resultados').html(data);
-            $('.btn_limpiar').removeClass('d-none');
-            datatable_search();
-        }
-    });
+    let desde = $("#ano_desde").val();
+    let hasta = $("#ano_hasta").val();
+
+    if(desde == 0 && hasta == 0){
+       $("#pdocrud-ajax-loader").show();
+       setTimeout(() => {
+        $("#pdocrud-ajax-loader").hide();
+        $('.reportes').show();
+       }, 1000);
+    } else {
+        $.ajax({
+            type: "POST",
+            url: "<?=$_ENV["BASE_URL"]?>home/buscar_por_ano",
+            dataType: "html",
+            data: {
+                ano_desde: ano_desde,
+                ano_hasta: ano_hasta
+            },
+            beforeSend: function() {
+                $("#pdocrud-ajax-loader").show();
+            },
+            success: function(data){
+                $("#pdocrud-ajax-loader").hide();
+                $(".reportes").hide();
+                $('.resultados').show();
+                $('.resultados').html(data);
+                $('.btn_limpiar').removeClass('d-none');
+                datatable_search();
+            }
+        });
+    }
 });
 
 $("#fecha").flatpickr({
