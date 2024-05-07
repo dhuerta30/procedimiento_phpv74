@@ -615,6 +615,7 @@ class HomeController
 		$pdocrud->setSettings("excelBtn", false);
 		$pdocrud->setSettings("template", "exportacion_ingreso_egreso");
 		$pdocrud->setSettings("viewbtn", false);
+		$pdocrud->setSettings("encryption", false);
 		$pdocrud->setLangData("actions", "Acción");
 		$pdocrud->setSettings("editbtn", false);
 		$pdocrud->tableColFormatting("tipo_exportacion", "replace",array("Ingreso" =>"<div class='badge badge-success'>Ingreso</div>"));

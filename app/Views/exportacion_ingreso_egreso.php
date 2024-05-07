@@ -187,5 +187,16 @@
             });
         }
     });
+
+    $(document).on("change", ".pdocrud_search_cols", function(){
+        let val = $(this).val();
+        let input = $('#pdocrud_search_box');
+
+        if (val == "fecha_corte" || val == "fecha_exportacion") {
+            input.prop('type', 'date');
+        } else {
+            input.prop('type', 'text');
+        }
+    });
 </script>
 <?php require "layouts/footer.php"; ?>
