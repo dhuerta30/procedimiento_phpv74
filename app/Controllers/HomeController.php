@@ -790,20 +790,16 @@ class HomeController
 		$pdomodel = $pdocrud->getPDOModelObj();
 		$data = $pdomodel->executeQuery("
 			SELECT 
-				dp.id_datos_paciente,
-				ds.id_detalle_de_solicitud,
+				codigo_fonasa AS codigo,
 				dp.rut,
 				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+				dp.fecha_nacimiento,
+				dp.sexo,
 				dp.telefono,
-				dp.apellido_paterno,
-				dp.apellido_materno,
 				dp.edad,
 				ds.folio,
-				ds.fecha_egreso,
-				ds.motivo_egreso,
 				fecha_solicitud as fecha_solicitud,
 				ds.estado AS estado,
-				codigo_fonasa AS codigo,
 				examen,
 				ds.fecha as fecha,
 				especialidad,
@@ -823,7 +819,34 @@ class HomeController
 				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
 		);
-		$pdomodel->arrayToExcel($data, "exportacion.xlsx");
+
+		$columnTitles = [
+			'codigo_fonasa' => 'Código',
+			'rut' => 'RUT',
+			'paciente' => 'Nombre Completo Paciente',
+			'fecha_nacimiento' => 'Fecha Nacimiento',
+			'sexo' => 'Sexo',
+			'telefono' => 'Teléfono',
+			'edad' => 'Edad',
+			'folio' => 'Folio',
+			'fecha_solicitud' => 'Fecha de Solicitud',
+			'estado' => 'Estado',
+			'examen' => 'Examen',
+			'fecha' => 'Fecha',
+			'especialidad' => 'Especialidad',
+			'profesional' => 'Profesional'
+		];
+	
+		// Extraer solo los valores de los datos
+		$dataValues = array_map(function($row) {
+			return array_values($row);
+		}, $data);
+	
+		// Insertar los títulos en la primera fila de los datos
+		array_unshift($dataValues, array_values($columnTitles));
+	
+		// Exportar los datos con los títulos al Excel
+		$pdomodel->arrayToExcel($dataValues, "exportacion.xlsx");
 	}
 
 	public function profesionales(){
