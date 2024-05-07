@@ -824,9 +824,11 @@ class HomeController
 			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
 		);
 
-		echo count($data);
-		//echo $pdomodel->getLastQuery();
+		print_r($data);
 		die();
+
+		//echo $pdomodel->getLastQuery();
+		//die();
 	}
 
 	public function profesionales(){
