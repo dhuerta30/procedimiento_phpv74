@@ -618,8 +618,8 @@ class HomeController
 		$pdocrud->setSettings("encryption", false);
 		$pdocrud->setLangData("actions", "Acción");
 		$pdocrud->setSettings("editbtn", false);
-		$pdocrud->tableColFormatting("tipo_exportacion", "replace",array("Ingreso" =>"<div class='badge badge-success'>Ingreso</div>"));
-		$pdocrud->tableColFormatting("tipo_exportacion", "replace",array("Egreso" =>"<div class='badge badge-danger'>Egreso</div>"));
+		$pdocrud->tableColFormatting("tipo_exportacion", "replace",array("Ingresado" =>"<div class='badge badge-success'>Ingresado</div>"));
+		$pdocrud->tableColFormatting("tipo_exportacion", "replace",array("Egresado" =>"<div class='badge badge-danger'>Egresado</div>"));
 		$pdocrud->tableColFormatting("fecha_corte", "date",array("format" =>"d/m/Y"));
 		$pdocrud->tableColFormatting("fecha_exportacion", "date",array("format" =>"d/m/Y"));
 		$pdocrud->setLangData("no_data", "No hay Datos Exportados");
@@ -682,7 +682,7 @@ class HomeController
 
 			if($data){
 				$pdomodel->insert("exportacion_ingreso_egreso", array(
-					"tipo_exportacion" => "Ingreso",
+					"tipo_exportacion" => "Ingresado",
 					"fecha_corte" => $hasta,
 					"cantidad_de_registros" => $total_registros,
 					"fecha_exportacion" => $fecha_exportacion,
@@ -756,7 +756,7 @@ class HomeController
 
 			if($data){
 				$pdomodel->insert("exportacion_ingreso_egreso", array(
-					"tipo_exportacion" => "Egreso",
+					"tipo_exportacion" => "Egresado",
 					"fecha_corte" => $hasta,
 					"cantidad_de_registros" => $total_registros,
 					"fecha_exportacion" => $fecha_exportacion,

@@ -42,7 +42,7 @@
                             <div class="card">
                                 <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Tipo de Registro</h6>
                                 <div class="card-body text-center">
-                                    <div class="badge badge-success">Ingreso</div>
+                                    <div class="badge badge-success">Ingresado</div>
                                 </div>
                             </div>
                             <div class="card">
@@ -65,7 +65,7 @@
                             <div class="card">
                                 <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Tipo de Registro</h6>
                                 <div class="card-body text-center">
-                                    <div class="badge badge-danger">Egreso</div>
+                                    <div class="badge badge-danger">Egresado</div>
                                 </div>
                             </div>
                             <div class="card">
@@ -211,6 +211,12 @@
             input.prop('type', 'text');
             $("#pdocrud_search_box").val("");
         }
+    });
+
+    $(document).on("click", ".descargar_excel", function(){
+        let folio = $(this).data("folio");
+        let fechacorte = $(this).data("fechacorte");
+        let estado = $(this).data("estado");
     });
 </script>
 <?php require "layouts/footer.php"; ?>
