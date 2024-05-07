@@ -689,7 +689,7 @@ class HomeController
 				));
 				echo json_encode(['mensaje' => 'Datos Exportados con éxito']);
 			} else {
-				echo json_encode(['error' => 'No se econtraron Datos para exportar']);
+				echo json_encode(['error' => 'No se econtraron Datos de Ingreso para exportar']);
 			}
 		}
 	}	
@@ -754,7 +754,7 @@ class HomeController
 				));
 				echo json_encode(['mensaje' => 'Datos Exportados con éxito']);
 			} else {
-				echo json_encode(['error' => 'No se econtraron Datos para exportar']);
+				echo json_encode(['error' => 'No se econtraron Datos de Egreso para exportar']);
 			}
 		}
 	}	
