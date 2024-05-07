@@ -475,6 +475,7 @@ function formatTable_datos_paciente($data, $obj){
     return $data;
 }
 
+
 function editar_lista_examenes_notas($data, $obj){
     $id_datos_paciente = $data["datos_paciente"]["id_datos_paciente"];
     $fecha_solicitud = $data["detalle_de_solicitud"]["fecha_solicitud"];

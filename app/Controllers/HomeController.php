@@ -601,7 +601,7 @@ class HomeController
 	}
 
 	public function exportacion_ingreso_egreso(){
-		$pdocrud = DB::PDOCrud();
+		$pdocrud = DB::PDOCrud(false, "", "", array("autoSuggestion" => true, "showAllSearch" => false));
 		$pdocrud->colRename("tipo_exportacion", "Tipo Exportación");
 		$pdocrud->colRename("fecha_exportacion", "Fecha Exportación");
 		$pdocrud->tableHeading("Descarga Ingreso/Egreso");
@@ -612,7 +612,14 @@ class HomeController
 		$pdocrud->setSettings("pdfBtn", false);
 		$pdocrud->setSettings("csvBtn", false);
 		$pdocrud->setSettings("excelBtn", false);
+		$pdocrud->setSettings("template", "exportacion_ingreso_egreso");
+		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setLangData("actions", "Acción");
+		$pdocrud->setSettings("editbtn", false);
+		$pdocrud->tableColFormatting("tipo_exportacion", "replace",array("Ingreso" =>"<div class='badge badge-success'>Ingreso</div>"));
+		$pdocrud->tableColFormatting("tipo_exportacion", "replace",array("Egreso" =>"<div class='badge badge-danger'>Egreso</div>"));
+		$pdocrud->tableColFormatting("fecha_corte", "date",array("format" =>"d/m/Y"));
+		$pdocrud->tableColFormatting("fecha_exportacion", "date",array("format" =>"d/m/Y"));
 		$pdocrud->setLangData("no_data", "No hay Datos Exportados");
 		$pdocrud->setSearchCols(array("folio","tipo_exportacion", "fecha_corte", "cantidad_de_registros", "fecha_exportacion", "usuario_exporta"));
 		$pdocrud->crudRemoveCol(array("id_exportacion_ingreso_egreso"));
@@ -673,6 +680,7 @@ class HomeController
 
 			if($data){
 				$pdomodel->insert("exportacion_ingreso_egreso", array(
+					"folio" => "",
 					"tipo_exportacion" => "Ingreso",
 					"fecha_corte" => $hasta,
 					"cantidad_de_registros" => $total_registros,
