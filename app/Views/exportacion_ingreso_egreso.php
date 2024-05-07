@@ -99,7 +99,7 @@
         if(val != ""){
             $.ajax({
                 type: "POST",
-                url: "<?=$_ENV["BASE_URL"]?>home/consultar_datos_examenes",
+                url: "<?=$_ENV["BASE_URL"]?>home/consultar_datos_examenes_ingresados",
                 data: {
                     val: val
                 },
@@ -109,7 +109,24 @@
                 },
                 success: function(data){
                     $("#pdocrud-ajax-loader").hide();
-                    console.log(data);
+                    if(data['mensaje']){
+                        $("#pdocrud_search_btn").click();
+                        Swal.fire({
+                            title: 'Genial!',
+                            text: data["mensaje"],
+                            icon: 'success',
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Lo siento!',
+                            text: data["error"],
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false
+                        });
+                    }
                 }
             });
         } else {

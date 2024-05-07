@@ -622,13 +622,69 @@ class HomeController
 		]);
 	}
 
-	public function consultar_datos_examenes(){
+	public function consultar_datos_examenes_ingresados(){
 		$request = new Request();
+	
+		if ($request->getMethod() === 'POST') {
+			$hasta = $request->post('val');
+	
+			$crud = DB::PDOCrud();
+			$pdomodel = $crud->getPDOModelObj();
+			$data = $pdomodel->executeQuery("
+				SELECT 
+					dp.id_datos_paciente,
+					ds.id_detalle_de_solicitud,
+					dp.rut,
+					CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+					dp.telefono,
+					dp.apellido_paterno,
+					dp.apellido_materno,
+					dp.edad,
+					ds.fecha_egreso,
+					ds.motivo_egreso,
+					fecha_solicitud as fecha_solicitud,
+					ds.estado AS estado,
+					codigo_fonasa AS codigo,
+					examen,
+					ds.fecha as fecha,
+					especialidad,
+					CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+				FROM 
+					datos_paciente AS dp
+				INNER JOIN
+					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					profesional AS pro ON pro.id_profesional = dg_p.profesional
+				WHERE 
+					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Ingresado'
+				GROUP BY 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen", 
+				[':hasta' => $hasta]
+			);
+	
+			// Contar la cantidad de registros
+			date_default_timezone_set('America/Santiago');
+			$total_registros = count($data);
+			$sesionUsuario = $_SESSION["usuario"][0]["usuario"];
+			$fecha_exportacion = date('Y-m-d');
 
-		 if ($request->getMethod() === 'POST') {
-			$val = $request->post('val');
-		 }
-	}
+			if($data){
+				$pdomodel->insert("exportacion_ingreso_egreso", array(
+					"tipo_exportacion" => "Ingreso",
+					"fecha_corte" => $hasta,
+					"cantidad_de_registros" => $total_registros,
+					"fecha_exportacion" => $fecha_exportacion,
+					"usuario_exporta" => $sesionUsuario
+				));
+				echo json_encode(['mensaje' => 'Datos Exportados con éxito']);
+			} else {
+				echo json_encode(['error' => 'Ha ocurrido un error al exportar los Datos']);
+			}
+		}
+	}	
 
 	public function profesionales(){
 		$pdocrud = DB::PDOCrud();
@@ -1933,65 +1989,6 @@ class HomeController
 			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
 		);
 
-		/*$html = '
-			
-		';
-		foreach ($data as $row) {
-
-			$fecha = date('d/m/Y H:i:s', strtotime($row["fecha"]));
-			$data_fecha = ($fecha != "01/01/1970 01:00:00" && $fecha != "31/12/1969 01:00:00") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
-
-			$codigos = explode(',', $row["codigo"]);
-
-			$code = "";
-			foreach ($codigos as $codigo) {
-				$code .= '<div class="badge badge-info">'. $codigo . '</div>' . '<br>';
-			}
-
-			$profesional = str_replace(',', "<br>", $row["profesional"]);
-			$especialidad = str_replace(',', "<br>", $row["especialidad"]);
-
-
-			$fecha_egreso = date('d/m/Y', strtotime($row["fecha_egreso"]));
-			if($fecha_egreso != "01/01/1970" && $fecha_egreso != "31/12/1969"){
-				$fecha_egreso;
-			} else {
-				$fecha_egreso = "<div class='badge badge-danger'>Sin Fecha</div>";
-			}
-
-			$html .= '
-				<tr style="white-space: nowrap;">
-					<td>' . $row["estado"] . '</td>
-					<td>' . $especialidad . '</td>
-					<td>' . $row['rut'] . '</td>
-					<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
-					<td>' . $row["telefono"] . '</td>
-					<td>' . $row["edad"] . '</td>
-					<td>'. $code .'</td>
-					<td>' . $row["examen"] . '</td>
-					<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
-					<td>' . $data_fecha . '</td>
-					<td>' . $fecha_egreso . '</td>
-					<td>' . $profesional . '</td>
-					<td>
-						<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
-						<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
-						<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-o"></i></a>
-						<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
-						<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
-					</td>
-				</tr>
-			';
-		}
-	
-		$html .= '
-				</tbody>
-			</table>
-		';
-
-		$html_data = array($html);
-		$render_crud = $crud->render("HTML", $html_data);
-		return $render_crud;*/
 		echo json_encode(['data' => $data]);
 	}
 
