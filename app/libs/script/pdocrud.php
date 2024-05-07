@@ -420,7 +420,6 @@ function editar_procedimientos($data, $obj){
     return $data;
 }
 
-
 function editar_egresar_solicitud($data, $obj) {
     $id_detalle_de_solicitud = $data["detalle_de_solicitud"]["id_detalle_de_solicitud"];
     $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];

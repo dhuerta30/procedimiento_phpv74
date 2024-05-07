@@ -83,7 +83,8 @@ class PDOModel
     public $uploadedFileName = "";          // Name of new uploaded file 
     public $fileUploadPath = "../upload/";  // Path of the uploaded file
     public $maxSize = 1000000000000000;               // Max size of file allowed for file upload
-    public $fileSavePath = "../save/";     // Default path for saving generated file 
+    public $fileSavePath = "";     // Default path for saving generated file 
+    //public $fileSavePath = "../save";
     public $pdfFontName = "helvetica";      // font name for pdf
     public $pdfFontSize = "8";              // font size for pdf
     public $pdfFontWeight = "B";            // font weight for pdf

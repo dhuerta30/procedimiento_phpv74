@@ -823,12 +823,7 @@ class HomeController
 				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
 		);
-
-		print_r($data);
-		die();
-
-		//echo $pdomodel->getLastQuery();
-		//die();
+		$pdomodel->arrayToExcel($data, "exportacion.xlsx");
 	}
 
 	public function profesionales(){
