@@ -196,6 +196,20 @@
             input.prop('type', 'date');
         } else {
             input.prop('type', 'text');
+            $("#pdocrud_search_box").val("");
+        }
+    });
+
+
+    $(document).on("pdocrud_after_ajax_action",function(event, obj, data){
+        let val = $('.pdocrud_search_cols').val();
+        let input = $('#pdocrud_search_box');
+
+        if (val == "fecha_corte" || val == "fecha_exportacion") {
+            input.prop('type', 'date');
+        } else {
+            input.prop('type', 'text');
+            $("#pdocrud_search_box").val("");
         }
     });
 </script>
