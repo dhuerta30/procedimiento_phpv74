@@ -606,6 +606,7 @@ class HomeController
 		$pdocrud->colRename("fecha_exportacion", "Fecha Exportación");
 		$pdocrud->tableHeading("Descarga Ingreso/Egreso");
 		$pdocrud->setSettings("deleteMultipleBtn", false);
+		$pdocrud->tableColFormatting("folio", "string",array("type" =>"prefix","str"=>"# "));
 		$pdocrud->setSettings("checkboxCol", false);
 		$pdocrud->setSettings("addbtn", false);
 		$pdocrud->setSettings("printBtn", false);
@@ -646,6 +647,7 @@ class HomeController
 					dp.apellido_paterno,
 					dp.apellido_materno,
 					dp.edad,
+					ds.folio,
 					ds.fecha_egreso,
 					ds.motivo_egreso,
 					fecha_solicitud as fecha_solicitud,
@@ -665,9 +667,9 @@ class HomeController
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Ingresado'
+					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Ingresado' AND ds.folio IS NULL
 				GROUP BY 
-					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen", 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 				[':hasta' => $hasta]
 			);
 	
@@ -685,6 +687,15 @@ class HomeController
 					"fecha_exportacion" => $fecha_exportacion,
 					"usuario_exporta" => $sesionUsuario
 				));
+				$folio = $pdomodel->lastInsertId;
+
+				foreach ($data as $registro) {
+					$pdomodel->where("id_datos_paciente", $registro["id_datos_paciente"], "=", "AND");
+					$pdomodel->where("fecha_solicitud", $registro["fecha_solicitud"], "=", "AND");
+					$pdomodel->where("estado", "Ingresado");
+					$pdomodel->update("detalle_de_solicitud", ["folio" => $folio]);
+				}
+
 				echo json_encode(['mensaje' => 'Datos Exportados con éxito']);
 			} else {
 				echo json_encode(['error' => 'No se econtraron Datos de Ingreso para exportar']);
@@ -710,6 +721,7 @@ class HomeController
 					dp.apellido_paterno,
 					dp.apellido_materno,
 					dp.edad,
+					ds.folio,
 					ds.fecha_egreso,
 					ds.motivo_egreso,
 					fecha_solicitud as fecha_solicitud,
@@ -729,7 +741,7 @@ class HomeController
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Egresado'
+					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Egresado' AND ds.folio IS NULL
 				GROUP BY 
 					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen", 
 				[':hasta' => $hasta]
@@ -743,12 +755,21 @@ class HomeController
 
 			if($data){
 				$pdomodel->insert("exportacion_ingreso_egreso", array(
-					"tipo_exportacion" => "Ingreso",
+					"tipo_exportacion" => "Egreso",
 					"fecha_corte" => $hasta,
 					"cantidad_de_registros" => $total_registros,
 					"fecha_exportacion" => $fecha_exportacion,
 					"usuario_exporta" => $sesionUsuario
 				));
+				$folio = $pdomodel->lastInsertId;
+
+				foreach ($data as $registro) {
+					$pdomodel->where("id_datos_paciente", $registro["id_datos_paciente"], "=", "AND");
+					$pdomodel->where("fecha_solicitud", $registro["fecha_solicitud"], "=", "AND");
+					$pdomodel->where("estado", "Egresado");
+					$pdomodel->update("detalle_de_solicitud", ["folio" => $folio]);
+				}
+
 				echo json_encode(['mensaje' => 'Datos Exportados con éxito']);
 			} else {
 				echo json_encode(['error' => 'No se econtraron Datos de Egreso para exportar']);
