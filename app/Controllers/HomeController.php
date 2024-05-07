@@ -620,8 +620,8 @@ class HomeController
 		$pdocrud->setSettings("editbtn", false);
 		$pdocrud->tableColFormatting("tipo_exportacion", "replace",array("Ingresado" =>"<div class='badge badge-success'>Ingresado</div>"));
 		$pdocrud->tableColFormatting("tipo_exportacion", "replace",array("Egresado" =>"<div class='badge badge-danger'>Egresado</div>"));
-		$pdocrud->tableColFormatting("fecha_corte", "date",array("format" =>"d/m/Y"));
-		$pdocrud->tableColFormatting("fecha_exportacion", "date",array("format" =>"d/m/Y"));
+		$pdocrud->tableColFormatting("fecha_corte", "date",array("format" =>"d-m-Y"));
+		$pdocrud->tableColFormatting("fecha_exportacion", "date",array("format" =>"d-m-Y"));
 		$pdocrud->setLangData("no_data", "No hay Datos Exportados");
 		$pdocrud->setSearchCols(array("folio","tipo_exportacion", "fecha_corte", "cantidad_de_registros", "fecha_exportacion", "usuario_exporta"));
 		$render = $pdocrud->dbTable("exportacion_ingreso_egreso")->render();
@@ -634,7 +634,8 @@ class HomeController
 		$request = new Request();
 	
 		if ($request->getMethod() === 'POST') {
-			$hasta = date("Y-m-d", strtotime($request->post('val')));
+			$hasta = $request->post('val');
+			$hasta_formateada = date("Y-m-d", strtotime($hasta));
 	
 			$crud = DB::PDOCrud();
 			$pdomodel = $crud->getPDOModelObj();
@@ -671,7 +672,7 @@ class HomeController
 					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Ingresado' AND ds.folio IS NULL
 				GROUP BY 
 					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
-				[':hasta' => $hasta]
+				[':hasta' => $hasta_formateada]
 			);
 	
 			// Contar la cantidad de registros
@@ -683,7 +684,7 @@ class HomeController
 			if($data){
 				$pdomodel->insert("exportacion_ingreso_egreso", array(
 					"tipo_exportacion" => "Ingresado",
-					"fecha_corte" => $hasta,
+					"fecha_corte" => $hasta_formateada,
 					"cantidad_de_registros" => $total_registros,
 					"fecha_exportacion" => $fecha_exportacion,
 					"usuario_exporta" => $sesionUsuario
@@ -704,60 +705,11 @@ class HomeController
 		}
 	}	
 
-	public function descargar_excel(){
-		$request = new Request();
-		$folio = $request->get('folio');
-		$fechacorte = $request->get('fechacorte');
-		$estado = $request->get('estado');
-
-		$pdocrud = DB::PDOCrud();
-		$pdomodel = $pdocrud->getPDOModelObj();
-		$data = $pdomodel->executeQuery("
-				SELECT 
-				dp.id_datos_paciente,
-				ds.id_detalle_de_solicitud,
-				dp.rut,
-				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
-				dp.telefono,
-				dp.apellido_paterno,
-				dp.apellido_materno,
-				dp.edad,
-				ds.folio,
-				ds.fecha_egreso,
-				ds.motivo_egreso,
-				fecha_solicitud as fecha_solicitud,
-				ds.estado AS estado,
-				codigo_fonasa AS codigo,
-				examen,
-				ds.fecha as fecha,
-				especialidad,
-				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
-			FROM 
-				datos_paciente AS dp
-			INNER JOIN
-				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-			INNER JOIN 
-				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-			INNER JOIN 
-				profesional AS pro ON pro.id_profesional = dg_p.profesional
-			WHERE 
-				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-				AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(':fechacorte', '%Y-%m') AND ds.estado = ':estado'
-			GROUP BY 
-				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
-			[':fechacorte' => $fechacorte, ':estado' => $estado]
-		);
-
-		print_r($data);
-		//echo $pdomodel->getLastQuery();
-		die();
-	}
-
 	public function consultar_datos_examenes_egresados(){
 		$request = new Request();
 	
 		if ($request->getMethod() === 'POST') {
-			$hasta = date("Y-m-d", strtotime($request->post('val')));
+			$hasta = $request->post('val');
 	
 			$crud = DB::PDOCrud();
 			$pdomodel = $crud->getPDOModelObj();
@@ -793,7 +745,7 @@ class HomeController
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
 					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Egresado' AND ds.folio IS NULL
 				GROUP BY 
-					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen", 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 				[':hasta' => $hasta]
 			);
 	
@@ -826,6 +778,56 @@ class HomeController
 			}
 		}
 	}	
+
+	public function descargar_excel(){
+		$request = new Request();
+		$folio = $request->get('folio');
+		$fechacorte = $request->get('fechacorte');
+		$estado = $request->get('estado');
+		$fecha_corte_formateada = date("Y-m-d", strtotime($fechacorte));
+
+		$pdocrud = DB::PDOCrud();
+		$pdomodel = $pdocrud->getPDOModelObj();
+		$data = $pdomodel->executeQuery("
+			SELECT 
+				dp.id_datos_paciente,
+				ds.id_detalle_de_solicitud,
+				dp.rut,
+				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+				dp.telefono,
+				dp.apellido_paterno,
+				dp.apellido_materno,
+				dp.edad,
+				ds.folio,
+				ds.fecha_egreso,
+				ds.motivo_egreso,
+				fecha_solicitud as fecha_solicitud,
+				ds.estado AS estado,
+				codigo_fonasa AS codigo,
+				examen,
+				ds.fecha as fecha,
+				especialidad,
+				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+			FROM 
+				datos_paciente AS dp
+			INNER JOIN
+				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				profesional AS pro ON pro.id_profesional = dg_p.profesional
+			WHERE 
+				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+				AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:fechacorte, '%Y-%m') AND ds.estado = :estado
+			GROUP BY 
+				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
+			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
+		);
+
+		echo count($data);
+		//echo $pdomodel->getLastQuery();
+		die();
+	}
 
 	public function profesionales(){
 		$pdocrud = DB::PDOCrud();

@@ -91,7 +91,10 @@
                     if (is_array($btnActions) && count($btnActions)) {
                     ?>
                         <td class="pdocrud-row-actions">
-                            <a href="javascript:;" class="btn btn-warning btn-sm descargar_excel" title="Descargar Excel" data-fechacorte="<?=date("Y-m-d", strtotime($rows["fecha_corte"]))?>"  data-estado="<?=strip_tags($rows["tipo_exportacion"])?>" data-id="<?=str_replace("#", "", $rows[$pk]);?>"><i class="fa fa-file-excel-o text-white"></i> <i class="fas fa-arrow-left text-white"></i> </a>
+                            <?php 
+                               $fechacorte = $rows["fecha_corte"];
+                            ?>
+                            <a href="javascript:;" class="btn btn-warning btn-sm descargar_excel" title="Descargar Excel" data-fechacorte="<?=$fechacorte?>"  data-estado="<?=strip_tags($rows["tipo_exportacion"])?>" data-id="<?=str_replace("#", "", $rows[$pk]);?>"><i class="fa fa-file-excel-o text-white"></i> <i class="fas fa-arrow-left text-white"></i> </a>
                         </td>
                     <?php } ?>
                 </tr>
