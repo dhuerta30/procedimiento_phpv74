@@ -196,7 +196,7 @@ function carga_masiva_pacientes_insertar($data, $obj){
             }
 
             if (!empty($rutInvalidos)) {
-                $error_msg = array("message" => "", "error" => "RUTs inválidos: " . implode(", ", $rutInvalidos), "redirectionurl" => "");
+                $error_msg = array("message" => "", "error" => "Los siguientes Rut inválidos no han sido cargados: " . implode(", ", $rutInvalidos), "redirectionurl" => "");
                 die(json_encode($error_msg));
             }
             $data["carga_masiva_pacientes"]["archivo"] = basename($data["carga_masiva_pacientes"]["archivo"]);
