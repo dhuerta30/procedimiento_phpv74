@@ -795,15 +795,16 @@ class HomeController
 				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
 				dp.fecha_nacimiento,
 				dp.sexo,
-				dp.telefono,
-				dp.edad,
-				ds.folio,
+				ds.plano,
+				ds.extremidad,
+				ds.tipo_examen,
 				fecha_solicitud as fecha_solicitud,
-				ds.estado AS estado,
-				examen,
-				ds.fecha as fecha,
-				especialidad,
-				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+				ds.fecha_egreso,
+				ds.motivo_egreso,
+				dg_p.diagnostico,
+				dp.direccion,
+				dp.telefono,
+				ds.fecha
 			FROM 
 				datos_paciente AS dp
 			INNER JOIN
@@ -826,15 +827,16 @@ class HomeController
 			'paciente' => 'Nombre Completo Paciente',
 			'fecha_nacimiento' => 'Fecha Nacimiento',
 			'sexo' => 'Sexo',
-			'telefono' => 'Teléfono',
-			'edad' => 'Edad',
-			'folio' => 'Folio',
+			'plano' => 'Plano',
+			'extremidad' => 'Extremidad',
+			'tipo_examen' => 'Tipo Prestación',
 			'fecha_solicitud' => 'Fecha de Solicitud',
-			'estado' => 'Estado',
-			'examen' => 'Examen',
-			'fecha' => 'Fecha',
-			'especialidad' => 'Especialidad',
-			'profesional' => 'Profesional'
+			'fecha_egreso' => 'Fecha Egreso',
+			'motivo_egreso' => 'Motivo Egreso',
+			'diagnostico' => 'Diagnóstico',
+			'direccion' => 'Dirección',
+			'telefono' => 'Teléfono',
+			'fecha' => 'Fecha'
 		];
 	
 		// Extraer solo los valores de los datos
