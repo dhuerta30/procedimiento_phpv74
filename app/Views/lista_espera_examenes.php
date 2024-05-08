@@ -138,7 +138,16 @@ function datatable(){
             { data: 'rut' },
             { data: 'paciente' },
             { data: 'telefono' },
-            { data: 'edad' },
+            { data: 'edad',
+                render: function(data, type, row, meta){
+                    
+                    if (data == 0) {
+                        return "<div class='badge badge-danger'>Sin Edad</div>";
+                    } else {
+                        return data;
+                    }
+                } 
+             },
             { data: 'codigo',
                 render: function(data, type, row, meta){
                     return "<div class='badge badge-info'>"+ data +"</div>";
