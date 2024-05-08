@@ -913,6 +913,9 @@ class HomeController
 			$row['ciudad'] = 'MELIPILLA';
 			$row['ruralidad'] = '01';
 			$row['via_direccion'] = '04';
+			$row['estab_orig'] = '110150';
+			$row['estab_dest'] = '110150';
+			$row['e_otor_at'] = '110150';
 		}
 
 		$columnTitles['serv_salud'] = 'SERV_SALUD';
@@ -925,6 +928,9 @@ class HomeController
 		$columnTitles['ciudad'] = 'CIUDAD';
 		$columnTitles['ruralidad'] = 'COND_RURALIDAD';
 		$columnTitles['via_direccion'] = 'VIA_DIRECCION';
+		$columnTitles['estab_orig'] = 'ESTAB_ORIG';
+		$columnTitles['estab_dest'] = 'ESTAB_DEST';
+		$columnTitles['e_otor_at'] = 'E_OTOR_AT';
 		
 		// Extraer solo los valores de los datos
 		$dataValues = array_map(function($row) {
