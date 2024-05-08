@@ -864,6 +864,13 @@ class HomeController
 				$row['estab_orig'] = '110150';
 				$row['estab_dest'] = '110150';
 				$row['e_otor_at'] = '110150';
+				$row['num_direccion'] = '';
+				$row['resto_direccion'] = '';
+				$row['fono_fijo'] = '';
+				$row['fono_movil'] = '';
+				$row['email'] = '';
+				$row['resultado'] = '';
+				$row['sigte_id'] = '';
 			}
 	
 			$columnTitles['serv_salud'] = 'SERV_SALUD';
@@ -879,6 +886,13 @@ class HomeController
 			$columnTitles['estab_orig'] = 'ESTAB_ORIG';
 			$columnTitles['estab_dest'] = 'ESTAB_DEST';
 			$columnTitles['e_otor_at'] = 'E_OTOR_AT';
+			$columnTitles['num_direccion'] = 'NUM_DIRECCION';
+			$columnTitles['resto_direccion'] = 'RESTO_DIRECCION';
+			$columnTitles['fono_fijo'] = 'FONO_FIJO';
+			$columnTitles['fono_movil'] = 'FONO_MOVIL';
+			$columnTitles['email'] = 'EMAIL';
+			$columnTitles['resultado'] = 'RESULTADO';
+			$columnTitles['sigte_id'] = 'SIGETE_ID';
 			
 		} else {
 			$data = $pdomodel->executeQuery("
