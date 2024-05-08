@@ -792,6 +792,7 @@ class HomeController
 		if($estado == "Egresado"){
 			$data = $pdomodel->executeQuery("
 				SELECT 
+					ds.id_detalle_de_solicitud,
 					codigo_fonasa AS codigo,
 					dp.rut,
 					nombres, 
@@ -844,11 +845,45 @@ class HomeController
 				'diagnostico_libre' => 'CONFIR_DIAG',
 				'direccion' => 'NOM_CALLE',
 				'telefono' => 'Teléfono',
-				'fecha' => 'F_CITACION'
+				'fecha' => 'F_CITACION',
+				'id_detalle_de_solicitud' => 'ID_LOCAL'
 			];
+
+			foreach ($data as &$row) {
+				// Agregar el nuevo campo con el valor deseado, por ejemplo:
+				$row['serv_salud'] = '10';
+				$row['previcion'] = '1';
+				$row['tipo_prest'] = '3';
+				$row['dv'] = '';
+				$row['prais'] = '2';
+				$row['region'] = '13';
+				$row['comuna'] = '13501';
+				$row['ciudad'] = 'MELIPILLA';
+				$row['ruralidad'] = '01';
+				$row['via_direccion'] = '04';
+				$row['estab_orig'] = '110150';
+				$row['estab_dest'] = '110150';
+				$row['e_otor_at'] = '110150';
+			}
+	
+			$columnTitles['serv_salud'] = 'SERV_SALUD';
+			$columnTitles['previcion'] = 'PREVISION';
+			$columnTitles['tipo_prest'] = 'TIPO_PREST';
+			$columnTitles['dv'] = 'DV';
+			$columnTitles['prais'] = 'PRAIS';
+			$columnTitles['region'] = 'REGION';
+			$columnTitles['comuna'] = 'COMUNA';
+			$columnTitles['ciudad'] = 'CIUDAD';
+			$columnTitles['ruralidad'] = 'COND_RURALIDAD';
+			$columnTitles['via_direccion'] = 'VIA_DIRECCION';
+			$columnTitles['estab_orig'] = 'ESTAB_ORIG';
+			$columnTitles['estab_dest'] = 'ESTAB_DEST';
+			$columnTitles['e_otor_at'] = 'E_OTOR_AT';
+			
 		} else {
 			$data = $pdomodel->executeQuery("
 				SELECT 
+					ds.id_detalle_de_solicitud,
 					codigo_fonasa AS codigo,
 					dp.rut,
 					nombres, 
@@ -883,55 +918,55 @@ class HomeController
 
 			$columnTitles = [
 				'codigo_fonasa' => 'Código',
-				'rut' => 'RUT',
-				'nombres' => 'Nombres',
-				'apellido_paterno' => 'Primer Apellido',
-				'apellido_materno' => 'Segundo Apellido',
-				'fecha_nacimiento' => 'Fecha Nacimiento',
-				'sexo' => 'Sexo',
-				'plano' => 'Plano',
-				'extremidad' => 'Extremidad',
-				'tipo_examen' => 'Tipo Prestación',
-				'fecha_solicitud' => 'Fecha de Solicitud',
-				'diagnostico' => 'Diagnóstico',
-				'direccion' => 'Dirección',
+				'rut' => 'RUN',
+				'nombres' => 'NOMBRES',
+				'apellido_paterno' => 'PRIMER_APELLIDO',
+				'apellido_materno' => 'SEGUNDO_APELLIDO',
+				'fecha_nacimiento' => 'FECHA_NAC',
+				'sexo' => 'SEXO',
+				'plano' => 'PLANO',
+				'extremidad' => 'EXTREMIDAD',
+				'tipo_examen' => 'PRESTA_EST',
+				'fecha_solicitud' => 'F_ENTRADA',
+				'diagnostico' => 'SOSPECHA_DIAG',
+				'diagnostico_libre' => 'CONFIR_DIAG',
+				'direccion' => 'NOM_CALLE',
 				'telefono' => 'Teléfono',
-				'fecha' => 'Fecha'
+				'fecha' => 'F_CITACION',
+				'id_detalle_de_solicitud' => 'ID_LOCAL'
 			];
+
+			foreach ($data as &$row) {
+				// Agregar el nuevo campo con el valor deseado, por ejemplo:
+				$row['serv_salud'] = '10';
+				$row['previcion'] = '1';
+				$row['tipo_prest'] = '3';
+				$row['dv'] = '';
+				$row['prais'] = '2';
+				$row['region'] = '13';
+				$row['comuna'] = '13501';
+				$row['ciudad'] = 'MELIPILLA';
+				$row['ruralidad'] = '01';
+				$row['via_direccion'] = '04';
+				$row['estab_orig'] = '110150';
+				$row['estab_dest'] = '110150';
+			}
+	
+			$columnTitles['serv_salud'] = 'SERV_SALUD';
+			$columnTitles['previcion'] = 'PREVISION';
+			$columnTitles['tipo_prest'] = 'TIPO_PREST';
+			$columnTitles['dv'] = 'DV';
+			$columnTitles['prais'] = 'PRAIS';
+			$columnTitles['region'] = 'REGION';
+			$columnTitles['comuna'] = 'COMUNA';
+			$columnTitles['ciudad'] = 'CIUDAD';
+			$columnTitles['ruralidad'] = 'COND_RURALIDAD';
+			$columnTitles['via_direccion'] = 'VIA_DIRECCION';
+			$columnTitles['estab_orig'] = 'ESTAB_ORIG';
+			$columnTitles['estab_dest'] = 'ESTAB_DEST';
+			
 		}
 	
-
-		foreach ($data as &$row) {
-			// Agregar el nuevo campo con el valor deseado, por ejemplo:
-			$row['serv_salud'] = '10';
-			$row['previcion'] = '1';
-			$row['tipo_prest'] = '3';
-			$row['dv'] = '';
-			$row['prais'] = '2';
-			$row['region'] = '13';
-			$row['comuna'] = '13501';
-			$row['ciudad'] = 'MELIPILLA';
-			$row['ruralidad'] = '01';
-			$row['via_direccion'] = '04';
-			$row['estab_orig'] = '110150';
-			$row['estab_dest'] = '110150';
-			$row['e_otor_at'] = '110150';
-		}
-
-		$columnTitles['serv_salud'] = 'SERV_SALUD';
-		$columnTitles['previcion'] = 'PREVISION';
-		$columnTitles['tipo_prest'] = 'TIPO_PREST';
-		$columnTitles['dv'] = 'DV';
-		$columnTitles['prais'] = 'PRAIS';
-		$columnTitles['region'] = 'REGION';
-		$columnTitles['comuna'] = 'COMUNA';
-		$columnTitles['ciudad'] = 'CIUDAD';
-		$columnTitles['ruralidad'] = 'COND_RURALIDAD';
-		$columnTitles['via_direccion'] = 'VIA_DIRECCION';
-		$columnTitles['estab_orig'] = 'ESTAB_ORIG';
-		$columnTitles['estab_dest'] = 'ESTAB_DEST';
-		$columnTitles['e_otor_at'] = 'E_OTOR_AT';
-		
 		// Extraer solo los valores de los datos
 		$dataValues = array_map(function($row) {
 			return array_values($row);
