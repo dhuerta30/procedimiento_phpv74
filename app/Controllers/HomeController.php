@@ -788,6 +788,59 @@ class HomeController
 
 		$pdocrud = DB::PDOCrud();
 		$pdomodel = $pdocrud->getPDOModelObj();
+
+		if($estado == "Egresado"){
+			$data = $pdomodel->executeQuery("
+				SELECT 
+					codigo_fonasa AS codigo,
+					dp.rut,
+					CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+					dp.fecha_nacimiento,
+					dp.sexo,
+					ds.plano,
+					ds.extremidad,
+					ds.tipo_examen,
+					fecha_solicitud as fecha_solicitud,
+					ds.fecha_egreso,
+					ds.motivo_egreso,
+					dg_p.diagnostico,
+					dp.direccion,
+					dp.telefono,
+					ds.fecha
+				FROM 
+					datos_paciente AS dp
+				INNER JOIN
+					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					profesional AS pro ON pro.id_profesional = dg_p.profesional
+				WHERE 
+					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:fechacorte, '%Y-%m') AND ds.estado = :estado
+				GROUP BY 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
+				[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
+			);
+	
+			$columnTitles = [
+				'codigo_fonasa' => 'Código',
+				'rut' => 'RUT',
+				'paciente' => 'Nombre Completo Paciente',
+				'fecha_nacimiento' => 'Fecha Nacimiento',
+				'sexo' => 'Sexo',
+				'plano' => 'Plano',
+				'extremidad' => 'Extremidad',
+				'tipo_examen' => 'Tipo Prestación',
+				'fecha_solicitud' => 'Fecha de Solicitud',
+				'fecha_egreso' => 'Fecha Egreso',
+				'motivo_egreso' => 'Motivo Egreso',
+				'diagnostico' => 'Diagnóstico',
+				'direccion' => 'Dirección',
+				'telefono' => 'Teléfono',
+				'fecha' => 'Fecha'
+			];
+		} else {
 		$data = $pdomodel->executeQuery("
 			SELECT 
 				codigo_fonasa AS codigo,
@@ -799,8 +852,6 @@ class HomeController
 				ds.extremidad,
 				ds.tipo_examen,
 				fecha_solicitud as fecha_solicitud,
-				ds.fecha_egreso,
-				ds.motivo_egreso,
 				dg_p.diagnostico,
 				dp.direccion,
 				dp.telefono,
@@ -831,13 +882,12 @@ class HomeController
 			'extremidad' => 'Extremidad',
 			'tipo_examen' => 'Tipo Prestación',
 			'fecha_solicitud' => 'Fecha de Solicitud',
-			'fecha_egreso' => 'Fecha Egreso',
-			'motivo_egreso' => 'Motivo Egreso',
 			'diagnostico' => 'Diagnóstico',
 			'direccion' => 'Dirección',
 			'telefono' => 'Teléfono',
 			'fecha' => 'Fecha'
 		];
+		}
 	
 		// Extraer solo los valores de los datos
 		$dataValues = array_map(function($row) {
