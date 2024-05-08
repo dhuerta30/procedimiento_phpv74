@@ -430,6 +430,16 @@ function editar_egresar_solicitud($data, $obj) {
     $empresas_en_convenio = isset($data["detalle_de_solicitud"]["empresas_en_convenio"]) ? $data["detalle_de_solicitud"]["empresas_en_convenio"] : null;
     $adjuntar = $data["detalle_de_solicitud"]["adjuntar"];
 
+    if(empty($fecha_egreso)){
+        $error_msg = array("message" => "", "error" => "Ingrese una Fecha de egreso", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    }
+
+    if(empty($motivo_egreso)){
+        $error_msg = array("message" => "", "error" => "Ingrese un Motivo de egreso", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    }
+
     if (!empty($adjuntar)) {
         $extension = pathinfo($adjuntar, PATHINFO_EXTENSION);
         if($extension != "pdf"){
