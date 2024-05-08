@@ -403,6 +403,11 @@ function editar_procedimientos($data, $obj){
     $diagnostico = $data["diagnostico_antecedentes_paciente"]["diagnostico"];
     $fundamento = $data["detalle_de_solicitud"]["fundamento"];
 
+    if(empty($estado)){
+        $error_msg = array("message" => "", "error" => "Ingrese un estado", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    }
+
     $pdomodel = $obj->getPDOModelObj();
     $pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud);
     $pdomodel->update("detalle_de_solicitud", array(
