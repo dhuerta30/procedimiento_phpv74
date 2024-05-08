@@ -794,7 +794,9 @@ class HomeController
 				SELECT 
 					codigo_fonasa AS codigo,
 					dp.rut,
-					CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+					nombres, 
+					apellido_paterno,
+					apellido_materno,
 					dp.fecha_nacimiento,
 					dp.sexo,
 					ds.plano,
@@ -804,6 +806,7 @@ class HomeController
 					ds.fecha_egreso,
 					ds.motivo_egreso,
 					dg_p.diagnostico,
+					dg_p.diagnostico_libre,
 					dp.direccion,
 					dp.telefono,
 					ds.fecha
@@ -825,27 +828,32 @@ class HomeController
 	
 			$columnTitles = [
 				'codigo_fonasa' => 'Código',
-				'rut' => 'RUT',
-				'paciente' => 'Nombre Completo Paciente',
-				'fecha_nacimiento' => 'Fecha Nacimiento',
-				'sexo' => 'Sexo',
-				'plano' => 'Plano',
-				'extremidad' => 'Extremidad',
-				'tipo_examen' => 'Tipo Prestación',
-				'fecha_solicitud' => 'Fecha de Solicitud',
-				'fecha_egreso' => 'Fecha Egreso',
-				'motivo_egreso' => 'Motivo Egreso',
-				'diagnostico' => 'Diagnóstico',
-				'direccion' => 'Dirección',
+				'rut' => 'RUN',
+				'nombres' => 'NOMBRES',
+				'apellido_paterno' => 'PRIMER_APELLIDO',
+				'apellido_materno' => 'SEGUNDO_APELLIDO',
+				'fecha_nacimiento' => 'FECHA_NAC',
+				'sexo' => 'SEXO',
+				'plano' => 'PLANO',
+				'extremidad' => 'EXTREMIDAD',
+				'tipo_examen' => 'PRESTA_EST',
+				'fecha_solicitud' => 'F_ENTRADA',
+				'fecha_egreso' => 'F_SALIDA',
+				'motivo_egreso' => 'C_SALIDA',
+				'diagnostico' => 'SOSPECHA_DIAG',
+				'diagnostico_libre' => 'CONFIR_DIAG',
+				'direccion' => 'NOM_CALLE',
 				'telefono' => 'Teléfono',
-				'fecha' => 'Fecha'
+				'fecha' => 'F_CITACION'
 			];
 		} else {
 			$data = $pdomodel->executeQuery("
 				SELECT 
 					codigo_fonasa AS codigo,
 					dp.rut,
-					CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+					nombres, 
+					apellido_paterno,
+					apellido_materno,
 					dp.fecha_nacimiento,
 					dp.sexo,
 					ds.plano,
@@ -853,6 +861,7 @@ class HomeController
 					ds.tipo_examen,
 					fecha_solicitud as fecha_solicitud,
 					dg_p.diagnostico,
+					dg_p.diagnostico_libre,
 					dp.direccion,
 					dp.telefono,
 					ds.fecha
@@ -875,7 +884,9 @@ class HomeController
 			$columnTitles = [
 				'codigo_fonasa' => 'Código',
 				'rut' => 'RUT',
-				'paciente' => 'Nombre Completo Paciente',
+				'nombres' => 'Nombres',
+				'apellido_paterno' => 'Primer Apellido',
+				'apellido_materno' => 'Segundo Apellido',
 				'fecha_nacimiento' => 'Fecha Nacimiento',
 				'sexo' => 'Sexo',
 				'plano' => 'Plano',
@@ -889,6 +900,32 @@ class HomeController
 			];
 		}
 	
+
+		foreach ($data as &$row) {
+			// Agregar el nuevo campo con el valor deseado, por ejemplo:
+			$row['serv_salud'] = '10';
+			$row['previcion'] = '1';
+			$row['tipo_prest'] = '3';
+			$row['dv'] = '';
+			$row['prais'] = '2';
+			$row['region'] = '13';
+			$row['comuna'] = '13501';
+			$row['ciudad'] = 'MELIPILLA';
+			$row['ruralidad'] = '01';
+			$row['via_direccion'] = '04';
+		}
+
+		$columnTitles['serv_salud'] = 'SERV_SALUD';
+		$columnTitles['previcion'] = 'PREVISION';
+		$columnTitles['tipo_prest'] = 'TIPO_PREST';
+		$columnTitles['dv'] = 'DV';
+		$columnTitles['prais'] = 'PRAIS';
+		$columnTitles['region'] = 'REGION';
+		$columnTitles['comuna'] = 'COMUNA';
+		$columnTitles['ciudad'] = 'CIUDAD';
+		$columnTitles['ruralidad'] = 'COND_RURALIDAD';
+		$columnTitles['via_direccion'] = 'VIA_DIRECCION';
+		
 		// Extraer solo los valores de los datos
 		$dataValues = array_map(function($row) {
 			return array_values($row);
@@ -998,6 +1035,8 @@ class HomeController
 				$examArray[$key] = ($key + 1) . '. ' . $element;
 			}
 
+			$edad = ($data[0]["edad"] != 0) ? $data[0]["edad"] : 'Sin Edad';
+
 			// Unir de nuevo el array en una cadena con saltos de línea
 			$exam = implode("<br>", $examArray);
 
@@ -1063,7 +1102,7 @@ class HomeController
 						</tr>
 						<tr>
 							<td><strong>Edad</strong></td>
-							<td>".$data[0]["edad"]."</td>
+							<td>".$edad."</td>
 						</tr>
 						<tr>
 							<td><strong>Fecha Solicitud</strong></td>
