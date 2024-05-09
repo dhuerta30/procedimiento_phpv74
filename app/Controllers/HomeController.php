@@ -788,232 +788,115 @@ class HomeController
 
 		$pdocrud = DB::PDOCrud();
 		$pdomodel = $pdocrud->getPDOModelObj();
+		
+		$data = $pdomodel->executeQuery("
+			SELECT 
+				ds.id_detalle_de_solicitud,
+				codigo_fonasa,
+				SUBSTRING_INDEX(dp.rut, '-', 1) AS run,
+				SUBSTRING_INDEX(dp.rut, '-', -1) AS dv,
+				dp.nombres, 
+				dp.apellido_paterno,
+				dp.apellido_materno,
+				dp.fecha_nacimiento,
+				dp.sexo,
+				ds.plano,
+				ds.extremidad,
+				ds.tipo_examen,
+				ds.fecha_solicitud as fecha_solicitud,
+				ds.fecha_egreso,
+				ds.motivo_egreso,
+				dg_p.diagnostico,
+				dg_p.diagnostico_libre,
+				dp.direccion,
+				ds.fecha
+			FROM 
+				datos_paciente AS dp
+			INNER JOIN
+				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				profesional AS pro ON pro.id_profesional = dg_p.profesional
+			WHERE 
+				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+				AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:fechacorte, '%Y-%m') AND ds.estado = :estado
+			GROUP BY 
+				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
+			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
+		);
+		
+		$columnTitles = [		
+			'id_detalle_de_solicitud' => 'ID_LOCAL',
+			'codigo_fonasa' => 'PRESTA_MIN',
+			'run' => 'RUN',
+			'dv' => 'DV',
+			'nombres' => 'NOMBRES',
+			'apellido_paterno' => 'PRIMER_APELLIDO',
+			'apellido_materno' => 'SEGUNDO_APELLIDO',
+			'fecha_nacimiento' => 'FECHA_NAC',
+			'sexo' => 'SEXO',
+			'plano' => 'PLANO',
+			'extremidad' => 'EXTREMIDAD',
+			'tipo_examen' => 'PRESTA_EST',
+			'fecha_solicitud' => 'F_ENTRADA',
+			'fecha_egreso' => 'F_SALIDA',
+			'motivo_egreso' => 'C_SALIDA',
+			'diagnostico' => 'SOSPECHA_DIAG',
+			'diagnostico_libre' => 'CONFIR_DIAG',
+			'direccion' => 'NOM_CALLE',
+			'fecha' => 'F_CITACION',
+			'previcion' => 'PREVISION',
+			'tipo_prest' => 'TIPO_PREST',
+			'estab_orig' => 'ESTAB_ORIG',
+			'estab_dest' => 'ESTAB_DEST',
+			'e_otor_at' => 'E_OTOR_AT',
+			'codigo_fonasa' => 'PRESTA_MIN_SALIDA',
+			'prais' => 'PRAIS',
+			'region' => 'REGION',
+			'comuna' => 'COMUNA',
+			'ciudad' => 'CIUDAD',
+			'ruralidad' => 'COND_RURALIDAD',
+			'via_direccion' => 'VIA_DIRECCION',
+			'num_direccion' => 'NUM_DIRECCION',
+			'resto_direccion' => 'RESTO_DIRECCION',
+			'fono_fijo' => 'FONO_FIJO',
+			'fono_movil' => 'FONO_MOVIL',
+			'email' => 'EMAIL',
+			'run_prof_sol' => 'RUN_PROF_SOL',
+			'cv_prof_sol' => 'DV_PROF_SOL',
+			'run_prof_resol' => 'RUN_PROF_RESOL',
+			'cv_prof_resol' => 'DV_PROF_RESOL',
+			'resultado' => 'RESULTADO',
+			'sigte_id' => 'SIGETE_ID',
+			'serv_salud' => 'SERV_SALUD'
+		];
 
-		if($estado == "Egresado"){
-			$data = $pdomodel->executeQuery("
-				SELECT 
-					ds.id_detalle_de_solicitud,
-					codigo_fonasa AS codigo,
-					SUBSTRING_INDEX(dp.rut, '-', 1) AS run,
-    				SUBSTRING_INDEX(dp.rut, '-', -1) AS dv,
-					dp.nombres, 
-					dp.apellido_paterno,
-					dp.apellido_materno,
-					dp.fecha_nacimiento,
-					dp.sexo,
-					ds.plano,
-					ds.extremidad,
-					ds.tipo_examen,
-					ds.fecha_solicitud as fecha_solicitud,
-					ds.fecha_egreso,
-					ds.motivo_egreso,
-					dg_p.diagnostico,
-					dg_p.diagnostico_libre,
-					dp.direccion,
-					dp.telefono,
-					ds.fecha
-				FROM 
-					datos_paciente AS dp
-				INNER JOIN
-					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-				INNER JOIN 
-					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-				INNER JOIN 
-					profesional AS pro ON pro.id_profesional = dg_p.profesional
-				WHERE 
-					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:fechacorte, '%Y-%m') AND ds.estado = :estado
-				GROUP BY 
-					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
-				[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
-			);
-	
-			$columnTitles = [
-				'id_detalle_de_solicitud' => 'ID_LOCAL',
-				'run' => 'RUN',
-				'dv' => 'DV',
-				'codigo_fonasa' => 'Código',
-				'nombres' => 'NOMBRES',
-				'apellido_paterno' => 'PRIMER_APELLIDO',
-				'apellido_materno' => 'SEGUNDO_APELLIDO',
-				'fecha_nacimiento' => 'FECHA_NAC',
-				'sexo' => 'SEXO',
-				'plano' => 'PLANO',
-				'extremidad' => 'EXTREMIDAD',
-				'tipo_examen' => 'PRESTA_EST',
-				'fecha_solicitud' => 'F_ENTRADA',
-				'fecha_egreso' => 'F_SALIDA',
-				'motivo_egreso' => 'C_SALIDA',
-				'diagnostico' => 'SOSPECHA_DIAG',
-				'diagnostico_libre' => 'CONFIR_DIAG',
-				'direccion' => 'NOM_CALLE',
-				'telefono' => 'Teléfono',
-				'fecha' => 'F_CITACION',
-				// Campos adicionales que no están en la query pero se agregan
-				'serv_salud' => 'SERV_SALUD',
-				'previcion' => 'PREVISION',
-				'tipo_prest' => 'TIPO_PREST',
-				'prais' => 'PRAIS',
-				'region' => 'REGION',
-				'comuna' => 'COMUNA',
-				'ciudad' => 'CIUDAD',
-				'ruralidad' => 'COND_RURALIDAD',
-				'via_direccion' => 'VIA_DIRECCION',
-				'estab_orig' => 'ESTAB_ORIG',
-				'estab_dest' => 'ESTAB_DEST',
-				'e_otor_at' => 'E_OTOR_AT',
-				'num_direccion' => 'NUM_DIRECCION',
-				'resto_direccion' => 'RESTO_DIRECCION',
-				'fono_fijo' => 'FONO_FIJO',
-				'fono_movil' => 'FONO_MOVIL',
-				'email' => 'EMAIL',
-				'resultado' => 'RESULTADO',
-				'sigte_id' => 'SIGETE_ID',
-				'run_prof_resol' => 'RUN_PROF_RESOL',
-				'cv_prof_resol' => 'DV_PROF_RESOL',
-				'run_prof_sol' => 'RUN_PROF_SOL',
-				'cv_prof_sol' => 'DV_PROF_SOL',
-			];
-
-			foreach ($data as &$row) {
-				// Agregar el nuevo campo con el valor deseado, por ejemplo:
-				$row['serv_salud'] = '10';
-				$row['previcion'] = '1';
-				$row['tipo_prest'] = '3';
-				$row['prais'] = '2';
-				$row['region'] = '13';
-				$row['comuna'] = '13501';
-				$row['ciudad'] = 'MELIPILLA';
-				$row['ruralidad'] = '01';
-				$row['via_direccion'] = '04';
-				$row['estab_orig'] = '110150';
-				$row['estab_dest'] = '110150';
-				$row['e_otor_at'] = '110150';
-				$row['num_direccion'] = '';
-				$row['resto_direccion'] = '';
-				$row['fono_fijo'] = '';
-				$row['fono_movil'] = '';
-				$row['email'] = '';
-				$row['resultado'] = '';
-				$row['sigte_id'] = '';
-				$row['run_prof_resol'] = '';
-				$row['cv_prof_resol'] = '';
-				$row['run_prof_sol'] = '';
-				$row['cv_prof_sol'] = '';
-			}
-		} else {
-			$data = $pdomodel->executeQuery("
-				SELECT 
-					ds.id_detalle_de_solicitud,
-					codigo_fonasa AS codigo,
-					SUBSTRING_INDEX(dp.rut, '-', 1) AS run,
-    				SUBSTRING_INDEX(dp.rut, '-', -1) AS dv,
-					nombres, 
-					apellido_paterno,
-					apellido_materno,
-					dp.fecha_nacimiento,
-					dp.sexo,
-					ds.plano,
-					ds.extremidad,
-					ds.tipo_examen,
-					fecha_solicitud as fecha_solicitud,
-					ds.fecha_egreso,
-					ds.motivo_egreso,
-					dg_p.diagnostico,
-					dg_p.diagnostico_libre,
-					dp.direccion,
-					dp.telefono,
-					ds.fecha
-				FROM 
-					datos_paciente AS dp
-				INNER JOIN
-					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-				INNER JOIN 
-					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-				INNER JOIN 
-					profesional AS pro ON pro.id_profesional = dg_p.profesional
-				WHERE 
-					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:fechacorte, '%Y-%m') AND ds.estado = :estado
-				GROUP BY 
-					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
-				[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
-			);
-
-			$columnTitles = [
-				'id_detalle_de_solicitud' => 'ID_LOCAL',
-				'run' => 'RUN',
-				'dv' => 'DV',
-				'codigo_fonasa' => 'Código',
-				'nombres' => 'NOMBRES',
-				'apellido_paterno' => 'PRIMER_APELLIDO',
-				'apellido_materno' => 'SEGUNDO_APELLIDO',
-				'fecha_nacimiento' => 'FECHA_NAC',
-				'sexo' => 'SEXO',
-				'plano' => 'PLANO',
-				'extremidad' => 'EXTREMIDAD',
-				'tipo_examen' => 'PRESTA_EST',
-				'fecha_solicitud' => 'F_ENTRADA',
-				'fecha_egreso' => 'F_SALIDA',
-				'motivo_egreso' => 'C_SALIDA',
-				'diagnostico' => 'SOSPECHA_DIAG',
-				'diagnostico_libre' => 'CONFIR_DIAG',
-				'direccion' => 'NOM_CALLE',
-				'telefono' => 'Teléfono',
-				'fecha' => 'F_CITACION',
-				// Campos adicionales que no están en la query pero se agregan
-				'serv_salud' => 'SERV_SALUD',
-				'previcion' => 'PREVISION',
-				'tipo_prest' => 'TIPO_PREST',
-				'prais' => 'PRAIS',
-				'region' => 'REGION',
-				'comuna' => 'COMUNA',
-				'ciudad' => 'CIUDAD',
-				'ruralidad' => 'COND_RURALIDAD',
-				'via_direccion' => 'VIA_DIRECCION',
-				'estab_orig' => 'ESTAB_ORIG',
-				'estab_dest' => 'ESTAB_DEST',
-				'e_otor_at' => 'E_OTOR_AT',
-				'num_direccion' => 'NUM_DIRECCION',
-				'resto_direccion' => 'RESTO_DIRECCION',
-				'fono_fijo' => 'FONO_FIJO',
-				'fono_movil' => 'FONO_MOVIL',
-				'email' => 'EMAIL',
-				'resultado' => 'RESULTADO',
-				'sigte_id' => 'SIGETE_ID',
-				'run_prof_resol' => 'RUN_PROF_RESOL',
-				'cv_prof_resol' => 'DV_PROF_RESOL',
-				'run_prof_sol' => 'RUN_PROF_SOL',
-				'cv_prof_sol' => 'DV_PROF_SOL',
-			];
-
-			foreach ($data as &$row) {
-				// Agregar el nuevo campo con el valor deseado, por ejemplo:
-				$row['serv_salud'] = '10';
-				$row['previcion'] = '1';
-				$row['tipo_prest'] = '3';
-				$row['prais'] = '2';
-				$row['region'] = '13';
-				$row['comuna'] = '13501';
-				$row['ciudad'] = 'MELIPILLA';
-				$row['ruralidad'] = '01';
-				$row['via_direccion'] = '04';
-				$row['estab_orig'] = '110150';
-				$row['estab_dest'] = '110150';
-				$row['e_otor_at'] = '110150';
-				$row['num_direccion'] = '';
-				$row['resto_direccion'] = '';
-				$row['fono_fijo'] = '';
-				$row['fono_movil'] = '';
-				$row['email'] = '';
-				$row['resultado'] = '';
-				$row['sigte_id'] = '';
-				$row['run_prof_resol'] = '';
-				$row['cv_prof_resol'] = '';
-				$row['run_prof_sol'] = '';
-				$row['cv_prof_sol'] = '';
-			}
-			
+		foreach ($data as &$row) {
+			// Agregar el nuevo campo con el valor deseado, por ejemplo:
+			$row['serv_salud'] = '10';
+			$row['previcion'] = '01';
+			$row['tipo_prest'] = '03';
+			$row['prais'] = '02';
+			$row['region'] = '13';
+			$row['comuna'] = '13501';
+			$row['ciudad'] = 'MELIPILLA';
+			$row['ruralidad'] = '01';
+			$row['via_direccion'] = '04';
+			$row['estab_orig'] = '110150';
+			$row['estab_dest'] = '110150';
+			$row['e_otor_at'] = '110150';
+			$row['num_direccion'] = '';
+			$row['resto_direccion'] = '';
+			$row['fono_fijo'] = '';
+			$row['fono_movil'] = '';
+			$row['email'] = '';
+			$row['resultado'] = '';
+			$row['sigte_id'] = '';
+			$row['run_prof_resol'] = '';
+			$row['cv_prof_resol'] = '';
+			$row['run_prof_sol'] = '';
+			$row['cv_prof_sol'] = '';
 		}
 	
 		// Extraer solo los valores de los datos
@@ -1022,10 +905,18 @@ class HomeController
 		}, $data);
 	
 		// Insertar los títulos en la primera fila de los datos
-		array_unshift($dataValues, array_values($columnTitles));
+		//array_unshift($dataValues, array_values($columnTitles));
+
+		$columnTitleValues = array_values($columnTitles);
+
+		// Merge the titles with the data
+		$dataWithTitles = [$columnTitleValues];
+		foreach ($dataValues as $value) {
+			$dataWithTitles[] = $value;
+		}
 	
 		// Exportar los datos con los títulos al Excel
-		$pdomodel->arrayToExcel($dataValues, "exportacion.xlsx");
+		$pdomodel->arrayToExcel($dataWithTitles, "exportacion.xlsx");
 	}
 
 	public function profesionales(){
