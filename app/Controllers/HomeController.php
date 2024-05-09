@@ -830,9 +830,9 @@ class HomeController
 	
 			$columnTitles = [
 				'id_detalle_de_solicitud' => 'ID_LOCAL',
-				'codigo_fonasa' => 'Código',
 				'run' => 'RUN',
 				'dv' => 'DV',
+				'codigo_fonasa' => 'Código',
 				'nombres' => 'NOMBRES',
 				'apellido_paterno' => 'PRIMER_APELLIDO',
 				'apellido_materno' => 'SEGUNDO_APELLIDO',
@@ -848,7 +848,31 @@ class HomeController
 				'diagnostico_libre' => 'CONFIR_DIAG',
 				'direccion' => 'NOM_CALLE',
 				'telefono' => 'Teléfono',
-				'fecha' => 'F_CITACION'
+				'fecha' => 'F_CITACION',
+				// Campos adicionales que no están en la query pero se agregan
+				'serv_salud' => 'SERV_SALUD',
+				'previcion' => 'PREVISION',
+				'tipo_prest' => 'TIPO_PREST',
+				'prais' => 'PRAIS',
+				'region' => 'REGION',
+				'comuna' => 'COMUNA',
+				'ciudad' => 'CIUDAD',
+				'ruralidad' => 'COND_RURALIDAD',
+				'via_direccion' => 'VIA_DIRECCION',
+				'estab_orig' => 'ESTAB_ORIG',
+				'estab_dest' => 'ESTAB_DEST',
+				'e_otor_at' => 'E_OTOR_AT',
+				'num_direccion' => 'NUM_DIRECCION',
+				'resto_direccion' => 'RESTO_DIRECCION',
+				'fono_fijo' => 'FONO_FIJO',
+				'fono_movil' => 'FONO_MOVIL',
+				'email' => 'EMAIL',
+				'resultado' => 'RESULTADO',
+				'sigte_id' => 'SIGETE_ID',
+				'run_prof_resol' => 'RUN_PROF_RESOL',
+				'cv_prof_resol' => 'DV_PROF_RESOL',
+				'run_prof_sol' => 'RUN_PROF_SOL',
+				'cv_prof_sol' => 'DV_PROF_SOL',
 			];
 
 			foreach ($data as &$row) {
@@ -877,30 +901,6 @@ class HomeController
 				$row['run_prof_sol'] = '';
 				$row['cv_prof_sol'] = '';
 			}
-	
-			$columnTitles['serv_salud'] = 'SERV_SALUD';
-			$columnTitles['previcion'] = 'PREVISION';
-			$columnTitles['tipo_prest'] = 'TIPO_PREST';
-			$columnTitles['prais'] = 'PRAIS';
-			$columnTitles['region'] = 'REGION';
-			$columnTitles['comuna'] = 'COMUNA';
-			$columnTitles['ciudad'] = 'CIUDAD';
-			$columnTitles['ruralidad'] = 'COND_RURALIDAD';
-			$columnTitles['via_direccion'] = 'VIA_DIRECCION';
-			$columnTitles['estab_orig'] = 'ESTAB_ORIG';
-			$columnTitles['estab_dest'] = 'ESTAB_DEST';
-			$columnTitles['e_otor_at'] = 'E_OTOR_AT';
-			$columnTitles['num_direccion'] = 'NUM_DIRECCION';
-			$columnTitles['resto_direccion'] = 'RESTO_DIRECCION';
-			$columnTitles['fono_fijo'] = 'FONO_FIJO';
-			$columnTitles['fono_movil'] = 'FONO_MOVIL';
-			$columnTitles['email'] = 'EMAIL';
-			$columnTitles['resultado'] = 'RESULTADO';
-			$columnTitles['sigte_id'] = 'SIGETE_ID';
-			$columnTitles['run_prof_resol'] = 'RUN_PROF_RESOL';
-			$columnTitles['cv_prof_resol'] = 'DV_PROF_RESOL';
-			$columnTitles['run_prof_sol'] = 'RUN_PROF_SOL';
-			$columnTitles['cv_prof_sol'] = 'DV_PROF_SOL';
 		} else {
 			$data = $pdomodel->executeQuery("
 				SELECT 
@@ -941,9 +941,10 @@ class HomeController
 			);
 
 			$columnTitles = [
-				'codigo_fonasa' => 'Código',
+				'id_detalle_de_solicitud' => 'ID_LOCAL',
 				'run' => 'RUN',
 				'dv' => 'DV',
+				'codigo_fonasa' => 'Código',
 				'nombres' => 'NOMBRES',
 				'apellido_paterno' => 'PRIMER_APELLIDO',
 				'apellido_materno' => 'SEGUNDO_APELLIDO',
@@ -953,12 +954,37 @@ class HomeController
 				'extremidad' => 'EXTREMIDAD',
 				'tipo_examen' => 'PRESTA_EST',
 				'fecha_solicitud' => 'F_ENTRADA',
+				'fecha_egreso' => 'F_SALIDA',
+				'motivo_egreso' => 'C_SALIDA',
 				'diagnostico' => 'SOSPECHA_DIAG',
 				'diagnostico_libre' => 'CONFIR_DIAG',
 				'direccion' => 'NOM_CALLE',
 				'telefono' => 'Teléfono',
 				'fecha' => 'F_CITACION',
-				'id_detalle_de_solicitud' => 'ID_LOCAL'
+				// Campos adicionales que no están en la query pero se agregan
+				'serv_salud' => 'SERV_SALUD',
+				'previcion' => 'PREVISION',
+				'tipo_prest' => 'TIPO_PREST',
+				'prais' => 'PRAIS',
+				'region' => 'REGION',
+				'comuna' => 'COMUNA',
+				'ciudad' => 'CIUDAD',
+				'ruralidad' => 'COND_RURALIDAD',
+				'via_direccion' => 'VIA_DIRECCION',
+				'estab_orig' => 'ESTAB_ORIG',
+				'estab_dest' => 'ESTAB_DEST',
+				'e_otor_at' => 'E_OTOR_AT',
+				'num_direccion' => 'NUM_DIRECCION',
+				'resto_direccion' => 'RESTO_DIRECCION',
+				'fono_fijo' => 'FONO_FIJO',
+				'fono_movil' => 'FONO_MOVIL',
+				'email' => 'EMAIL',
+				'resultado' => 'RESULTADO',
+				'sigte_id' => 'SIGETE_ID',
+				'run_prof_resol' => 'RUN_PROF_RESOL',
+				'cv_prof_resol' => 'DV_PROF_RESOL',
+				'run_prof_sol' => 'RUN_PROF_SOL',
+				'cv_prof_sol' => 'DV_PROF_SOL',
 			];
 
 			foreach ($data as &$row) {
@@ -987,30 +1013,6 @@ class HomeController
 				$row['run_prof_sol'] = '';
 				$row['cv_prof_sol'] = '';
 			}
-	
-			$columnTitles['serv_salud'] = 'SERV_SALUD';
-			$columnTitles['previcion'] = 'PREVISION';
-			$columnTitles['tipo_prest'] = 'TIPO_PREST';
-			$columnTitles['prais'] = 'PRAIS';
-			$columnTitles['region'] = 'REGION';
-			$columnTitles['comuna'] = 'COMUNA';
-			$columnTitles['ciudad'] = 'CIUDAD';
-			$columnTitles['ruralidad'] = 'COND_RURALIDAD';
-			$columnTitles['via_direccion'] = 'VIA_DIRECCION';
-			$columnTitles['estab_orig'] = 'ESTAB_ORIG';
-			$columnTitles['estab_dest'] = 'ESTAB_DEST';
-			$columnTitles['e_otor_at'] = 'E_OTOR_AT';
-			$columnTitles['num_direccion'] = 'NUM_DIRECCION';
-			$columnTitles['resto_direccion'] = 'RESTO_DIRECCION';
-			$columnTitles['fono_fijo'] = 'FONO_FIJO';
-			$columnTitles['fono_movil'] = 'FONO_MOVIL';
-			$columnTitles['email'] = 'EMAIL';
-			$columnTitles['resultado'] = 'RESULTADO';
-			$columnTitles['sigte_id'] = 'SIGETE_ID';
-			$columnTitles['run_prof_resol'] = 'RUN_PROF_RESOL';
-			$columnTitles['cv_prof_resol'] = 'DV_PROF_RESOL';
-			$columnTitles['run_prof_sol'] = 'RUN_PROF_SOL';
-			$columnTitles['cv_prof_sol'] = 'DV_PROF_SOL';
 			
 		}
 	
