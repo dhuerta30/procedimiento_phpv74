@@ -2668,68 +2668,35 @@ class HomeController
 		$pdomodel = $crud->getPDOModelObj();
 		$data = $pdomodel->executeQuery(
 			"SELECT 
-				dp.id_datos_paciente,
-				COUNT(ds.examen) AS total_examen,
-				GROUP_CONCAT(ds.examen) AS examen,
-				ds.codigo_fonasa,
-				ds.fecha_solicitud,
-				ds.procedencia,
-				GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
-				GROUP_CONCAT(dg_p.diagnostico) AS diagnostico,
-				dp.nombres,
-				dp.apellido_paterno,
-				dp.apellido_materno,
-				GROUP_CONCAT(DISTINCT ds.estado) AS estado,
-				dp.rut,
-				dp.fecha_y_hora_ingreso,
-				GROUP_CONCAT(ds.fecha) AS fecha,
-				COUNT(ds.id_datos_paciente) AS cantidad_media,
-				MAX(ds_count) AS cantidad_mediana,
-				SUM(ds_mes_actual) AS cantidad_mes_actual,
-				SUM(ds_ultimos_30_dias) AS cantidad_ultimos_30_dias
+			ds.codigo_fonasa AS codigo_fonasa,
+			ds.procedencia AS procedencia,
+			GROUP_CONCAT(ds.examen) AS examen,
+			GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
+			YEAR(ds.fecha_solicitud) AS ano,
+			AVG(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_media,
+			MAX(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_mediana,
+			COUNT(ds.id_datos_paciente) AS total_examen
+		FROM 
+			datos_paciente AS dp
+		INNER JOIN 
+			detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+		INNER JOIN 
+			diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+		LEFT JOIN (
+			SELECT 
+				id_datos_paciente,
+				COUNT(*) AS ds_count
 			FROM 
-				datos_paciente AS dp
-			INNER JOIN 
-				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-			INNER JOIN 
-				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-			LEFT JOIN (
-				SELECT 
-					id_datos_paciente,
-					COUNT(*) AS ds_count
-				FROM 
-					detalle_de_solicitud
-				GROUP BY 
-					id_datos_paciente
-			) AS ds_count ON ds_count.id_datos_paciente = dp.id_datos_paciente
-			LEFT JOIN (
-				SELECT 
-					id_datos_paciente,
-					COUNT(*) AS ds_mes_actual
-				FROM 
-					detalle_de_solicitud
-				WHERE 
-					MONTH(fecha) = MONTH(CURRENT_DATE())
-				GROUP BY 
-					id_datos_paciente
-			) AS ds_mes_actual ON ds_mes_actual.id_datos_paciente = dp.id_datos_paciente
-			LEFT JOIN (
-				SELECT 
-					id_datos_paciente,
-					COUNT(*) AS ds_ultimos_30_dias
-				FROM 
-					detalle_de_solicitud
-				WHERE 
-					fecha >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
-				GROUP BY 
-					id_datos_paciente
-			) AS ds_ultimos_30_dias ON ds_ultimos_30_dias.id_datos_paciente = dp.id_datos_paciente
-			WHERE 
-				ds.estado != 'Egresado'
-			GROUP BY
-				dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
-			ORDER BY 
-				ds.fecha ASC"
+				detalle_de_solicitud
+			GROUP BY 
+				id_datos_paciente
+		) AS ds_count ON ds_count.id_datos_paciente = dp.id_datos_paciente
+		WHERE 
+			ds.estado != 'Egresado'
+		GROUP BY
+			dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
+		ORDER BY 
+			ds.fecha ASC;"
 		);
 
 		echo json_encode(['data' => $data]);

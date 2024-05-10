@@ -141,7 +141,7 @@ function datatable(){
              },
             { data: 'examen' },
             { data: 'tipo_examen' },
-            { data: 'fecha_solicitud', 
+            { data: 'ano', 
                 render: function(data, type, row, meta){
                     var fecha = moment(data);
 
