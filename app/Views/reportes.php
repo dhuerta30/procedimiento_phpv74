@@ -159,7 +159,6 @@ function datatable(){
     });
 }
 
-
 function datatable_search(){
     $('.tabla_reportes_search').DataTable({
         searching: false,
