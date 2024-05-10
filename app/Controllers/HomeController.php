@@ -2673,9 +2673,9 @@ class HomeController
 			GROUP_CONCAT(ds.examen) AS examen,
 			GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
 			YEAR(ds.fecha_solicitud) AS ano,
-			AVG(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_media,
+			MIN(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_media,
 			MAX(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_mediana,
-			COUNT(ds.id_datos_paciente) AS total_examen
+			COUNT(ds.examen) AS total_examen
 		FROM 
 			datos_paciente AS dp
 		INNER JOIN 
