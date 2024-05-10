@@ -99,7 +99,7 @@ function datatable(){
                     return 'reportes';
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] // Define las columnas a exportar
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7] // Define las columnas a exportar
                 }
             }
         ],
@@ -176,7 +176,7 @@ function datatable_search(){
                     return 'reportes';
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] // Define las columnas a exportar
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7] // Define las columnas a exportar
                 }
             }
         ],
