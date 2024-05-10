@@ -42,11 +42,10 @@
                                     <th>Código Fonasa</th>
                                     <th>Procedencia</th>
                                     <th>Exámen</th>
-                                    <th>Estado</th>
                                     <th>Tipo de Exámen</th>
                                     <th>Año</th>
-                                    <th>Mínima</th>
-                                    <th>Máxima</th>
+                                    <th>Media</th>
+                                    <th>Mediana</th>
                                     <th>Total Exámenes</th>
                                 </tr>
                             </thead>
@@ -141,7 +140,6 @@ function datatable(){
                 }
              },
             { data: 'examen' },
-            { data: 'estado' },
             { data: 'tipo_examen' },
             { data: 'fecha_solicitud', 
                 render: function(data, type, row, meta){
@@ -154,8 +152,8 @@ function datatable(){
                     return fechaFormateada;
                 }
              },
-            { data: 'cantidad_minima' },
-            { data: 'cantidad_maxima' },
+            { data: 'cantidad_media' },
+            { data: 'cantidad_mediana' },
             { data: 'total_examen' }
         ]
     });

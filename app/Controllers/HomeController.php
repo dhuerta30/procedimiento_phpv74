@@ -2683,8 +2683,8 @@ class HomeController
 				dp.rut,
 				dp.fecha_y_hora_ingreso,
 				GROUP_CONCAT(ds.fecha) AS fecha,
-				COUNT(ds.id_datos_paciente) AS cantidad_minima,
-				MAX(ds_count) AS cantidad_maxima,
+				COUNT(ds.id_datos_paciente) AS cantidad_media,
+				MAX(ds_count) AS cantidad_mediana,
 				SUM(ds_mes_actual) AS cantidad_mes_actual,
 				SUM(ds_ultimos_30_dias) AS cantidad_ultimos_30_dias
 			FROM 
@@ -3131,8 +3131,8 @@ class HomeController
 					dp.rut,
 					dp.fecha_y_hora_ingreso,
 					GROUP_CONCAT(ds.fecha) AS fecha,
-					COUNT(ds.id_datos_paciente) AS cantidad_minima,
-					MAX(ds_count) AS cantidad_maxima,
+					COUNT(ds.id_datos_paciente) AS cantidad_media,
+					MAX(ds_count) AS cantidad_mediana,
 					SUM(ds_mes_actual) AS cantidad_mes_actual,
 					SUM(ds_ultimos_30_dias) AS cantidad_ultimos_30_dias
 
@@ -3193,11 +3193,10 @@ class HomeController
 								<th>Código Fonasa</th>
 								<th>Procedencia</th>
 								<th>Exámen</th>
-								<th>Estado</th>
 								<th>Tipo de Exámen</th>
 								<th>Año</th>
-								<th>Mínima</th>
-								<th>Máxima</th>
+								<th>Media</th>
+								<th>Mediana</th>
 								<th>Total Exámenes</th>
 							</tr>
 						</thead>
@@ -3207,16 +3206,16 @@ class HomeController
 				foreach ($data as $row) {
 					$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
 					$ano = ($row["fecha_solicitud"] != null) ? date('Y', strtotime($row["fecha_solicitud"])) : "Sin Año";
+					$procedencia = ($row["procedencia"] != null) ? $row["procedencia"] : '<div class="badge badge-danger">Sin Procedencia</div>';
 					$html .= '
 						<tr>
 							<td>' . $row['codigo_fonasa'] . '</td>
-							<td>' . $row['procedencia'] . '</td>
+							<td>' . $procedencia . '</td>
 							<td>' . $row["examen"] . '</td>
-							<td>' . $row["estado"] . '</td>
 							<td>' . $row["tipo_examen"] . '</td>
 							<td>' . $ano . '</td>
-							<td>'. $row['cantidad_minima'] .'</td>
-							<td>'. $row['cantidad_maxima'] .'</td>
+							<td>'. $row['cantidad_media'] .'</td>
+							<td>'. $row['cantidad_mediana'] .'</td>
 							<td>' . $row["total_examen"] . '</td>
 						</tr>
 					';
