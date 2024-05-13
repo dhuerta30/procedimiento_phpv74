@@ -3080,23 +3080,27 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 	
-			$where = "";
+			$where = "ds.estado != 'Egresado'";
 			$ano_desde = $request->post('ano_desde');
 			$ano_hasta = $request->post('ano_hasta');
 			$procedencia = $request->post('procedencia');
 	
-			if ($ano_desde != "0" || $ano_hasta != "0") {
-				$where .= " YEAR(ds.fecha_solicitud) = '$ano_desde' OR ";
-				$where .= " YEAR(ds.fecha_solicitud) = '$ano_hasta' OR ";
-				$where .= " YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' ";
-			}
-
-			if($procedencia != "0"){
-				if($procedencia == 'Sin Procedencia'){
-					$where .= "(ds.procedencia = 'Sin Procedencia' OR ds.procedencia IS NULL) ";
-				} else {
-					$where .= "ds.procedencia = '$procedencia' ";
+			if ($ano_desde != "0" || $ano_hasta != "0" || $procedencia != "0") {
+				$where .= " AND (";
+				if ($ano_desde != "0" && $ano_hasta != "0") {
+					$where .= " YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' ";
 				}
+				if ($procedencia != "0") {
+					if ($ano_desde != "0" && $ano_hasta != "0") {
+						$where .= " AND ";
+					}
+					if ($procedencia == 'Sin Procedencia') {
+						$where .= " (ds.procedencia IS NULL OR ds.procedencia = 'Sin Procedencia') ";
+					} else {
+						$where .= " ds.procedencia = '$procedencia' ";
+					}
+				}
+				$where .= ")";
 			}
 	
 			$data = $pdomodel->executeQuery(
@@ -3126,7 +3130,6 @@ class HomeController
 						id_datos_paciente
 				) AS ds_count ON ds_count.id_datos_paciente = dp.id_datos_paciente
 				WHERE 
-					ds.estado != 'Egresado' AND
 					".$where."
 				GROUP BY
 					dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
@@ -3137,49 +3140,47 @@ class HomeController
 			//echo $pdomodel->getLastQuery();
 			//die();
 
-			if($data){
-				$html = '
-					<table class="table table-striped tabla_reportes_search text-center" style="width:100%">
-						<thead class="bg-primary">
-							<tr>
-								<th>Código Fonasa</th>
-								<th>Procedencia</th>
-								<th>Exámen</th>
-								<th>Tipo de Exámen</th>
-								<th>Año</th>
-								<th>Media</th>
-								<th>Mediana</th>
-								<th>Total Exámenes</th>
-							</tr>
-						</thead>
-						<tbody>
-				';
-		
-				foreach ($data as $row) {
-					//$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
-					$ano = ($row["ano"] != null) ? date('Y', strtotime($row["ano"])) : "Sin Año";
-					$procedencia = ($row["procedencia"] != null) ? $row["procedencia"] : '<div class="badge badge-danger">Sin Procedencia</div>';
-					$html .= '
+			$html = '
+				<table class="table table-striped tabla_reportes_search text-center" style="width:100%">
+					<thead class="bg-primary">
 						<tr>
-							<td>' . $row['codigo_fonasa'] . '</td>
-							<td>' . $procedencia . '</td>
-							<td>' . $row["examen"] . '</td>
-							<td>' . $row["tipo_examen"] . '</td>
-							<td>' . $row["ano"] . '</td>
-							<td>'. $row['cantidad_media'] .'</td>
-							<td>'. $row['cantidad_mediana'] .'</td>
-							<td>' . $row["total_examen"] . '</td>
+							<th>Código Fonasa</th>
+							<th>Procedencia</th>
+							<th>Exámen</th>
+							<th>Tipo de Exámen</th>
+							<th>Año</th>
+							<th>Media</th>
+							<th>Mediana</th>
+							<th>Total Exámenes</th>
 						</tr>
-					';
-				}
-		
+					</thead>
+					<tbody>
+			';
+	
+			foreach ($data as $row) {
+				//$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
+				$ano = ($row["ano"] != null) ? date('Y', strtotime($row["ano"])) : "Sin Año";
+				$procedencia = ($row["procedencia"] != null) ? $row["procedencia"] : '<div class="badge badge-danger">Sin Procedencia</div>';
 				$html .= '
-						</tbody>
-					</table>
+					<tr>
+						<td>' . $row['codigo_fonasa'] . '</td>
+						<td>' . $procedencia . '</td>
+						<td>' . $row["examen"] . '</td>
+						<td>' . $row["tipo_examen"] . '</td>
+						<td>' . $row["ano"] . '</td>
+						<td>'. $row['cantidad_media'] .'</td>
+						<td>'. $row['cantidad_mediana'] .'</td>
+						<td>' . $row["total_examen"] . '</td>
+					</tr>
 				';
-				$html_data = array($html);
-				echo $pdocrud->render("HTML", $html_data);
 			}
+	
+			$html .= '
+					</tbody>
+				</table>
+			';
+			$html_data = array($html);
+			echo $pdocrud->render("HTML", $html_data);
 		}
 	}
 		
