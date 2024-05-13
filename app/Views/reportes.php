@@ -316,6 +316,7 @@ $(document).on("click", ".btn_limpiar", function(){
     $('.ano_desde').val("");
     $('.ano_desde').select2();
     $('.ano_desde').html('<option value="0">Seleccionar Año Desde</option>');
+    $('.procedencia_filtro').val("0");
 
     $('.ano_hasta').select2('destroy');
     $('.ano_hasta').val("");
