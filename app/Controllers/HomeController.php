@@ -3085,22 +3085,25 @@ class HomeController
 			$ano_hasta = $request->post('ano_hasta');
 			$procedencia = $request->post('procedencia');
 	
-			if ($ano_desde != "0" || $ano_hasta != "0" || $procedencia != "0") {
-				$where .= " AND (";
-				if ($ano_desde != "0" && $ano_hasta != "0") {
-					$where .= " YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' ";
+			if ($ano_desde != "0" && $ano_hasta != "0") {
+				$where .= " AND YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta'";
+			} else {
+				// Si solo se proporciona un año, filtrar por ese año específico
+				if ($ano_desde != "0") {
+					$where .= " AND YEAR(ds.fecha_solicitud) = '$ano_desde'";
 				}
-				if ($procedencia != "0") {
-					if ($ano_desde != "0" && $ano_hasta != "0") {
-						$where .= " AND ";
-					}
-					if ($procedencia == 'Sin Procedencia') {
-						$where .= " (ds.procedencia IS NULL OR ds.procedencia = 'Sin Procedencia') ";
-					} else {
-						$where .= " ds.procedencia = '$procedencia' ";
-					}
+				if ($ano_hasta != "0") {
+					$where .= " AND YEAR(ds.fecha_solicitud) = '$ano_hasta'";
 				}
-				$where .= ")";
+			}
+	
+			// Construir la condición para filtrar por procedencia
+			if ($procedencia != "0") {
+				if ($procedencia == 'Sin Procedencia') {
+					$where .= " AND (ds.procedencia IS NULL OR ds.procedencia = 'Sin Procedencia')";
+				} else {
+					$where .= " AND ds.procedencia = '$procedencia'";
+				}
 			}
 	
 			$data = $pdomodel->executeQuery(
