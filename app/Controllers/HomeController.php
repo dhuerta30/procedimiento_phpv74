@@ -2709,7 +2709,7 @@ class HomeController
 		$html_data = array('
 			<form action="#" method="POST" class="form_search">
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<label for="correo">Año Desde</label>
 					<div class="input-group-append">
 						<select class="form-control ano_desde" type="text" name="ano_desde" id="ano_desde">
@@ -2720,7 +2720,7 @@ class HomeController
 						</span>
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<label for="fecha">Año Hasta</label>
 					<div class="input-group-append">
 						<select class="form-control ano_hasta" type="text" name="ano_hasta" id="ano_hasta">
@@ -2729,6 +2729,18 @@ class HomeController
 						<span class="btn btn-default border" id="basic-addon1">
 							<i class="fa fa-calendar"></i>
 						</span>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label for="fecha">Procedencia</label>
+					<div class="input-group-append">
+						<select class="form-control procedencia_filtro" type="text" name="procedencia_filtro" id="procedencia_filtro">
+							<option value="0">Seleccionar Procedencia</option>
+							<option value="Hospitalizado">Hospitalizado</option>
+							<option value="Urgencia">Urgencia</option>
+							<option value="Ambulatorio">Ambulatorio</option>
+							<option value="Sin Procedencia">Sin Procedencia</option>
+						</select>
 					</div>
 				</div>
 			</div>
@@ -2744,14 +2756,11 @@ class HomeController
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
 		$select2 = $pdocrud->loadPluginJsCode("select2",".ano_desde, .ano_hasta");
 
-		//$render_crud = $this->reportes_all();
-
 		View::render(
 			"reportes",[
 				'render' => $render,
 				'mask' => $mask,
 				'select2' => $select2
-				//'render_crud' => $render_crud
 			]
 		);
 	}
@@ -3074,17 +3083,27 @@ class HomeController
 			$where = "";
 			$ano_desde = $request->post('ano_desde');
 			$ano_hasta = $request->post('ano_hasta');
+			$procedencia = $request->post('procedencia');
 	
-			if (isset($ano_desde) || isset($ano_hasta)) {
+			if ($ano_desde != "0" || $ano_hasta != "0") {
 				$where .= " YEAR(ds.fecha_solicitud) = '$ano_desde' OR ";
 				$where .= " YEAR(ds.fecha_solicitud) = '$ano_hasta' OR ";
 				$where .= " YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' ";
+			}
+
+			if(isset($procedencia)){
+				if($procedencia == 'Sin Procedencia'){
+					$where .= "(ds.procedencia = 'Sin Procedencia' OR ds.procedencia IS NULL) ";
+				} else {
+					$where .= "ds.procedencia = '$procedencia' ";
+				}
 			}
 	
 			$data = $pdomodel->executeQuery(
 				"SELECT 
 				ds.codigo_fonasa AS codigo_fonasa,
 				ds.procedencia AS procedencia,
+				ds.estado,
 				GROUP_CONCAT(ds.examen) AS examen,
 				GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
 				YEAR(ds.fecha_solicitud) AS ano,

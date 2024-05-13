@@ -210,11 +210,9 @@ $(document).ready(function(){
 $(document).on("click", ".btn_search", function(){
     let ano_desde = $('#ano_desde').val();
     let ano_hasta = $('#ano_hasta').val();
+    let procedencia = $('#procedencia_filtro').val();
 
-    let desde = $("#ano_desde").val();
-    let hasta = $("#ano_hasta").val();
-
-    if(desde == 0 && hasta == 0){
+    if(ano_desde == 0 && ano_hasta == 0 && procedencia == 0){
        $("#pdocrud-ajax-loader").show();
        setTimeout(() => {
         $("#pdocrud-ajax-loader").hide();
@@ -227,7 +225,8 @@ $(document).on("click", ".btn_search", function(){
             dataType: "html",
             data: {
                 ano_desde: ano_desde,
-                ano_hasta: ano_hasta
+                ano_hasta: ano_hasta,
+                procedencia: procedencia
             },
             beforeSend: function() {
                 $("#pdocrud-ajax-loader").show();
