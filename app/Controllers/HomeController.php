@@ -3091,7 +3091,7 @@ class HomeController
 				$where .= " YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta' ";
 			}
 
-			if(isset($procedencia)){
+			if($procedencia != "0"){
 				if($procedencia == 'Sin Procedencia'){
 					$where .= "(ds.procedencia = 'Sin Procedencia' OR ds.procedencia IS NULL) ";
 				} else {
