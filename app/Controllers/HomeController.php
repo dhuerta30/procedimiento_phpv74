@@ -2693,7 +2693,7 @@ class HomeController
 		WHERE 
 			ds.estado != 'Egresado'
 		GROUP BY
-			dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
+			ds.codigo_fonasa, ds.procedencia, YEAR(ds.fecha_solicitud)
 		ORDER BY 
 			ds.fecha ASC;"
 		);
@@ -3106,11 +3106,9 @@ class HomeController
 			}
 	
 			$data = $pdomodel->executeQuery(
-				"SELECT 
+				"SELECT
 				ds.codigo_fonasa AS codigo_fonasa,
 				ds.procedencia AS procedencia,
-				ds.estado,
-				ds.fecha,
 				GROUP_CONCAT(ds.examen) AS examen,
 				GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
 				YEAR(ds.fecha_solicitud) AS ano,
@@ -3134,7 +3132,7 @@ class HomeController
 				WHERE 
 					".$where."
 				GROUP BY
-					dp.id_datos_paciente, dp.nombres, dp.rut, ds.fecha_solicitud, ds.estado
+					ds.codigo_fonasa, ds.procedencia, YEAR(ds.fecha_solicitud)
 				ORDER BY 
 					ds.fecha ASC"
 			);
