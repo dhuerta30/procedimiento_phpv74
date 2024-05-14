@@ -45,7 +45,6 @@
                                     <th>Tipo de Exámen</th>
                                     <th>Año</th>
                                     <th>Media</th>
-                                    <th>Mediana</th>
                                     <th>Total Exámenes</th>
                                 </tr>
                             </thead>
@@ -153,7 +152,6 @@ function datatable(){
                 }
              },
             { data: 'cantidad_media' },
-            { data: 'cantidad_mediana' },
             { data: 'total_examen' }
         ]
     });

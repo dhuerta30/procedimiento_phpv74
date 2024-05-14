@@ -2674,7 +2674,6 @@ class HomeController
 			GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
 			YEAR(ds.fecha_solicitud) AS ano,
 			ABS(MIN(DATEDIFF(ds.fecha, ds.fecha_solicitud))) AS cantidad_media,
-			MAX(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_mediana,
 			COUNT(ds.examen) AS total_examen
 		FROM 
 			datos_paciente AS dp
@@ -3116,7 +3115,6 @@ class HomeController
 				GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
 				YEAR(ds.fecha_solicitud) AS ano,
 				ABS(MIN(DATEDIFF(ds.fecha, ds.fecha_solicitud))) AS cantidad_media,
-				MAX(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_mediana,
 				COUNT(ds.examen) AS total_examen
 				FROM
 					datos_paciente AS dp
@@ -3154,7 +3152,6 @@ class HomeController
 							<th>Tipo de Exámen</th>
 							<th>Año</th>
 							<th>Media</th>
-							<th>Mediana</th>
 							<th>Total Exámenes</th>
 						</tr>
 					</thead>
@@ -3173,7 +3170,6 @@ class HomeController
 						<td>' . $row["tipo_examen"] . '</td>
 						<td>' . $row["ano"] . '</td>
 						<td>'. $row['cantidad_media'] .'</td>
-						<td>'. $row['cantidad_mediana'] .'</td>
 						<td>' . $row["total_examen"] . '</td>
 					</tr>
 				';
