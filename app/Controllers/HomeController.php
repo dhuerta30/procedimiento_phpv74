@@ -990,7 +990,7 @@ class HomeController
 
 			$nombre = isset($motivo_egreso[0]["nombre"]) ? $motivo_egreso[0]["nombre"] : '';
 
-			$fecha = date('d/m/Y', strtotime($data[0]["fecha"]));
+			$fecha = date('d/m/Y H:i:s', strtotime($data[0]["fecha"]));
 			$data_fecha = ($fecha != "01/01/1970" && $fecha != "31/12/1969") ? $fecha : 'Sin Fecha';
 
 			$fecha_egreso = date('d/m/Y', strtotime($data[0]["fecha_egreso"]));
@@ -1102,7 +1102,7 @@ class HomeController
 							<td>".$exam."</td>
 						</tr>
 						<tr>
-							<td><strong>Fecha</strong></td>
+							<td><strong>Fecha Agendada</strong></td>
 							<td>".$data_fecha."</td>
 						</tr>
 						<tr>
@@ -2673,7 +2673,7 @@ class HomeController
 			GROUP_CONCAT(ds.examen) AS examen,
 			GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
 			YEAR(ds.fecha_solicitud) AS ano,
-			MIN(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_media,
+			ABS(MIN(DATEDIFF(ds.fecha, ds.fecha_solicitud))) AS cantidad_media,
 			MAX(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_mediana,
 			COUNT(ds.examen) AS total_examen
 		FROM 
@@ -3111,13 +3111,14 @@ class HomeController
 				ds.codigo_fonasa AS codigo_fonasa,
 				ds.procedencia AS procedencia,
 				ds.estado,
+				ds.fecha,
 				GROUP_CONCAT(ds.examen) AS examen,
 				GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
 				YEAR(ds.fecha_solicitud) AS ano,
-				MIN(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_media,
+				ABS(MIN(DATEDIFF(ds.fecha, ds.fecha_solicitud))) AS cantidad_media,
 				MAX(DATEDIFF(CURRENT_DATE(), ds.fecha_solicitud)) AS cantidad_mediana,
 				COUNT(ds.examen) AS total_examen
-				FROM 
+				FROM
 					datos_paciente AS dp
 				INNER JOIN 
 					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
