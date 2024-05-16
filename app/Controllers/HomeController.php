@@ -3166,7 +3166,7 @@ class HomeController
 					<tr>
 						<td>' . $row['codigo_fonasa'] . '</td>
 						<td>' . $procedencia . '</td>
-						<td>' . $row["examen"] . '</td>
+						<td>' . substr($row["examen"], 0, 10) . '...' . '</td>
 						<td>' . $row["tipo_examen"] . '</td>
 						<td>' . $row["ano"] . '</td>
 						<td>'. $row['cantidad_media'] .'</td>

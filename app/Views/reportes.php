@@ -138,7 +138,15 @@ function datatable(){
                     }
                 }
              },
-            { data: 'examen' },
+             { data: 'examen',
+                render: function(data, type, row, meta){
+                    if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
+                        return data.substr(0, 10) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
+                    } else {
+                        return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
+                    }
+                }
+             },
             { data: 'tipo_examen' },
             { data: 'ano', 
                 render: function(data, type, row, meta){
