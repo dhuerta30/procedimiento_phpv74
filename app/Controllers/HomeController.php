@@ -3321,7 +3321,7 @@ class HomeController
 							<td>' . $row["telefono"] . '</td>
 							<td>' . $edad . '</td>
 							<td>'. $code .'</td>
-							<td>' . $row["examen"] . '</td>
+							<td>' . $row["procedencia"] . '</td>
 							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
 							<td>' . $data_fecha . '</td>
 							<td>' . $fecha_egreso . '</td>
