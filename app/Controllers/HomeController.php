@@ -3247,6 +3247,7 @@ class HomeController
 					fecha_solicitud as fecha_solicitud,
 					ds.estado AS estado,
 					codigo_fonasa AS codigo,
+					ds.examen,
 					ds.procedencia AS procedencia,
 					ds.fecha as fecha,
 					especialidad AS especialidad,
@@ -3321,7 +3322,7 @@ class HomeController
 							<td>' . $row["telefono"] . '</td>
 							<td>' . $edad . '</td>
 							<td>'. $code .'</td>
-							<td>' . $row["procedencia"] . '</td>
+							<td>' . substr($row["examen"], 0, 10) . '...' . '</td>
 							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
 							<td>' . $data_fecha . '</td>
 							<td>' . $fecha_egreso . '</td>
