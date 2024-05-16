@@ -2375,6 +2375,7 @@ class HomeController
 			$fundamento = isset($detalle_de_solicitud[0]["fundamento"]) ? $detalle_de_solicitud[0]["fundamento"] : '';
 			$pdocrud->fieldDataAttr("diagnostico", array("value"=> $diagnostico));
 			$pdocrud->formFieldValue("fundamento", $fundamento);
+			$pdocrud->fieldNotMandatory("fundamento");
 
 			$pdocrud->formFields(array("fecha", "id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "diagnostico", "fundamento", "estado"));
 			$pdocrud->setLangData("login", "Guardar");
