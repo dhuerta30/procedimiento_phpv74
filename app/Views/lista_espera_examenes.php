@@ -319,7 +319,7 @@ $(document).on("click", ".buscar", function(){
     let run = $('.rut').val();
     let nombre_paciente = $('.nombre_paciente').val();
     let estado = $('.estado').val();
-    let prestacion = $('.prestacion').val();
+    let procedencia = $('.procedencia').val();
     let profesional = $('.profesional').val();
     let fecha_solicitud = $('.fecha_solicitud').val();
 
@@ -331,7 +331,7 @@ $(document).on("click", ".buscar", function(){
             run: run,
             nombre_paciente: nombre_paciente,
             estado: estado,
-            prestacion: prestacion,
+            procedencia: procedencia,
             profesional: profesional,
             fecha_solicitud: fecha_solicitud
         },

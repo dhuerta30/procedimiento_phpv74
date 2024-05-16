@@ -3198,7 +3198,7 @@ class HomeController
 			$run = $request->post('run');
 			$nombre_paciente = $request->post('nombre_paciente');
 			$estado = $request->post('estado');
-			$prestacion = $request->post('prestacion');
+			$procedencia = $request->post('procedencia');
 			$profesional = $request->post('profesional');
 			$fecha_solicitud = $request->post('fecha_solicitud');
 
@@ -3220,8 +3220,8 @@ class HomeController
 				$where .= " AND ds.estado = '$estado' ";
 			}
 
-			if (!empty($prestacion)) {
-				$where .= " AND ds.examen = '$prestacion' ";
+			if (!empty($procedencia)) {
+				$where .= " AND ds.procedencia = '$procedencia' ";
 			}
 
 			if (!empty($profesional)) {
@@ -3247,7 +3247,7 @@ class HomeController
 					fecha_solicitud as fecha_solicitud,
 					ds.estado AS estado,
 					codigo_fonasa AS codigo,
-					ds.examen AS examen,
+					ds.procedencia AS procedencia,
 					ds.fecha as fecha,
 					especialidad AS especialidad,
 					CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
