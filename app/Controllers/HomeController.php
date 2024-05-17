@@ -2377,6 +2377,18 @@ class HomeController
 			$pdocrud->formFieldValue("fundamento", $fundamento);
 			$pdocrud->fieldNotMandatory("fundamento");
 
+			$pdocrud->buttonHide("submitBtn");
+			$pdocrud->buttonHide("cancel");
+
+			$pdocrud->formStaticFields("buttons", "html", "
+				<div class='row justify-content-center'>
+					<input type='submit' class='btn btn-info pdocrud-form-control pdocrud-submit' id='pdocrud_submit_jkFdX8o5Z9' data-action='selectform' value='Guardar'>
+					<button type='button' class='btn btn-info' data-dismiss='modal'> Cerrar</button>
+				</div>
+				
+			");
+			$pdocrud->fieldDisplayOrder(array("fecha", "estado", "id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "diagnostico", "fundamento", "buttons"));  
+
 			$pdocrud->formFields(array("fecha", "id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "diagnostico", "fundamento", "estado"));
 			$pdocrud->setLangData("login", "Guardar");
 			$pdocrud->addCallback("before_select", "editar_procedimientos");
