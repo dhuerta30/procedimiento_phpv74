@@ -2426,10 +2426,22 @@ class HomeController
 
 			$pdocrud->addCallback("before_select", "editar_lista_examenes_notas");
 			$pdocrud->setSettings("hideAutoIncrement", false);
+			$pdocrud->buttonHide("submitBtn");
+			$pdocrud->buttonHide("cancel");
+
+			$pdocrud->formStaticFields("buttons", "html", "
+				<div class='row justify-content-center'>
+					<input type='submit' class='btn btn-info pdocrud-form-control pdocrud-submit' id='pdocrud_submit_jkFdX8o5Z9' data-action='selectform' value='Guardar'>
+					<button type='button' class='btn btn-info' data-dismiss='modal'> Cerrar</button>
+				</div>
+				
+			");
+			$pdocrud->fieldDisplayOrder(array("info_paciente", "observacion", "buttons"));      
+
 			$pdocrud->setSettings("template", "datos_usuario_busqueda");
 			$pdocrud->fieldRenameLable("observacion", "Observación");
 			$pdocrud->formFields(array("id_datos_paciente", "fecha_solicitud", "observacion"));
-			$pdocrud->setLangData("login", "Guardar");
+			$pdocrud->setLangData("login", "Guardar"); 
 
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
 			HomeController::modal("agregar_nota", "<i class='fa fa-file-o'></i> Agregar Nota", $render);
@@ -2630,6 +2642,18 @@ class HomeController
 			$pdocrud->fieldHideLable("fecha_solicitud");
 			$pdocrud->fieldDataAttr("fecha_solicitud", array("style"=>"display:none"));
 
+			$pdocrud->buttonHide("submitBtn");
+			$pdocrud->buttonHide("cancel");
+
+			$pdocrud->formStaticFields("buttons", "html", "
+				<div class='row justify-content-center'>
+					<input type='submit' class='btn btn-info pdocrud-form-control pdocrud-submit' id='pdocrud_submit_jkFdX8o5Z9' data-action='selectform' value='Guardar'>
+					<button type='button' class='btn btn-info' data-dismiss='modal'> Cerrar</button>
+				</div>
+				
+			");
+			$pdocrud->fieldDisplayOrder(array("id_datos_paciente","empresas_en_convenio","id_detalle_de_solicitud","motivo_egreso","observacion", "fecha_egreso", "fecha_solicitud", "adjuntar", "compra_servicio", "buttons"));  
+
 			$pdocrud->addPlugin("bootstrap-inputmask");
 			$pdocrud->fieldTypes("motivo_egreso", "select");
 			$pdocrud->fieldTypes("adjuntar", "FILE_NEW");
@@ -2645,7 +2669,7 @@ class HomeController
 			$pdocrud->fieldTypes("empresas_en_convenio", "select");
 			$pdocrud->fieldDataBinding("empresas_en_convenio", array("San Agustin"=> "San Agustin","Clinica maitenes" => "Clinica maitenes", "Red salud" => "Red salud", "Imared"=> "Imared", "Atryx"=> "Atryx"), "", "","array");
 			$pdocrud->fieldDataBinding("compra_servicio", array("1"=> "si","2" => "no"), "", "","array");
-			$pdocrud->fieldDisplayOrder(array("id_datos_paciente","fecha_egreso","motivo_egreso","compra_servicio", "listado_empresas_en_convenio", "empresas_en_convenio", "observacion"));
+			//$pdocrud->fieldDisplayOrder(array("id_datos_paciente","fecha_egreso","motivo_egreso","compra_servicio", "listado_empresas_en_convenio", "empresas_en_convenio", "observacion"));
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->fieldCssClass("fecha_egreso", array("fecha_egreso"));
