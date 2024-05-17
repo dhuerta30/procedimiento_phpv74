@@ -618,7 +618,8 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
             allowOutsideClick: false
         }).then((result) => {
             if(result.isConfirmed) {
-                $('.limpiar_filtro').click();
+                //$('.limpiar_filtro').click();
+                $('.tabla_reportes').DataTable().ajax.reload();
             }
         });
     }
