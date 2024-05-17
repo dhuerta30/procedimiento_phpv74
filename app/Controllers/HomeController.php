@@ -2244,7 +2244,7 @@ class HomeController
 		$pdocrud->fieldCssClass("nombre_profesional", array("profesional"));
 		$pdocrud->formStaticFields("botones_busqueda", "html", "
 				<div class='row'>
-					<div class='col-md-12'>
+					<div class='col-md-12 text-center'>
 						<a href='javascript:;' class='btn btn-primary buscar'><i class='fa fa-search'></i> Buscar</a>
 						<a href='javascript:;' class='btn btn-danger limpiar_filtro'><i class='fas fa-eraser'></i> Limpiar</a>
 					</div>
@@ -2260,7 +2260,7 @@ class HomeController
 		$pdocrud->fieldTypes("estado", "select");
 		$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
 		$pdocrud->fieldGroups("Name",array("rut","nombres", "estado"));
-		$pdocrud->fieldGroups("Name2",array("procedencia", "nombre_profesional", "fecha_solicitud"));
+		$pdocrud->fieldGroups("Name2",array("procedencia","nombre_profesional", "fecha_solicitud"));
 		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "procedencia", "nombre_profesional", "fecha_solicitud"));
 		$pdocrud->buttonHide("submitBtn");
 		$pdocrud->buttonHide("cancel");

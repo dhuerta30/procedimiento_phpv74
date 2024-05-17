@@ -30,9 +30,13 @@
 				<h5>Búsqueda Lista Espera Exámenes</h5>
 				<hr>
 
-				<div class="examenes">
-					<?=$render?>
-                    <?=$mask;?>
+				<div class="container examenes">
+					<div class="row justify-content-center">
+                        <div class="col-md-9">
+                            <?=$render?>
+                            <?=$mask;?>
+                        </div>
+                    </div>
 				</div>
 
                 <div class="datos_search p-0"></div>
