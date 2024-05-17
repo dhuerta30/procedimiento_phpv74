@@ -352,7 +352,7 @@ $(document).on("click", ".limpiar_filtro", function(){
     $('.rut').val("");
     $('.nombre_paciente').val("");
     $('.estado').val("");
-    $('.prestacion').val("");
+    $('.procedencia').val("");
     $('.profesional').val("");
     $('.fecha_solicitud').val("");
     $('.buscar').click();
