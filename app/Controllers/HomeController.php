@@ -2255,7 +2255,7 @@ class HomeController
 		$pdocrud->fieldRenameLable("nombres", "Nombre Paciente");
 		$pdocrud->fieldRenameLable("procedencia", "Procedencia");
 		$pdocrud->fieldTypes("procedencia", "select");
-		$pdocrud->fieldDataBinding("procedencia", array("Hospitalizado" => "Hospitalizado", "Urgencia" => "Urgencia", "Ambulatorio" => "Ambulatorio"), "", "","array");
+		$pdocrud->fieldDataBinding("procedencia", array("Hospitalizado" => "Hospitalizado", "Urgencia" => "Urgencia", "Ambulatorio" => "Ambulatorio", "" => "Sin Procedencia"), "", "","array");
 		$pdocrud->fieldRenameLable("nombre_profesional", "Profesional");
 		$pdocrud->fieldTypes("estado", "select");
 		$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
