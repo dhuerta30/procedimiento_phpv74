@@ -84,8 +84,10 @@
 <script src="<?=$_ENV["BASE_URL"]?>js/buttons.html5.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/buttons.print.min.js"></script>
 <script>
-function datatable(){
-    $('.tabla_reportes').DataTable({
+
+var table;
+$(document).ready(function(){
+    table = $('.tabla_reportes').DataTable({
         searching: false,
         scrollX: true,
         lengthMenu: [10],
@@ -208,10 +210,6 @@ function datatable(){
             }
         ]
     });
-}
-
-$(document).ready(function(){
-    datatable();
 
     $(".fecha_solicitud").flatpickr({
         dateFormat: "Y-m-d",
@@ -294,7 +292,7 @@ $(document).on("click", ".buscar", function(){
         success: function(response){
             $("#pdocrud-ajax-loader").hide();
             // Reconstruir la tabla DataTable con los nuevos datos
-            $('.tabla_reportes').DataTable({
+            table = $('.tabla_reportes').DataTable({
                 searching: false,
                 scrollX: true,
                 lengthMenu: [10],
@@ -678,7 +676,6 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
     let json = JSON.parse(data);
 
     if(json.message){
-        //$('#pdocrud_search_btn').click();
         $('#procedimientos').modal('hide');
         $('#egresar_solicitud').modal('hide');
         $('#agregar_nota').modal('hide');
@@ -691,8 +688,7 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
             allowOutsideClick: false
         }).then((result) => {
             if(result.isConfirmed) {
-                //$('.limpiar_filtro').click();
-                $('.tabla_reportes_search').DataTable().ajax.reload(null, false);
+                $('.buscar').click();
             }
         });
     }
