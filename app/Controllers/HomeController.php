@@ -3301,88 +3301,9 @@ class HomeController
 				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
 			);
 
-			if (isset($run)) {
-				$html = '
-				<div class="table-responsive">
-					<table class="table table-striped tabla_reportes_search text-center" style="width:100%">
-						<thead class="bg-primary">
-							<tr>
-								<th>Estado</th>
-								<th>Especialidad</th>
-								<th>Rut</th>
-								<th>Paciente</th>
-								<th>Teléfono</th>
-								<th>Edad</th>
-								<th>Código</th>
-								<th>Exámen</th>
-								<th>Fecha Solicitud</th>
-								<th>Fecha Agendada</th>
-								<th>Fecha Egreso</th>
-								<th>Profesional</th>
-								<th>Acciones</th>
-							</tr>
-						</thead>
-						<tbody>
-				';
 			
-				foreach ($data as $row) {
-
-					$fecha = date('d/m/Y H:i:s', strtotime($row["fecha"]));
-					$data_fecha = ($fecha != "01/01/1970 01:00:00" && $fecha != "31/12/1969 01:00:00") ? $fecha : '<div class="badge badge-danger">Sin Fecha</div>';
-
-					$edad = ($row["edad"] != 0) ? $row["edad"] : '<div class="badge badge-danger">Sin Edad</div>';
-		
-					$codigos = explode(',', $row["codigo"]);
-		
-					$code = "";
-					foreach ($codigos as $codigo) {
-						$code .= '<div class="badge badge-info">'. $codigo . '</div>' . '<br>';
-					}
-		
-					$profesional = str_replace(',', "<br>", $row["profesional"]);
-					$especialidad = str_replace(',', "<br>", $row["especialidad"]);
-
-					$fecha_egreso = date('d/m/Y', strtotime($row["fecha_egreso"]));
-					if($fecha_egreso != "01/01/1970" && $fecha_egreso != "31/12/1969"){
-						$fecha_egreso;
-					} else {
-						$fecha_egreso = "<div class='badge badge-danger'>Sin Fecha</div>";
-					}
-
-					$html .= '
-						<tr style="white-space: nowrap;">
-							<td>' . $row["estado"] . '</td>
-							<td>' . $especialidad . '</td>
-							<td>' . $row['rut'] . '</td>
-							<td>' . $row['nombres'] . ' ' . $row['apellido_paterno'] . ' ' . $row['apellido_materno'] . '</td>
-							<td>' . $row["telefono"] . '</td>
-							<td>' . $edad . '</td>
-							<td>'. $code .'</td>
-							<td>' . substr($row["examen"], 0, 10) . '...' . '</td>
-							<td>' . date('d/m/Y', strtotime($row["fecha_solicitud"])) . '</td>
-							<td>' . $data_fecha . '</td>
-							<td>' . $fecha_egreso . '</td>
-							<td>' . $profesional . '</td>
-							<td>
-								<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'.$row["id_datos_paciente"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-file-o"></i></a>
-								<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-arrow-right"></i></a>
-								<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-o"></i></a>
-								<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'"><i class="fa fa-file-pdf"></i></a>
-								<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'.$row["id_datos_paciente"].'" data-solicitud="'.$row["id_detalle_de_solicitud"].'" data-fechasolicitud="'.$row["fecha_solicitud"].'"><i class="fa fa-folder"></i></a>
-							</td>
-						</tr>
-					';
-				}
+			echo json_encode(['data' => $data]);
 			
-				$html .= '
-						</tbody>
-					</table>
-				</div>
-				';
-	
-				$html_data = array($html);
-				echo $pdocrud->render("HTML", $html_data);
-			}
 		}
 	}
 
