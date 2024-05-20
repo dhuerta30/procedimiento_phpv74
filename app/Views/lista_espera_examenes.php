@@ -267,6 +267,7 @@ $(document).ready(function(){
 
 
 $(document).on("click", ".buscar", function(){
+    // Obtener los valores de los filtros
     let run = $('.rut').val();
     let nombre_paciente = $('.nombre_paciente').val();
     let estado = $('.estado').val();
@@ -287,16 +288,144 @@ $(document).on("click", ".buscar", function(){
             fecha_solicitud: fecha_solicitud
         },
         beforeSend: function() {
+            // Puedes mostrar un indicador de carga aquí
             $("#pdocrud-ajax-loader").show();
         },
-        success: function(data){
+        success: function(response){
             $("#pdocrud-ajax-loader").hide();
-            console.log(data);
-            //$(".tabla_principal").hide();
-            $('.tabla_principal').html(data);
+            // Reconstruir la tabla DataTable con los nuevos datos
+            /*$('#DataTables_Table_0').DataTable({
+                data: response.data, // Los datos filtrados del controlador PHP
+                destroy: true, // Destruir la tabla DataTable existente antes de reconstruirla
+                // Resto de la configuración de la DataTable...
+            });*/
+
+            $('.tabla_reportes').DataTable({
+                searching: false,
+                scrollX: true,
+                lengthMenu: [10],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+                        className: 'btn btn-light',
+                        filename: function(){
+                            return 'reportes';
+                        },
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Define las columnas a exportar
+                        }
+                    }
+                ],
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                data: response.data, // Los datos filtrados del controlador PHP
+                destroy: true,
+                columns: [
+                    { data: 'estado' },
+                    { data: 'especialidad' },
+                    { data: 'rut' },
+                    { data: 'paciente' },
+                    { data: 'telefono' },
+                    { data: 'edad',
+                        render: function(data, type, row, meta){
+                            
+                            if (data == 0) {
+                                return "<div class='badge badge-danger'>Sin Edad</div>";
+                            } else {
+                                return data;
+                            }
+                        } 
+                    },
+                    { data: 'codigo',
+                        render: function(data, type, row, meta){
+                            return "<div class='badge badge-info'>"+ data +"</div>";
+                        }
+                    },
+                    { data: 'examen',
+                        render: function(data, type, row, meta){
+                            if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
+                                return data.substr(0, 10) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
+                            } else {
+                                return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
+                            }
+                        }
+                    },
+                    { data: 'fecha_solicitud',
+                        render: function(data, type, row, meta){
+                            var fecha = moment(data);
+
+                            if (!fecha.isValid()) {
+                                return "<div class='badge badge-danger'>Sin Fecha</div>";
+                            }
+                            // Formatear la fecha en el formato deseado (d/m/y)
+                            var fechaFormateada = fecha.format('DD/MM/Y');
+                            return fechaFormateada;
+                        } 
+                    },
+                    { data: 'fecha',
+                        render: function(data, type, row, meta){
+                            var fecha = moment(data);
+
+                            if (!fecha.isValid()) {
+                                return "<div class='badge badge-danger'>Sin Fecha</div>";
+                            }
+                            // Formatear la fecha en el formato deseado (d/m/y)
+                            var fechaFormateada = fecha.format('DD/MM/Y');
+                            return fechaFormateada;
+                        } 
+                    },
+                    { data: 'fecha_egreso',
+                        render: function(data, type, row, meta){
+                            var fecha = moment(data);
+
+                            if (!fecha.isValid()) {
+                                return "<div class='badge badge-danger'>Sin Fecha</div>";
+                            }
+                            // Formatear la fecha en el formato deseado (d/m/y)
+                            var fechaFormateada = fecha.format('DD/MM/Y');
+                            return fechaFormateada;
+                        } 
+                    },
+                    { data: 'profesional' },
+                    {
+                        render: function(data, type, row) {
+                            return '<td>' +
+                                        '<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'+ row.id_datos_paciente +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-file-o"></i></a>' +
+                                        '<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-arrow-right"></i></a>' +
+                                        '<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-o"></i></a>' +
+                                        '<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-pdf"></i></a>' +
+                                        '<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-folder"></i></a>' +
+                                    '</td>';
+                        }
+                    }
+                ]
+            });
+
+
         }
     });
 });
+
 
 $(document).on("click", ".limpiar_filtro", function(){
     $('.rut').val("");

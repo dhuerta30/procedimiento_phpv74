@@ -3273,10 +3273,8 @@ class HomeController
 					dp.id_datos_paciente,
 					ds.id_detalle_de_solicitud,
 					dp.rut,
-					dp.nombres,
+					CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
 					dp.telefono,
-					dp.apellido_paterno,
-					dp.apellido_materno,
 					dp.edad,
 					ds.fecha_egreso,
 					ds.motivo_egreso,
@@ -3301,7 +3299,6 @@ class HomeController
 				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
 			);
 
-			
 			echo json_encode(['data' => $data]);
 			
 		}
