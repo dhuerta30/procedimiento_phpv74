@@ -294,12 +294,6 @@ $(document).on("click", ".buscar", function(){
         success: function(response){
             $("#pdocrud-ajax-loader").hide();
             // Reconstruir la tabla DataTable con los nuevos datos
-            /*$('#DataTables_Table_0').DataTable({
-                data: response.data, // Los datos filtrados del controlador PHP
-                destroy: true, // Destruir la tabla DataTable existente antes de reconstruirla
-                // Resto de la configuración de la DataTable...
-            });*/
-
             $('.tabla_reportes').DataTable({
                 searching: false,
                 scrollX: true,
