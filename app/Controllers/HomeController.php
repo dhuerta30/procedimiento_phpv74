@@ -669,7 +669,7 @@ class HomeController
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Ingresado' AND ds.folio IS NULL
+					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m-%d') = DATE_FORMAT(:hasta, '%Y-%m-%d') AND ds.estado = 'Ingresado' AND ds.folio IS NULL
 				GROUP BY 
 					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 				[':hasta' => $hasta_formateada]
@@ -743,7 +743,7 @@ class HomeController
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m') = DATE_FORMAT(:hasta, '%Y-%m') AND ds.estado = 'Egresado' AND ds.folio IS NULL
+					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m-%d') = DATE_FORMAT(:hasta, '%Y-%m-%d') AND ds.estado = 'Egresado' AND ds.folio IS NULL
 				GROUP BY 
 					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 				[':hasta' => $hasta]
