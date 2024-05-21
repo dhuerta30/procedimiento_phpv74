@@ -48,7 +48,7 @@
                             <div class="card">
                                 <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Acción</h6>
                                 <div class="card-body text-center">
-                                    <button class="btn btn-info btn-sm previsualizar_ingreso"><i class="fa fa-eye"></i> Previsualizar Ingreso</button>
+                                    <button class="btn btn-info btn-sm previsualizar_ingreso"><i class="fa fa-eye"></i> Generar</button>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                             <div class="card">
                                 <h6 class="card-title bg-custom page-title clearfix card-header pdocrud-table-heading p-2 mb-0">Acción</h6>
                                 <div class="card-body text-center">
-                                    <button class="btn btn-info btn-sm previsualizar_egreso"><i class="fa fa-eye"></i> Previsualizar Egreso</button>
+                                    <button class="btn btn-info btn-sm previsualizar_egreso"><i class="fa fa-eye"></i> Generar</button>
                                 </div>
                             </div>
                         </div>
