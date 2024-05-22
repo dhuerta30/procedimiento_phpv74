@@ -743,7 +743,7 @@ class HomeController
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m-%d') = DATE_FORMAT(:hasta, '%Y-%m-%d') AND ds.estado = 'Egresado' AND ds.folio IS NULL
+					AND DATE_FORMAT(ds.fecha_egreso, '%Y-%m-%d') = DATE_FORMAT(:hasta, '%Y-%m-%d') AND ds.estado = 'Egresado' AND ds.folio IS NULL
 				GROUP BY 
 					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 				[':hasta' => $hasta]
@@ -2638,6 +2638,7 @@ class HomeController
 			$adjuntar = isset($detalle_de_solicitud[0]["adjuntar"]) ? $detalle_de_solicitud[0]["adjuntar"] : '';
 			$pdocrud->formFieldValue("fecha_egreso", $fecha_egreso);
 			$pdocrud->formFieldValue("motivo_egreso", $motivo_egreso);
+			$pdocrud->fieldAttributes("fecha_egreso", array("autocomplete"=>"off"));
 
 			$pdocrud->formFieldValue("adjuntar", $detalle_de_solicitud[0]["adjuntar"]);
 			$pdocrud->formFieldValue("observacion", $detalle_de_solicitud[0]["observacion"]);
