@@ -2242,6 +2242,7 @@ class HomeController
 		$pdocrud->fieldCssClass("estado", array("estado"));
 		$pdocrud->fieldCssClass("procedencia", array("procedencia"));
 		$pdocrud->fieldCssClass("nombre_profesional", array("profesional"));
+		$pdocrud->fieldAttributes("nombre_profesional", array("autocomplete"=>"off"));
 		$pdocrud->formStaticFields("botones_busqueda", "html", "
 				<div class='row'>
 					<div class='col-md-12 text-center'>
