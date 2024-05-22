@@ -2368,7 +2368,7 @@ class HomeController
 
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("value"=> $detalle_de_solicitud[0]["id_datos_paciente"]));
 			$pdocrud->formFieldValue("estado", $detalle_de_solicitud[0]["estado"]);
-			//$pdocrud->formFieldValue("fecha", $detalle_de_solicitud[0]["fecha"]);
+			$pdocrud->formFieldValue("fecha", $detalle_de_solicitud[0]["fecha"]);
 			$pdocrud->fieldAttributes("fecha", array("autocomplete"=>"off"));
 			$pdocrud->fieldAttributes("diagnostico", array("autocomplete"=>"off"));
 			$pdocrud->fieldAttributes("fundamento", array("autocomplete"=>"off"));
