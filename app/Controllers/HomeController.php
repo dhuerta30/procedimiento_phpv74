@@ -2368,7 +2368,12 @@ class HomeController
 
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("value"=> $detalle_de_solicitud[0]["id_datos_paciente"]));
 			$pdocrud->formFieldValue("estado", $detalle_de_solicitud[0]["estado"]);
-			$pdocrud->formFieldValue("fecha", $detalle_de_solicitud[0]["fecha"]);
+			//$pdocrud->formFieldValue("fecha", $detalle_de_solicitud[0]["fecha"]);
+			$pdocrud->fieldAttributes("fecha", array("autocomplete"=>"off"));
+			$pdocrud->fieldAttributes("diagnostico", array("autocomplete"=>"off"));
+			$pdocrud->fieldAttributes("fundamento", array("autocomplete"=>"off"));
+			$pdocrud->fieldNotMandatory("diagnostico");
+
 			$pdocrud->fieldDataAttr("fecha_solicitud", array("value"=> $detalle_de_solicitud[0]["fecha_solicitud"]));
 
 			$diagnostico = isset($diagnostico_antecedentes_paciente[0]["diagnostico"]) ? $diagnostico_antecedentes_paciente[0]["diagnostico"] : '';
@@ -2387,7 +2392,7 @@ class HomeController
 				</div>
 				
 			");
-			$pdocrud->fieldDisplayOrder(array("fecha", "estado", "id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "diagnostico", "fundamento", "buttons"));  
+			$pdocrud->fieldDisplayOrder(array("fecha", "estado", "id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "diagnostico", "fundamento", "buttons")); 
 
 			$pdocrud->formFields(array("fecha", "id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "diagnostico", "fundamento", "estado"));
 			$pdocrud->setLangData("login", "Guardar");

@@ -554,55 +554,22 @@ $(document).on("click", ".procedimientos", function(){
             $(".fecha").flatpickr({
                 enableTime: true,
                 enableSeconds: true,
-                altFormat: "d m Y H:i:S",
+                dateFormat: "Y-m-d H:i:S",
                 allowInput: true,
-                defaultDate: new Date(),
+                //defaultDate: new Date(),
                 locale: {
                     firstDayOfWeek: 1, // Lunes como primer día de la semana
                     weekdays: {
                         shorthand: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-                        longhand: [
-                            'Domingo',
-                            'Lunes',
-                            'Martes',
-                            'Miércoles',
-                            'Jueves',
-                            'Viernes',
-                            'Sábado'
-                        ]
+                        longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
                     },
                     months: {
-                        shorthand: [
-                            'Ene',
-                            'Feb',
-                            'Mar',
-                            'Abr',
-                            'May',
-                            'Jun',
-                            'Jul',
-                            'Ago',
-                            'Sep',
-                            'Oct',
-                            'Nov',
-                            'Dic'
-                        ],
-                        longhand: [
-                            'Enero',
-                            'Febrero',
-                            'Marzo',
-                            'Abril',
-                            'Mayo',
-                            'Junio',
-                            'Julio',
-                            'Agosto',
-                            'Septiembre',
-                            'Octubre',
-                            'Noviembre',
-                            'Diciembre'
-                        ]
+                        shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        longhand: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
                     }
                 }
             });
+            
         }
     });
 });
