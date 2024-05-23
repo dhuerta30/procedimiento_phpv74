@@ -263,15 +263,20 @@ $(document).on("click", ".exportar_excel", function(){
     let ano_hasta = $('#ano_hasta').val();
     let procedencia = $('#procedencia_filtro').val();
 
-    let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_reportes";
+    if (ano_desde == "0" && ano_hasta == "0" && procedencia == "0") {
+        let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_reportes_default";
+        window.open(url);
+    } else {
 
-    // Agregar filtros a la URL según estén presentes
-    if (ano_desde != "0") url += "/ano_desde/" + ano_desde;
-    if (ano_hasta != "0") url += "/ano_hasta/" + ano_hasta;
-    if (procedencia != "0") url += "/procedencia/" + procedencia;
+        let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_reportes";
+        // Agregar filtros a la URL según estén presentes
+        if (ano_desde != "0") url += "/ano_desde/" + ano_desde;
+        if (ano_hasta != "0") url += "/ano_hasta/" + ano_hasta;
+        if (procedencia != "0") url += "/procedencia/" + procedencia;
 
-    // Abrir la URL en una nueva ventana
-    window.open(url);
+        // Abrir la URL en una nueva ventana
+        window.open(url);
+    }
 });
 
 $("#fecha").flatpickr({
