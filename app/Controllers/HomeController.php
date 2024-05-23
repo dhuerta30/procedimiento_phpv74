@@ -3184,46 +3184,8 @@ class HomeController
 
 			//echo $pdomodel->getLastQuery();
 			//die();
-
-			$html = '
-				<table class="table table-striped tabla_reportes_search text-center" style="width:100%">
-					<thead class="bg-primary">
-						<tr>
-							<th>Código Fonasa</th>
-							<th>Procedencia</th>
-							<th>Exámen</th>
-							<th>Tipo de Exámen</th>
-							<th>Año</th>
-							<th>Media</th>
-							<th>Total Exámenes</th>
-						</tr>
-					</thead>
-					<tbody>
-			';
-	
-			foreach ($data as $row) {
-				//$nombre_completo = $row["nombres"] . ' ' . $row["apellido_paterno"] . ' ' . $row["apellido_materno"];
-				$ano = ($row["ano"] != null) ? date('Y', strtotime($row["ano"])) : "Sin Año";
-				$procedencia = ($row["procedencia"] != null) ? $row["procedencia"] : '<div class="badge badge-danger">Sin Procedencia</div>';
-				$html .= '
-					<tr>
-						<td>' . $row['codigo_fonasa'] . '</td>
-						<td>' . $procedencia . '</td>
-						<td>' . substr($row["examen"], 0, 10) . '...' . '</td>
-						<td>' . $row["tipo_examen"] . '</td>
-						<td>' . $row["ano"] . '</td>
-						<td>'. $row['cantidad_media'] .'</td>
-						<td>' . $row["total_examen"] . '</td>
-					</tr>
-				';
-			}
-	
-			$html .= '
-					</tbody>
-				</table>
-			';
-			$html_data = array($html);
-			echo $pdocrud->render("HTML", $html_data);
+			
+			echo json_encode(['data' => $data]);
 		}
 	}
 
@@ -3276,7 +3238,7 @@ class HomeController
 		// Exportar los datos con los títulos al Excel
 		$pdomodel->arrayToExcel($dataValues, "reportes.xlsx");
 	}
-	
+
 
 	public function descargar_excel_reportes(){
 		$request = new Request();
