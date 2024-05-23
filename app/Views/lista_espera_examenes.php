@@ -647,19 +647,27 @@ $(document).on("click", ".exportar_excel", function(){
     let profesional = $('.profesional').val();
     let fecha_solicitud = $('.fecha_solicitud').val();
 
-    let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_lista_espera_examanes";
+    // Verificar si no hay ningún filtro aplicado
+    if (!run && !nombre_paciente && !estado && !procedencia && !profesional && !fecha_solicitud) {
+        let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_lista_espera_examenes_default";
+        // Si no hay filtros, usar la URL por defecto
+        window.open(url);
+    } else {
 
-    // Agregar filtros a la URL según estén presentes
-    if (run) url += "/run/" + run;
-    if (nombre_paciente) url += "/nombre_paciente/" + nombre_paciente;
-    if (estado) url += "/estado/" + estado;
-    if (procedencia) url += "/procedencia/" + procedencia;
-    if (profesional) url += "/profesional/" + profesional;
-    if (fecha_solicitud) url += "/fecha_solicitud/" + fecha_solicitud;
+        let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_lista_espera_examenes";
+        // Agregar filtros a la URL según estén presentes
+        if (run) url += "/run/" + run;
+        if (nombre_paciente) url += "/nombre_paciente/" + nombre_paciente;
+        if (estado) url += "/estado/" + estado;
+        if (procedencia) url += "/procedencia/" + procedencia;
+        if (profesional) url += "/profesional/" + profesional;
+        if (fecha_solicitud) url += "/fecha_solicitud/" + fecha_solicitud;
 
-    // Abrir la URL en una nueva ventana
-    window.open(url);
+        // Abrir la URL en una nueva ventana
+        window.open(url);
+    }
 });
+
 
 $(document).on("pdocrud_before_ajax_action", function(event, obj, data){
     $('.titulo_modal').html(`

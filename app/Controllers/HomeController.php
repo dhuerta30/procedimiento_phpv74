@@ -3391,7 +3391,61 @@ class HomeController
 	}
 
 
-	public function descargar_excel_lista_espera_examanes(){
+	public function descargar_excel_lista_espera_examenes_default(){
+
+		$pdocrud = DB::PDOCrud(true);
+		$pdomodel = $pdocrud->getPDOModelObj();
+
+		$data = $pdomodel->executeQuery(
+			"SELECT 
+				dp.id_datos_paciente,
+				ds.id_detalle_de_solicitud,
+				dp.rut,
+				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+				dp.telefono,
+				dp.edad,
+				ds.fecha_egreso,
+				ds.motivo_egreso,
+				fecha_solicitud as fecha_solicitud,
+				ds.estado AS estado,
+				codigo_fonasa AS codigo,
+				ds.examen,
+				ds.procedencia AS procedencia,
+				ds.fecha as fecha,
+				especialidad AS especialidad,
+				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+			FROM 
+				datos_paciente AS dp
+			INNER JOIN 
+				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				profesional AS pro ON pro.id_profesional = dg_p.profesional
+			WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+			GROUP BY 
+			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
+		);
+
+		$dataValues = array_map(function($row) {
+			return array_values($row);
+		}, $data);
+
+		// Definir los títulos de las columnas
+		$columnTitles = [
+			'ID Paciente', 'ID Solicitud', 'RUT', 'Paciente', 'Teléfono', 'Edad', 'Fecha Egreso', 'Motivo Egreso',
+			'Fecha Solicitud', 'Estado', 'Código Fonasa', 'Examen', 'Procedencia', 'Fecha', 'Especialidad', 'Profesional'
+		];
+
+		// Insertar los títulos en la primera fila de los datos
+		array_unshift($dataValues, $columnTitles);
+
+		// Exportar los datos con los títulos al Excel
+		$pdomodel->arrayToExcel($dataValues, "lista_espera_examenes.xlsx");
+	}
+
+
+	public function descargar_excel_lista_espera_examenes(){
 
 		$request = new Request();
 
