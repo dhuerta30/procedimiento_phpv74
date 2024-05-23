@@ -169,96 +169,89 @@ $(document).on("click", ".btn_search", function(){
     let ano_hasta = $('#ano_hasta').val();
     let procedencia = $('#procedencia_filtro').val();
 
-    if(ano_desde == 0 && ano_hasta == 0 && procedencia == 0){
-       $("#pdocrud-ajax-loader").show();
-       setTimeout(() => {
-        $("#pdocrud-ajax-loader").hide();
-        $('.reportes').show();
-       }, 1000);
-    } else {
-        $.ajax({
-            type: "POST",
-            url: "<?=$_ENV["BASE_URL"]?>home/buscar_por_ano",
-            dataType: "json",
-            data: {
-                ano_desde: ano_desde,
-                ano_hasta: ano_hasta,
-                procedencia: procedencia
-            },
-            beforeSend: function() {
-                $("#pdocrud-ajax-loader").show();
-            },
-            success: function(data){
-                $("#pdocrud-ajax-loader").hide();
-                
-                $('.tabla_reportes').DataTable({
-                    searching: false,
-                    scrollX: true,
-                    lengthMenu: [10],
-                    dom: 'rtip',
-                    language: {
-                        "decimal": "",
-                        "emptyTable": "No hay información",
-                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                        "infoPostFix": "",
-                        "thousands": ",",
-                        "lengthMenu": "Mostrar _MENU_ Entradas",
-                        "loadingRecords": "Cargando...",
-                        "processing": "Procesando...",
-                        "search": "Buscar:",
-                        "zeroRecords": "Sin resultados encontrados",
-                        "paginate": {
-                            "first": "Primero",
-                            "last": "Ultimo",
-                            "next": "Siguiente",
-                            "previous": "Anterior"
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV["BASE_URL"]?>home/buscar_por_ano",
+        dataType: "json",
+        data: {
+            ano_desde: ano_desde,
+            ano_hasta: ano_hasta,
+            procedencia: procedencia
+        },
+        beforeSend: function() {
+            $("#pdocrud-ajax-loader").show();
+        },
+        success: function(data){
+            $("#pdocrud-ajax-loader").hide();
+            
+            $('.tabla_reportes').DataTable({
+                searching: false,
+                scrollX: true,
+                lengthMenu: [10],
+                dom: 'rtip',
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                data: data.data,
+                destroy: true,
+                columns: [
+                    { data: 'codigo_fonasa' },
+                    { data: 'procedencia',
+                        render: function(data, type, row, meta){
+                            if(!data){
+                                return "<div class='badge badge-danger'>Sin Procedencia</div>";
+                            } else {
+                                return data;
+                            }
                         }
                     },
-                    data: data.data,
-                    destroy: true,
-                    columns: [
-                        { data: 'codigo_fonasa' },
-                        { data: 'procedencia',
-                            render: function(data, type, row, meta){
-                                if(!data){
-                                    return "<div class='badge badge-danger'>Sin Procedencia</div>";
-                                } else {
-                                    return data;
-                                }
+                    { data: 'examen',
+                        render: function(data, type, row, meta){
+                            if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
+                                return data.substr(0, 10) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
+                            } else {
+                                return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
                             }
-                        },
-                        { data: 'examen',
-                            render: function(data, type, row, meta){
-                                if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
-                                    return data.substr(0, 10) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
-                                } else {
-                                    return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
-                                }
-                            }
-                        },
-                        { data: 'tipo_examen' },
-                        { data: 'ano', 
-                            render: function(data, type, row, meta){
-                                var fecha = moment(data);
+                        }
+                    },
+                    { data: 'tipo_examen' },
+                    { data: 'ano', 
+                        render: function(data, type, row, meta){
+                            var fecha = moment(data);
 
-                                if (!fecha.isValid()) {
-                                    return "<div class='badge badge-danger'>Sin Año</div>";
-                                }
-                                var fechaFormateada = fecha.format('Y');
-                                return fechaFormateada;
+                            if (!fecha.isValid()) {
+                                return "<div class='badge badge-danger'>Sin Año</div>";
                             }
-                        },
-                        { data: 'cantidad_media' },
-                        { data: 'total_examen' }
-                    ]
-                });
+                            var fechaFormateada = fecha.format('Y');
+                            return fechaFormateada;
+                        }
+                    },
+                    { data: 'cantidad_media' },
+                    { data: 'total_examen' }
+                ]
+            });
 
 
-            }
-        });
-    }
+        }
+    });
+    
 });
 
 
