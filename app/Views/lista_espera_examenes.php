@@ -97,19 +97,6 @@ $(document).ready(function(){
         scrollX: true,
         lengthMenu: [10],
         dom: 'rtip',
-        /*buttons: [
-            {
-                extend: 'excel',
-                text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
-                className: 'btn btn-light',
-                filename: function(){
-                    return 'reportes';
-                },
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Define las columnas a exportar
-                }
-            }
-        ],*/
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -275,6 +262,7 @@ $(document).on("click", ".buscar", function(){
     let nombre_paciente = $('.nombre_paciente').val();
     let estado = $('.estado').val();
     let procedencia = $('.procedencia').val();
+    let prestacion = $('.prestacion').val();
     let profesional = $('.profesional').val();
     let fecha_solicitud = $('.fecha_solicitud').val();
 
@@ -287,6 +275,7 @@ $(document).on("click", ".buscar", function(){
             nombre_paciente: nombre_paciente,
             estado: estado,
             procedencia: procedencia,
+            prestacion: prestacion,
             profesional: profesional,
             fecha_solicitud: fecha_solicitud
         },
@@ -416,6 +405,7 @@ $(document).on("click", ".limpiar_filtro", function(){
     $('.nombre_paciente').val("");
     $('.estado').val("");
     $('.procedencia').val("");
+    $('.prestacion').val("");
     $('.profesional').val("");
     $('.fecha_solicitud').val("");
     $('.buscar').click();

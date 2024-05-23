@@ -3336,6 +3336,7 @@ class HomeController
 			$nombre_paciente = $request->post('nombre_paciente');
 			$estado = $request->post('estado');
 			$procedencia = $request->post('procedencia');
+			$prestacion = $request->post('prestacion');
 			$profesional = $request->post('profesional');
 			$fecha_solicitud = $request->post('fecha_solicitud');
 
@@ -3359,6 +3360,10 @@ class HomeController
 
 			if (!empty($procedencia)) {
 				$where .= " AND ds.procedencia = '$procedencia' ";
+			}
+
+			if (!empty($prestacion)) {
+				$where .= " AND ds.examen LIKE '%$prestacion%' ";
 			}
 
 			if (!empty($profesional)) {
