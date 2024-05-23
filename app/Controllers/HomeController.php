@@ -3590,129 +3590,6 @@ class HomeController
 	}
 
 
-	/*public function buscar_examenes(){
-		
-		$request = new Request();
-
-    	if ($request->getMethod() === 'POST') {
-	
-			$pdocrud = DB::PDOCrud(true);
-			$pdocrud->formDisplayInPopup();
-			
-			if (!empty($request->post('run'))) {
-				$run = $request->post('run');
-
-				if (!self::validaRut($run)) {
-					echo "<div class='alert alert-danger text-center'>RUT inválido</div>";
-					return;
-				}
-
-				$pdocrud->where("rut", $run);
-			} 
-
-			if (!empty($request->post('nombre_paciente'))) {
-				$nombre_paciente = $request->post('nombre_paciente');
-				$pdocrud->where("nombres", $nombre_paciente, "=", "", "(")
-					->where("CONCAT(nombres, ' ', apellido_paterno)", $nombre_paciente, "=", "OR")
-					->where("CONCAT(nombres, ' ', apellido_materno)", $nombre_paciente, "=", "OR")
-					->where("CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno)", $nombre_paciente, "=", "", ")");
-			}
-			
-			if (!empty($request->post('estado'))) {
-				$estado = $request->post('estado');
-				$pdocrud->where("estado", $estado);
-			}
-			
-			if (!empty($request->post('prestacion'))) {
-				$prestacion = $request->post('prestacion');
-				$pdocrud->where("examen", $prestacion);
-			}
-			
-			if (!empty($request->post('profesional'))) {
-				$profesional = $request->post('profesional');
-				//$pdocrud->where("profesional.nombre_profesional", "%$profesional%", "LIKE");
-
-				$pdocrud->where("profesional.nombre_profesional", $profesional, "=", "", "(")
-					->where("CONCAT(profesional.nombre_profesional, ' ', profesional.apellido_profesional)", $profesional, "=", "OR")
-					->where("CONCAT(profesional.apellido_profesional)", $profesional, "=", "OR")
-					->where("CONCAT(profesional.nombre_profesional, ' ', profesional.apellido_profesional)", $profesional, "=", "", ")");
-			}
-			
-			if (!empty($request->post('fecha_solicitud'))) {
-				$fecha_solicitud = $request->post('fecha_solicitud');
-				$pdocrud->where("fecha_y_hora_ingreso", $fecha_solicitud);
-			}
-
-			$pdocrud->setLangData("no_data", "No se encontraron resultados para " 
-				. (isset($run) ? 'Rut: ' . $run : '') . ' ' 
-				. (isset($nombre_paciente) ? 'Nombre Paciente: ' . $nombre_paciente : ''). ' '
-				. (isset($estado) ? 'Estado: ' . $estado : ''). ' '
-				. (isset($prestacion) ? 'Prestación: ' . $prestacion : ''). ' '
-				. (isset($profesional) ? 'Profesional: ' . $profesional : ''). ' '
-				. (isset($fecha_solicitud) ? 'Fecha Solicitud: ' . $fecha_solicitud : ''). ' '
-			);
-			//$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
-			//$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
-
-			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
-			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
-			$pdocrud->joinTable("profesional", "profesional.id_profesional = diagnostico_antecedentes_paciente.profesional", "INNER JOIN");
-			$pdocrud->dbOrderBy("codigo_fonasa");
-			$pdocrud->addCallback("format_table_data", "formatTable_buscar_examenes");
-			$pdocrud->enqueueCSS("style", $_ENV["BASE_URL"] . "app/libs/script/css/style.css");
-			$pdocrud->enqueueCSS("ui", $_ENV["BASE_URL"] . "app/libs/script/css/jquery-ui.css");
-			$pdocrud->enqueueCSS("uicss", $_ENV["BASE_URL"] . "app/libs/script/css/jquery-ui-timepicker-addon.css");
-			$pdocrud->enqueueCSS("font", $_ENV["BASE_URL"] . "app/libs/script/css/font-awesome.min.css");
-			$pdocrud->enqueueCSS("pure", $_ENV["BASE_URL"] . "app/libs/script/skin/advance.css");
-			//$pdocrud->setSettings("searchbox", false);
-			$pdocrud->setSettings("totalRecordsInfo", false);
-			$pdocrud->setSettings("template", "datos_usuario_busqueda");
-			$pdocrud->setSettings("deleteMultipleBtn", false);
-			$pdocrud->setSettings("hideAutoIncrement", false);
-			$pdocrud->setSettings("checkboxCol", false);
-			$pdocrud->setSettings("viewbtn", false);
-			$pdocrud->buttonHide("submitBtnSaveBack");
-			$pdocrud->fieldRenameLable("observacion", "Observación");
-			$pdocrud->colRename("codigo_fonasa", "Código");
-			$pdocrud->colRename("examen", "Exámen");
-			$pdocrud->colRename("fecha_y_hora_ingreso", "Fecha Solicitud");
-			$pdocrud->colRename("nombres", "Paciente");
-			$pdocrud->crudRemoveCol(array(
-				"id_datos_paciente", 
-				"sexo", 
-				"creatinina",
-				"id_detalle_de_solicitud",
-				"apellido_paterno", 
-				"apellido_materno", 
-				"direccion", 
-				"fecha_nacimiento", 
-				"diagnostico",
-				"plano", 
-				"tipo_solicitud",
-				"tipo_examen", 
-				"id_diagnostico_antecedentes_paciente",
-				"contraste",
-				"observacion", 
-				"extremidad", 
-				"diagnostico_libre", 
-				"sintomas_principales",
-				"adjuntar",
-				"fundamento",
-				"fecha_egreso",
-				"motivo_egreso",
-				"profesional",
-				"id_profesional"
-			));
-			$pdocrud->formFields(array("id_detalle_de_solicitud","observacion"));
-	
-			if (isset($run) || isset($nombre_paciente) || isset($estado) || isset($prestacion) || isset($profesional) || isset($fecha_solicitud)) {
-				echo $pdocrud->dbTable("datos_paciente")->render();
-			} else {
-				echo "<div class='alert alert-danger text-center'>Ingrese datos a Buscar</div>";
-			}
-		}
-	}*/
-
 	public static function validaRut($rut)
     {
         if (strpos($rut, "-") == false) {
@@ -3743,6 +3620,7 @@ class HomeController
             return false;
         }
     }
+	
 
 	public function agregar_paciente(){
 		$request = new Request();

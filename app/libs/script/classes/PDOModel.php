@@ -1103,17 +1103,16 @@ class PDOModel
         }
     }
 
-    private function getInsertQuery($dbTableName, $insertData)
-    {
+    private function getInsertQuery($dbTableName, $insertData) {
         $this->columns = implode(",", $this->parseColumns(array_keys($insertData)));
         $this->values = array_values($insertData);
         $this->parameters = "";
 
-        $this->parameters = array_map(function ($val) {
+        $this->parameters = array_map(function($val) {
             return "?";
         }, $insertData);
 
-
+        // Cambia el orden de los parámetros en implode
         $this->parameters = implode(",", $this->parameters);
         return "INSERT INTO " . $this->parseTable($dbTableName) . " ($this->columns) VALUES ($this->parameters)";
     }

@@ -156,22 +156,12 @@ function carga_masiva_pacientes_insertar($data, $obj){
                         $fecha_actual = date('Y-m-d');
                         $usuario = $_SESSION['usuario'][0]["usuario"];
 
-                        $sql_diag = array();
-                        $sql_diag['id_datos_paciente'] = $id_datos_paciente;
-                        if (!empty($Excelval['Fecha Solicitud'])) {
-                            $sql_diag['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
-                        }
-                        $sql_diag['profesional'] = $Excelval['Profesional'];
-                        $sql_diag['especialidad'] = $Excelval['Especialidad'];
-                        $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
-                        $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
-
                         $sql_detalle = array();
                         $sql_detalle['id_datos_paciente'] = $id_datos_paciente;
                         $sql_detalle['codigo_fonasa'] = $Excelval["Codigo Fonasa"];
                         $sql_detalle['tipo_solicitud'] = $Excelval["Tipo Solicitud"];
                         $sql_detalle['tipo_examen'] = $Excelval["Tipo Exámen"];
-                        $sql_detalle['examen'] = $Excelval["Exámen"];
+                        $sql_detalle['examen'] = $Excelval['Exámen'];
                         $sql_detalle['plano'] = $Excelval['Plano'];
                         $sql_detalle['extremidad'] = $Excelval['Extremidad'];
                         $sql_detalle['observacion'] = $Excelval['Observación'];
@@ -191,6 +181,17 @@ function carga_masiva_pacientes_insertar($data, $obj){
                         $sql_detalle['usuario'] = $usuario;
                         $sql_detalle['fecha_ingreso'] = $fecha_actual;
                         $pdomodel->insertBatch("detalle_de_solicitud", array($sql_detalle));
+
+
+                        $sql_diag = array();
+                        $sql_diag['id_datos_paciente'] = $id_datos_paciente;
+                        if (!empty($Excelval['Fecha Solicitud'])) {
+                            $sql_diag['fecha_solicitud_paciente'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                        }
+                        $sql_diag['profesional'] = $Excelval['Profesional'];
+                        $sql_diag['especialidad'] = $Excelval['Especialidad'];
+                        $sql_diag['diagnostico_libre'] = $Excelval['Diagnóstico Libre'];
+                        $pdomodel->insertBatch("diagnostico_antecedentes_paciente", array($sql_diag));
                     }
                 }
             }
