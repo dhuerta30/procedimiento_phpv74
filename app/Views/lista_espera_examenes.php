@@ -32,7 +32,7 @@
 
 				<div class="container examenes">
 					<div class="row justify-content-center">
-                        <div class="col-md-9">
+                        <div class="col-md-10">
                             <?=$render?>
                             <?=$mask;?>
                         </div>

@@ -2230,7 +2230,7 @@ class HomeController
 	public function lista_espera_examenes(){
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->addPlugin("bootstrap-inputmask");
-		$pdocrud->formFields(array("estado","rut","fecha_solicitud", "procedencia", "nombres", "nombre_profesional", "fecha_solicitud"));
+		$pdocrud->formFields(array("estado","rut","fecha_solicitud", "procedencia", "examen", "nombres", "nombre_profesional", "fecha_solicitud"));
 		$pdocrud->setSettings("required", false);
 		$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 		$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
@@ -2241,6 +2241,7 @@ class HomeController
 		$pdocrud->fieldCssClass("rut", array("rut"));
 		$pdocrud->fieldCssClass("estado", array("estado"));
 		$pdocrud->fieldCssClass("procedencia", array("procedencia"));
+		$pdocrud->fieldCssClass("examen", array("prestacion"));
 		$pdocrud->fieldCssClass("nombre_profesional", array("profesional"));
 		$pdocrud->fieldAttributes("nombre_profesional", array("autocomplete"=>"off"));
 		$pdocrud->formStaticFields("botones_busqueda", "html", "
@@ -2255,14 +2256,16 @@ class HomeController
 		$pdocrud->fieldRenameLable("fecha_solicitud", "Fecha Solicitud");
 		$pdocrud->fieldRenameLable("nombres", "Nombre Paciente");
 		$pdocrud->fieldRenameLable("procedencia", "Procedencia");
+		$pdocrud->fieldRenameLable("examen", "Prestación");
+		$pdocrud->fieldTypes("examen", "input");
 		$pdocrud->fieldTypes("procedencia", "select");
 		$pdocrud->fieldDataBinding("procedencia", array("Hospitalizado" => "Hospitalizado", "Urgencia" => "Urgencia", "Ambulatorio" => "Ambulatorio", "" => "Sin Procedencia"), "", "","array");
 		$pdocrud->fieldRenameLable("nombre_profesional", "Profesional");
 		$pdocrud->fieldTypes("estado", "select");
 		$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
 		$pdocrud->fieldGroups("Name",array("rut","nombres", "estado"));
-		$pdocrud->fieldGroups("Name2",array("procedencia","nombre_profesional", "fecha_solicitud"));
-		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "procedencia", "nombre_profesional", "fecha_solicitud"));
+		$pdocrud->fieldGroups("Name2",array("procedencia", "examen", "nombre_profesional", "fecha_solicitud"));
+		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "procedencia", "examen", "nombre_profesional", "fecha_solicitud"));
 		$pdocrud->buttonHide("submitBtn");
 		$pdocrud->buttonHide("cancel");
 		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
