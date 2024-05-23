@@ -35,6 +35,13 @@
                         <?=$mask?>
                         <?=$select2?>
 
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="exportar_excel border-0 p-2 mb-3"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
+                            </div>
+                        </div>
+
                        <div class="reportes">
                         <table class="table table-striped tabla_reportes text-center" style="width:100%">
                             <thead class="bg-primary">
@@ -88,8 +95,8 @@ function datatable(){
         searching: false,
         scrollX: true,
         lengthMenu: [10],
-        dom: 'Bfrtip',
-        buttons: [
+        dom: 'rtip',
+        /*buttons: [
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
@@ -101,7 +108,7 @@ function datatable(){
                     columns: [0, 1, 2, 3, 4, 5, 6] // Define las columnas a exportar
                 }
             }
-        ],
+        ],*/
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -171,8 +178,8 @@ function datatable_search(){
         scrollX: true,
         lengthMenu: [10],
         paging: ($('.tabla_reportes_search tbody tr').length > 10) ? true : false,
-        dom: 'Bfrtip',
-        buttons: [
+        dom: 'rtip',
+        /*buttons: [
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
@@ -184,7 +191,7 @@ function datatable_search(){
                     columns: [0, 1, 2, 3, 4, 5, 6] // Define las columnas a exportar
                 }
             }
-        ],
+        ],*/
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -247,6 +254,24 @@ $(document).on("click", ".btn_search", function(){
             }
         });
     }
+});
+
+
+$(document).on("click", ".exportar_excel", function(){
+    // obtener las variables de cada filtro y pasarselas a un ajax que hara la query para exportar el excel
+    let ano_desde = $('#ano_desde').val();
+    let ano_hasta = $('#ano_hasta').val();
+    let procedencia = $('#procedencia_filtro').val();
+
+    let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_reportes";
+
+    // Agregar filtros a la URL según estén presentes
+    if (ano_desde != "0") url += "/ano_desde/" + ano_desde;
+    if (ano_hasta != "0") url += "/ano_hasta/" + ano_hasta;
+    if (procedencia != "0") url += "/procedencia/" + procedencia;
+
+    // Abrir la URL en una nueva ventana
+    window.open(url);
 });
 
 $("#fecha").flatpickr({

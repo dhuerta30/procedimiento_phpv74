@@ -3226,7 +3226,86 @@ class HomeController
 			echo $pdocrud->render("HTML", $html_data);
 		}
 	}
-		
+
+
+	public function descargar_excel_reportes(){
+		$request = new Request();
+		$pdocrud = DB::PDOCrud(true);
+		$pdomodel = $pdocrud->getPDOModelObj();
+
+		$where = "ds.estado != 'Egresado'";
+		$ano_desde = $request->get('ano_desde');
+		$ano_hasta = $request->get('ano_hasta');
+		$procedencia = $request->get('procedencia');
+
+		if ($ano_desde != "0" && $ano_hasta != "0") {
+			$where .= " AND YEAR(ds.fecha_solicitud) BETWEEN '$ano_desde' AND '$ano_hasta'";
+		} else {
+			// Si solo se proporciona un año, filtrar por ese año específico
+			if ($ano_desde != "0") {
+				$where .= " AND YEAR(ds.fecha_solicitud) = '$ano_desde'";
+			}
+			if ($ano_hasta != "0") {
+				$where .= " AND YEAR(ds.fecha_solicitud) = '$ano_hasta'";
+			}
+		}
+
+		// Construir la condición para filtrar por procedencia
+		if ($procedencia != "0") {
+			if ($procedencia == 'Sin Procedencia') {
+				$where .= " AND (ds.procedencia IS NULL OR ds.procedencia = 'Sin Procedencia')";
+			} else {
+				$where .= " AND ds.procedencia = '$procedencia'";
+			}
+		}
+
+		$data = $pdomodel->executeQuery(
+			"SELECT
+			ds.codigo_fonasa AS codigo_fonasa,
+			ds.procedencia AS procedencia,
+			GROUP_CONCAT(ds.examen) AS examen,
+			GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
+			YEAR(ds.fecha_solicitud) AS ano,
+			ABS(MIN(DATEDIFF(ds.fecha, ds.fecha_solicitud))) AS cantidad_media,
+			COUNT(ds.examen) AS total_examen
+			FROM
+				datos_paciente AS dp
+			INNER JOIN 
+				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+			INNER JOIN 
+				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+			LEFT JOIN (
+				SELECT 
+					id_datos_paciente,
+					COUNT(*) AS ds_count
+				FROM 
+					detalle_de_solicitud
+				GROUP BY 
+					id_datos_paciente
+			) AS ds_count ON ds_count.id_datos_paciente = dp.id_datos_paciente
+			WHERE 
+				".$where."
+			GROUP BY
+				ds.codigo_fonasa, ds.procedencia, YEAR(ds.fecha_solicitud)
+			ORDER BY 
+				ds.fecha ASC"
+		);
+
+		$dataValues = array_map(function($row) {
+			return array_values($row);
+		}, $data);
+
+		// Definir los títulos de las columnas
+		$columnTitles = [
+			'Código Fonasa', 'Procedencia', 'Exámen', 'Tipo de Exámen', 'Año', 'Media', 'Total Exámenes'
+		];
+
+		// Insertar los títulos en la primera fila de los datos
+		array_unshift($dataValues, $columnTitles);
+
+		// Exportar los datos con los títulos al Excel
+		$pdomodel->arrayToExcel($dataValues, "reportes.xlsx");
+	}
 
 	public function buscar_examenes(){
 		
