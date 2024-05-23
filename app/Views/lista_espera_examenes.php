@@ -41,6 +41,11 @@
 
                 <div class="datos_search p-0"></div>
               
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="exportar_excel border-0 p-2 mb-3"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
+                    </div>
+                </div>
                     <div class='table-responsive tabla_principal'>
                         <table class="table table-striped tabla_reportes text-center" style="width:100%">
                             <thead class="bg-primary">
@@ -91,8 +96,8 @@ $(document).ready(function(){
         searching: false,
         scrollX: true,
         lengthMenu: [10],
-        dom: 'Bfrtip',
-        buttons: [
+        dom: 'rtip',
+        /*buttons: [
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
@@ -104,7 +109,7 @@ $(document).ready(function(){
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Define las columnas a exportar
                 }
             }
-        ],
+        ],*/
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -296,8 +301,8 @@ $(document).on("click", ".buscar", function(){
                 searching: false,
                 scrollX: true,
                 lengthMenu: [10],
-                dom: 'Bfrtip',
-                buttons: [
+                dom: 'rtip',
+                /*buttons: [
                     {
                         extend: 'excel',
                         text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
@@ -309,7 +314,7 @@ $(document).on("click", ".buscar", function(){
                             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Define las columnas a exportar
                         }
                     }
-                ],
+                ],*/
                 language: {
                     "decimal": "",
                     "emptyTable": "No hay información",
@@ -631,6 +636,29 @@ $(document).on("click", ".mostrar_adjunto", function(){
     let id = $(this).data('id');
     let id_detalle_de_solicitud = $(this).data('solicitud');
     window.open("<?=$_ENV["BASE_URL"]?>home/mostrar_adjunto/id/" + id + "/id_detalle_de_solicitud/" + id_detalle_de_solicitud);
+});
+
+$(document).on("click", ".exportar_excel", function(){
+    // obtener las variables de cada filtro y pasarselas a un ajax que hara la query para exportar el excel
+    let run = $('.rut').val();
+    let nombre_paciente = $('.nombre_paciente').val();
+    let estado = $('.estado').val();
+    let procedencia = $('.procedencia').val();
+    let profesional = $('.profesional').val();
+    let fecha_solicitud = $('.fecha_solicitud').val();
+
+    let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_lista_espera_examanes";
+
+    // Agregar filtros a la URL según estén presentes
+    if (run) url += "/run/" + run;
+    if (nombre_paciente) url += "/nombre_paciente/" + nombre_paciente;
+    if (estado) url += "/estado/" + estado;
+    if (procedencia) url += "/procedencia/" + procedencia;
+    if (profesional) url += "/profesional/" + profesional;
+    if (fecha_solicitud) url += "/fecha_solicitud/" + fecha_solicitud;
+
+    // Abrir la URL en una nueva ventana
+    window.open(url);
 });
 
 $(document).on("pdocrud_before_ajax_action", function(event, obj, data){
