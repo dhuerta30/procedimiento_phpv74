@@ -190,7 +190,6 @@ $(document).on("click", ".btn_search", function(){
             },
             success: function(data){
                 $("#pdocrud-ajax-loader").hide();
-                $('.btn_limpiar').removeClass('d-none');
                 
                 $('.tabla_reportes').DataTable({
                     searching: false,
@@ -360,11 +359,8 @@ function ComboAno() {
    }
 }
 
-//window.onload = ComboAno;
-
 $(document).on("click", ".btn_limpiar", function(){
 
-    $('.btn_limpiar').addClass('d-none');
     $(".reportes").show();
     $('.resultados').hide();
     $('#rut').val("");
@@ -379,11 +375,8 @@ $(document).on("click", ".btn_limpiar", function(){
     $('.ano_hasta').select2();
     $('.ano_hasta').html('<option value="0">Seleccionar Año Hasta</option>');
     ComboAno();
-    //$('.btn_search').click();
+    $('.btn_search').click();
 });
 
-$(document).on("click", ".btn_search", function(){
-    $('.btn_limpiar').addClass('d-none');
-});
 </script>
 <?php require 'layouts/footer.php'; ?>

@@ -302,19 +302,6 @@ $(document).on("click", ".buscar", function(){
                 scrollX: true,
                 lengthMenu: [10],
                 dom: 'rtip',
-                /*buttons: [
-                    {
-                        extend: 'excel',
-                        text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
-                        className: 'btn btn-light',
-                        filename: function(){
-                            return 'reportes';
-                        },
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] // Define las columnas a exportar
-                        }
-                    }
-                ],*/
                 language: {
                     "decimal": "",
                     "emptyTable": "No hay información",

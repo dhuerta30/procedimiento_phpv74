@@ -2791,7 +2791,7 @@ class HomeController
 			<div class="row mt-3 mb-4">
 				<div class="col-md-12">
 					<a href="javascript:;" class="btn btn-primary btn_search"><i class="fa fa-search"></i> Buscar</a>
-					<a href="javascript:;" class="btn btn-danger btn_limpiar d-none"><i class="fas fa-eraser"></i> Limpiar</a>
+					<a href="javascript:;" class="btn btn-danger btn_limpiar"><i class="fas fa-eraser"></i> Limpiar</a>
 				</div>
 			</div>	
 		</form>
