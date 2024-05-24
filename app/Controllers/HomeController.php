@@ -929,7 +929,7 @@ class HomeController
 
 			// Añadir los valores predeterminados para los campos faltantes
 			foreach ($defaultValues as $field => $value) {
-				if (!isset($rowData[$field])) {
+				if (empty($rowData[$field])) {
 					$rowData[$field] = $value;
 				}
 			}
