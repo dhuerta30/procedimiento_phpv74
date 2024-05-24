@@ -794,7 +794,8 @@ class HomeController
 		$data = $pdomodel->executeQuery("
 			SELECT
 				ds.id_detalle_de_solicitud,
-				codigo_fonasa,
+				codigo_fonasa AS PRESTA_MIN,
+				codigo_fonasa AS PRESTA_MIN_SALIDA,
 				SUBSTRING_INDEX(dp.rut, '-', 1) AS RUN,
 				SUBSTRING_INDEX(dp.rut, '-', -1) AS DV,
 				dp.nombres AS NOMBRES, 
@@ -804,14 +805,14 @@ class HomeController
 				dp.sexo AS SEXO,
 				ds.plano AS PLANO,
 				ds.extremidad AS EXTREMIDAD,
-				ds.tipo_examen AS TIPO_EXAMEN,
-				ds.fecha_solicitud AS FECHA_SOLICITUD,
-				ds.fecha_egreso AS FECHA_EGRESO,
-				ds.motivo_egreso AS MOTIVO_EGRESO,
+				ds.tipo_examen AS PRESTA_EST,
+				ds.fecha_solicitud AS F_ENTRADA,
+				ds.fecha_egreso AS F_SALIDA,
+				ds.motivo_egreso AS C_SALIDA,
 				dg_p.diagnostico AS DIAGNOSTICO,
 				dg_p.diagnostico_libre AS DIAGNOSTICO_LIBRE,
-				dp.direccion,
-				ds.fecha
+				dp.direccion AS DIRECCION,
+				ds.fecha AS F_CITACION
 			FROM 
 				datos_paciente AS dp
 			INNER JOIN
@@ -832,7 +833,7 @@ class HomeController
 		$sheet = $spreadsheet->getActiveSheet();
 
 		$columnLetters = [
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
 			'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 
 			'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 
@@ -851,17 +852,17 @@ class HomeController
 			'SEXO',
 			'PREVICION',
 			'TIPO_PREST',
-			'CODIGO_FONASA',
+			'PRESTA_MIN',
 			'PLANO',
 			'EXTREMIDAD',
-			'TIPO_EXAMEN',
-			'FECHA_SOLICITUD',
+			'PRESTA_EST',
+			'F_ENTRADA',
 			'ESTAB_ORIG',
 			'ESTAB_DEST',
-			'FECHA_EGRESO',
-			'MOTIVO_EGRESO',
+			'F_SALIDA',
+			'C_SALIDA',
 			'E_OTOR_AT',
-			'CODIGO_FONASA',
+			'PRESTA_MIN_SALIDA',
 			'PRAIS',
 			'REGION',
 			'COMUNA',
@@ -876,7 +877,7 @@ class HomeController
 			'FONO_FIJO',
 			'FONO_MOVIL',
 			'EMAIL',
-			'FECHA',
+			'F_CITACION',
 			'RUN_PROF_SOL',
 			'CV_PROF_SOL',
 			'RUN_PROF_RESOL',
