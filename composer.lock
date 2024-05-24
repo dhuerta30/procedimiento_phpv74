@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0887a2acfc32efb7bbca6325361abe10",
+    "content-hash": "c8625009fe71c6a90c0cbeb6b40eaa9f",
     "packages": [
         {
             "name": "coderatio/simple-backup",

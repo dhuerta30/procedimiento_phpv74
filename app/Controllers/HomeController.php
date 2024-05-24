@@ -16,6 +16,8 @@ use App\Models\UsuarioMenuModel;
 use App\Models\UserModel;
 use App\Models\ProcedimientoModel;
 use App\Models\UsuarioSubMenuModel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class HomeController
 {
@@ -789,8 +791,8 @@ class HomeController
 		$pdocrud = DB::PDOCrud();
 		$pdomodel = $pdocrud->getPDOModelObj();
 		
-		/*$data = $pdomodel->executeQuery("
-			SELECT 
+		$data = $pdomodel->executeQuery("
+			SELECT
 				ds.id_detalle_de_solicitud,
 				codigo_fonasa,
 				SUBSTRING_INDEX(dp.rut, '-', 1) AS run,
@@ -824,119 +826,136 @@ class HomeController
 			GROUP BY 
 				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
-		);*/
-
-		$data = $pdomodel->executeQuery("
-			SELECT 
-				*
-			FROM 
-				datos_paciente AS dp
-			INNER JOIN
-				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-			INNER JOIN 
-				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-			INNER JOIN 
-				profesional AS pro ON pro.id_profesional = dg_p.profesional
-			WHERE 
-				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-				AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m-%d') = DATE_FORMAT(:fechacorte, '%Y-%m-%d') AND ds.estado = :estado
-			GROUP BY 
-				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
-			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
 		);
 
-		$columnTitles = [		
-			'serv_salud' => 'SERV_SALUD',
-			'run' => 'RUN',
-			'dv' => 'DV',
-			'nombres' => 'NOMBRES',
-			'apellido_paterno' => 'PRIMER_APELLIDO',
-			'apellido_materno' => 'SEGUNDO_APELLIDO',
-			'fecha_nacimiento' => 'FECHA_NAC',
-			'sexo' => 'SEXO',
-			'previcion' => 'PREVISION',
-			'tipo_prest' => 'TIPO_PREST',
-			'codigo_fonasa' => 'PRESTA_MIN',
-			'plano' => 'PLANO',
-			'extremidad' => 'EXTREMIDAD',
-			'tipo_examen' => 'PRESTA_EST',
-			'fecha_solicitud' => 'F_ENTRADA',
-			'estab_orig' => 'ESTAB_ORIG',
-			'estab_dest' => 'ESTAB_DEST',
-			'fecha_egreso' => 'F_SALIDA',
-			'motivo_egreso' => 'C_SALIDA',
-			'e_otor_at' => 'E_OTOR_AT',
-			'codigo_fonasa' => 'PRESTA_MIN_SALIDA',
-			'prais' => 'PRAIS',
-			'region' => 'REGION',
-			'comuna' => 'COMUNA',
-			'diagnostico' => 'SOSPECHA_DIAG',
-			'diagnostico_libre' => 'CONFIR_DIAG',
-			'ciudad' => 'CIUDAD',
-			'ruralidad' => 'COND_RURALIDAD',
-			'via_direccion' => 'VIA_DIRECCION',
-			'direccion' => 'NOM_CALLE',
-			'num_direccion' => 'NUM_DIRECCION',
-			'resto_direccion' => 'RESTO_DIRECCION',
-			'fono_fijo' => 'FONO_FIJO',
-			'fono_movil' => 'FONO_MOVIL',
-			'email' => 'EMAIL',
-			'fecha' => 'F_CITACION',
-			'run_prof_sol' => 'RUN_PROF_SOL',
-			'cv_prof_sol' => 'DV_PROF_SOL',
-			'run_prof_resol' => 'RUN_PROF_RESOL',
-			'cv_prof_resol' => 'DV_PROF_RESOL',
-			'id_detalle_de_solicitud' => 'ID_LOCAL',
-			'resultado' => 'RESULTADO',
-			'sigte_id' => 'SIGETE_ID'
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+
+		$columnLetters = [
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
+			'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 
+			'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 
+			'AN', 'AO', 'AP', 'AQ'
 		];
 
-		foreach ($data as &$row) {
-			// Agregar el nuevo campo con el valor deseado, por ejemplo:
-			$row['serv_salud'] = '10';
-			$row['run'] = '01';
-			$row['tipo_prest'] = '03';
-			$row['prais'] = '02';
-			$row['region'] = '13';
-			$row['comuna'] = '13501';
-			$row['ciudad'] = 'MELIPILLA';
-			$row['ruralidad'] = '01';
-			$row['via_direccion'] = '04';
-			$row['estab_orig'] = '110150';
-			$row['estab_dest'] = '110150';
-			$row['e_otor_at'] = '110150';
-			$row['num_direccion'] = '';
-			$row['resto_direccion'] = '';
-			$row['fono_fijo'] = '';
-			$row['fono_movil'] = '';
-			$row['email'] = '';
-			$row['resultado'] = '';
-			$row['sigte_id'] = '';
-			$row['run_prof_resol'] = '';
-			$row['cv_prof_resol'] = '';
-			$row['run_prof_sol'] = '';
-			$row['cv_prof_sol'] = '';
+		// Escribir títulos de columnas
+		$columnTitles = [
+			'serv_salud',
+			'run',
+			'dv',
+			'nombres',
+			'apellido_paterno',
+			'apellido_materno',
+			'fecha_nacimiento',
+			'sexo',
+			'previcion',
+			'tipo_prest',
+			'codigo_fonasa',
+			'plano',
+			'extremidad',
+			'tipo_examen',
+			'fecha_solicitud',
+			'estab_orig',
+			'estab_dest',
+			'fecha_egreso',
+			'motivo_egreso',
+			'e_otor_at',
+			'codigo_fonasa',
+			'prais',
+			'region',
+			'comuna',
+			'diagnostico',
+			'diagnostico_libre',
+			'ciudad',
+			'ruralidad',
+			'via_direccion',
+			'direccion',
+			'num_direccion',
+			'resto_direccion',
+			'fono_fijo',
+			'fono_movil',
+			'email',
+			'fecha',
+			'run_prof_sol',
+			'cv_prof_sol',
+			'run_prof_resol',
+			'cv_prof_resol',
+			'id_detalle_de_solicitud',
+			'resultado',
+			'sigte_id'
+		];
+
+		foreach ($columnTitles as $index => $title) {
+			$sheet->setCellValue($columnLetters[$index] . '1', $title);
 		}
 	
-		// Extraer solo los valores de los datos
-		$dataValues = array_map(function($row) {
-			return array_values($row);
-		}, $data);
+		// Asignar valores predeterminados a los campos faltantes
+		$defaultValues = [
+			'serv_salud' => '10',
+			'previcion' => '01',
+			'tipo_prest' => '03',
+			'prais' => '02',
+			'region' => '13',
+			'comuna' => '13501',
+			'ciudad' => 'MELIPILLA',
+			'ruralidad' => '01',
+			'via_direccion' => '04',
+			'estab_orig' => '110150',
+			'estab_dest' => '110150',
+			'e_otor_at' => '110150',
+			'num_direccion' => '',
+			'resto_direccion' => '',
+			'fono_fijo' => '',
+			'fono_movil' => '',
+			'email' => '',
+			'resultado' => '',
+			'sigte_id' => '',
+			'run_prof_resol' => '',
+			'cv_prof_resol' => '',
+			'run_prof_sol' => '',
+			'cv_prof_sol' => '',
+		];
 	
-		// Insertar los títulos en la primera fila de los datos
-		//array_unshift($dataValues, array_values($columnTitles));
+		$rowIndex = 2;
+		foreach ($data as $row) {
+			// Inicializar los datos de la fila
+			$rowData = [];
 
-		$columnTitleValues = array_values($columnTitles);
+			// Asignar los valores de los campos de la consulta
+			foreach ($columnTitles as $title) {
+				$rowData[] = $row[$title] ?? ''; // Si el campo no está definido en la consulta, se añade un valor vacío
+			}
 
-		// Merge the titles with the data
-		$dataWithTitles = [$columnTitleValues];
-		foreach ($dataValues as $value) {
-			$dataWithTitles[] = $value;
+			// Añadir los valores predeterminados para los campos faltantes
+			foreach ($defaultValues as $field => $value) {
+				if (!in_array($field, $columnTitles)) {
+					$rowData[] = $value;
+				}
+			}
+
+			// Escribir los datos en las letras de columnas correspondientes
+			foreach ($rowData as $index => $value) {
+				$sheet->setCellValue($columnLetters[$index] . $rowIndex, $value);
+			}
+
+			$rowIndex++;
 		}
-	
-		// Exportar los datos con los títulos al Excel
-		$pdomodel->arrayToExcel($dataWithTitles, "exportacion.xlsx");
+
+		// Crear un objeto Writer y guardar el archivo
+		$writer = new Xlsx($spreadsheet);
+		$filename = 'archivo.xlsx';
+		$writer->save($filename);
+
+		// Descargar el archivo
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment;filename="' . $filename . '"');
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+		exit;
 	}
+
 
 	public function profesionales(){
 		$pdocrud = DB::PDOCrud();
