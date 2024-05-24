@@ -809,9 +809,9 @@ class HomeController
 				ds.fecha_solicitud AS F_ENTRADA,
 				ds.fecha_egreso AS F_SALIDA,
 				ds.motivo_egreso AS C_SALIDA,
-				dg_p.diagnostico AS DIAGNOSTICO,
-				dg_p.diagnostico_libre AS DIAGNOSTICO_LIBRE,
-				dp.direccion AS DIRECCION,
+				dg_p.diagnostico AS SOSPECHA_DIAG,
+				dg_p.diagnostico_libre AS CONFIR_DIAG,
+				dp.direccion AS NOM_CALLE,
 				ds.fecha AS F_CITACION
 			FROM 
 				datos_paciente AS dp
@@ -866,12 +866,12 @@ class HomeController
 			'PRAIS',
 			'REGION',
 			'COMUNA',
-			'DIAGNOSTICO',
-			'DIAGNOSTICO_LIBRE',
+			'SOSPECHA_DIAG',
+			'CONFIR_DIAG',
 			'CIUDAD',
 			'RURALIDAD',
 			'VIA_DIRECCION',
-			'DIRECCION',
+			'NOM_CALLE',
 			'NUM_DIRECCION',
 			'RESTO_DIRECCION',
 			'FONO_FIJO',
