@@ -793,7 +793,7 @@ class HomeController
 		
 		$data = $pdomodel->executeQuery("
 			SELECT
-				ds.id_detalle_de_solicitud,
+				ds.id_detalle_de_solicitud AS ID_LOCAL,
 				codigo_fonasa AS PRESTA_MIN,
 				codigo_fonasa AS PRESTA_MIN_SALIDA,
 				SUBSTRING_INDEX(dp.rut, '-', 1) AS RUN,
@@ -869,7 +869,7 @@ class HomeController
 			'SOSPECHA_DIAG',
 			'CONFIR_DIAG',
 			'CIUDAD',
-			'RURALIDAD',
+			'COND_RURALIDAD',
 			'VIA_DIRECCION',
 			'NOM_CALLE',
 			'NUM_DIRECCION',
@@ -879,10 +879,10 @@ class HomeController
 			'EMAIL',
 			'F_CITACION',
 			'RUN_PROF_SOL',
-			'CV_PROF_SOL',
+			'DV_PROF_SOL',
 			'RUN_PROF_RESOL',
-			'CV_PROF_RESOL',
-			'ID_DETALLE_DE_SOLICITUD',
+			'DV_PROF_RESOL',
+			'ID_LOCAL',
 			'RESULTADO',
 			'SIGTE_ID'
 		];
@@ -896,7 +896,7 @@ class HomeController
 			'REGION' => '13',
 			'COMUNA' => '13501',
 			'CIUDAD' => 'MELIPILLA',
-			'RURALIDAD' => '01',
+			'COND_RURALIDAD' => '01',
 			'VIA_DIRECCION' => '04',
 			'ESTAB_ORIG' => '110150',
 			'ESTAB_DEST' => '110150',
@@ -909,9 +909,9 @@ class HomeController
 			'RESULTADO' => '',
 			'SIGTE_ID' => '',
 			'RUN_PROF_RESOL' => '',
-			'CV_PROF_RESOL' => '',
+			'DV_PROF_RESOL' => '',
 			'RUN_PROF_SOL' => '',
-			'CV_PROF_SOL' => '',
+			'DV_PROF_SOL' => '',
 		];
 
 		foreach ($columnTitles as $index => $title) {
