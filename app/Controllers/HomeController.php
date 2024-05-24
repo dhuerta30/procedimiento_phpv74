@@ -885,10 +885,6 @@ class HomeController
 			'resultado',
 			'sigte_id'
 		];
-
-		foreach ($columnTitles as $index => $title) {
-			$sheet->setCellValue($columnLetters[$index] . '1', $title);
-		}
 	
 		// Asignar valores predeterminados a los campos faltantes
 		$defaultValues = [
@@ -916,6 +912,10 @@ class HomeController
 			'run_prof_sol' => '',
 			'cv_prof_sol' => '',
 		];
+
+		foreach ($columnTitles as $index => $title) {
+			$sheet->setCellValue($columnLetters[$index] . '1', $title);
+		}
 	
 		$rowIndex = 2;
 		foreach ($data as $row) {
@@ -924,19 +924,20 @@ class HomeController
 
 			// Asignar los valores de los campos de la consulta
 			foreach ($columnTitles as $title) {
-				$rowData[] = $row[$title] ?? ''; // Si el campo no está definido en la consulta, se añade un valor vacío
+				$rowData[$title] = $row[$title] ?? ''; // Si el campo no está definido en la consulta, se añade un valor vacío
 			}
 
 			// Añadir los valores predeterminados para los campos faltantes
 			foreach ($defaultValues as $field => $value) {
-				if (!in_array($field, $columnTitles)) {
-					$rowData[] = $value;
+				if (!isset($rowData[$field])) {
+					$rowData[$field] = $value;
 				}
 			}
 
 			// Escribir los datos en las letras de columnas correspondientes
-			foreach ($rowData as $index => $value) {
-				$sheet->setCellValue($columnLetters[$index] . $rowIndex, $value);
+			foreach ($rowData as $title => $value) {
+				$columnIndex = array_search($title, $columnTitles);
+				$sheet->setCellValue($columnLetters[$columnIndex] . $rowIndex, $value);
 			}
 
 			$rowIndex++;
