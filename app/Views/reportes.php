@@ -276,11 +276,16 @@ $(document).on("click", ".exportar_excel", function(){
                 ano_hasta: ano_hasta,
                 procedencia: procedencia
             },
+            beforeSend: function() {
+                $("#pdocrud-ajax-loader").show();
+            },
             success: function(response){
                 if (response && response.excel) {
+                    $("#pdocrud-ajax-loader").hide();
                     // Abrir el archivo Excel en una nueva ventana
                     window.open(response.excel, '_blank');
                 } else {
+                    $("#pdocrud-ajax-loader").hide();
                     Swal.fire({
                         title: 'Error',
                         text: "No se pudo generar el archivo Excel.",
