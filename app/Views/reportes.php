@@ -263,31 +263,37 @@ $(document).on("click", ".exportar_excel", function(){
 
     // Si no hay filtros, usar la URL por defecto
     if (ano_desde == "0" && ano_hasta == "0" && procedencia == "0") {
-        let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_reportes_default";
+        let url = "<?= $_ENV["BASE_URL"] ?>home/descargar_excel_reportes_default";
         window.open(url);
-        return;
-    }
-
-    // Construir la URL con los filtros aplicados
-    let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_reportes";
-
-    if (ano_desde != "0" && ano_hasta != "0") {
-        url += "/ano_desde/" + ano_desde + "/ano_hasta/" + ano_hasta;
     } else {
-        if (ano_desde != "0") {
-            url += "/ano_desde/" + ano_desde;
-        }
-        if (ano_hasta != "0") {
-            url += "/ano_hasta/" + ano_hasta;
-        }
-    }
 
-    if (procedencia != "0") {
-        url += "/procedencia/" + procedencia;
-    }
+       $.ajax({
+            type: "POST",
+            url: "<?=$_ENV["BASE_URL"]?>home/descargar_excel_reportes",
+            dataType: "json",
+            data: {
+                ano_desde: ano_desde,
+                ano_hasta: ano_hasta,
+                procedencia: procedencia
+            },
+            success: function(response){
+                if (response && response.excel) {
+                    // Abrir el archivo Excel en una nueva ventana
+                    window.open(response.excel, '_blank');
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "No se pudo generar el archivo Excel.",
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false
+                    })
+                }
+            }
+        });
+    
 
-    // Abrir la URL en una nueva ventana
-    window.open(url);
+    }
 });
 
 
