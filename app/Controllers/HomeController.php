@@ -2270,7 +2270,8 @@ class HomeController
 	public function lista_espera_examenes(){
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->addPlugin("bootstrap-inputmask");
-		$pdocrud->formFields(array("estado","rut","fecha_solicitud", "procedencia", "examen", "nombres", "nombre_profesional", "fecha_solicitud"));
+		$pdocrud->formFields(array(""));
+		//$pdocrud->formFields(array("estado","rut","fecha_solicitud", "procedencia", "examen", "nombres", "nombre_profesional", "fecha_solicitud"));
 		$pdocrud->setSettings("required", false);
 		$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 		$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
@@ -2284,6 +2285,50 @@ class HomeController
 		$pdocrud->fieldCssClass("examen", array("prestacion"));
 		$pdocrud->fieldCssClass("nombre_profesional", array("profesional"));
 		$pdocrud->fieldAttributes("nombre_profesional", array("autocomplete"=>"off"));
+		
+		$pdocrud->formStaticFields("filtros_busqueda", "html", "
+				<div class='row'>
+					<div class='col-md'>
+						<label class='control-label col-form-label'>RUN</label>
+						<input type='text' class='form-control pdocrud-form-control pdocrud-text rut'>
+					</div>
+					<div class='col-md'>
+						<label class='control-label col-form-label'>Nombre Paciente</label>
+						<input type='text' class='form-control pdocrud-form-control pdocrud-text nombre_paciente'>
+					</div>
+					<div class='col-md'>
+						<label class='control-label col-form-label'>Estado</label>
+						<select class='form-control pdocrud-form-control pdocrud-select estado'>
+							<option value=''>Seleccionar</option>
+							<option value='Ingresado'>Ingresado</option>
+							<option value='Agendado'>Agendado</option>
+							<option value='Egresado'>Egresado</option>
+						</select>
+					</div>
+					<div class='col-md'>
+						<label class='control-label col-form-label'>Procedencia</label>
+						<select class='form-control pdocrud-form-control pdocrud-select procedencia'>
+							<option value=''>Seleccionar</option>
+							<option value='Hospitalizado'>Hospitalizado</option>
+							<option value='Urgencia'>Urgencia</option>
+							<option value='Ambulatorio'>Ambulatorio</option>
+							<option value=''>Sin Procedencia</option>
+						</select>
+					</div>
+					<div class='col-md'>
+						<label class='control-label col-form-label'>Fecha Solicitud</label>
+						<div class='input-group'>
+							<input type='text' class='form-control pdocrud-form-control pdocrud-text fecha_solicitud pdocrud-date flatpickr-input' data-type='date'>                
+							<div class='input-group-append'>
+							<span class='input-group-text' id='basic-addon1'>
+								<i class='fa fa-calendar'></i>
+							</span>
+						</div> 
+					</div>
+					</div>
+				</div>
+		");
+
 		$pdocrud->formStaticFields("botones_busqueda", "html", "
 				<div class='row'>
 					<div class='col-md-12 text-center'>
@@ -2304,8 +2349,9 @@ class HomeController
 		$pdocrud->fieldTypes("estado", "select");
 		$pdocrud->fieldDataBinding("estado", "estado_procedimiento", "nombre as estado_procedimiento", "nombre", "db");
 		$pdocrud->fieldGroups("Name",array("rut","nombres", "estado"));
-		$pdocrud->fieldGroups("Name2",array("procedencia", "examen", "nombre_profesional", "fecha_solicitud"));
-		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "procedencia", "examen", "nombre_profesional", "fecha_solicitud"));
+		$pdocrud->fieldGroups("Name2",array("procedencia", "fecha_solicitud"));
+		$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "procedencia", "fecha_solicitud"));
+		//$pdocrud->fieldDisplayOrder(array("rut","nombres","estado", "procedencia", "examen", "nombre_profesional", "fecha_solicitud"));
 		$pdocrud->buttonHide("submitBtn");
 		$pdocrud->buttonHide("cancel");
 		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");

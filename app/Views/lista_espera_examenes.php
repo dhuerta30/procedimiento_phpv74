@@ -127,7 +127,16 @@ $(document).ready(function(){
             { data: 'especialidad' },
             { data: 'rut' },
             { data: 'paciente' },
-            { data: 'telefono' },
+            { data: 'telefono',
+                render: function(data, type, row, meta){
+                    
+                    if (data == null) {
+                        return "<div class='badge badge-danger'>Sin Teléfono</div>";
+                    } else {
+                        return data;
+                    }
+                }
+            },
             { data: 'edad',
                 render: function(data, type, row, meta){
                     
@@ -318,7 +327,16 @@ $(document).on("click", ".buscar", function(){
                     { data: 'especialidad' },
                     { data: 'rut' },
                     { data: 'paciente' },
-                    { data: 'telefono' },
+                    { data: 'telefono',
+                        render: function(data, type, row, meta){
+                            
+                            if (data == null) {
+                                return "<div class='badge badge-danger'>Sin Teléfono</div>";
+                            } else {
+                                return data;
+                            }
+                        } 
+                     },
                     { data: 'edad',
                         render: function(data, type, row, meta){
                             
