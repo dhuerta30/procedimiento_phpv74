@@ -803,8 +803,8 @@ class HomeController
 				dp.apellido_materno AS SEGUNDO_APELLIDO,
 				dp.fecha_nacimiento AS FECHA_NAC,
 				dp.sexo AS SEXO,
-				ds.plano AS PLANO,
-				ds.extremidad AS EXTREMIDAD,
+				NULL AS PLANO,
+				NULL AS EXTREMIDAD,
 				ds.tipo_examen AS PRESTA_EST,
 				ds.fecha_solicitud AS F_ENTRADA,
 				ds.fecha_egreso AS F_SALIDA,
@@ -890,9 +890,9 @@ class HomeController
 		// Asignar valores predeterminados a los campos faltantes
 		$defaultValues = [
 			'SERV_SALUD' => '10',
-			'PREVICION' => '01',
-			'TIPO_PREST' => '03',
-			'PRAIS' => '02',
+			'PREVICION' => '1',
+			'TIPO_PREST' => '3',
+			'PRAIS' => '2',
 			'REGION' => '13',
 			'COMUNA' => '13501',
 			'CIUDAD' => 'MELIPILLA',
