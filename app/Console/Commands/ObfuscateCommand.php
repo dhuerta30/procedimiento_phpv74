@@ -14,7 +14,7 @@ class ObfuscateCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Ofusca un archivo PHP. Ejemplo de uso (php artify obfuscate-code ruta-al-archivo-a-ofuscar.php ruta-al-archivo-ofuscado.php)')
+            ->setDescription('Ofusca un archivo PHP.')
             ->addArgument('inputFile', InputArgument::REQUIRED, 'El archivo PHP de entrada a ofuscar.')
             ->addArgument('outputFile', InputArgument::REQUIRED, 'El archivo PHP de salida ofuscado.');
     }
@@ -27,6 +27,15 @@ class ObfuscateCommand extends Command
         if (!file_exists($inputFile)) {
             $output->writeln("<error>El archivo de entrada no existe: $inputFile</error>");
             return Command::FAILURE;
+        }
+
+        // Asegurarse de que el directorio de salida exista
+        $outputDir = dirname($outputFile);
+        if (!is_dir($outputDir)) {
+            if (!mkdir($outputDir, 0777, true) && !is_dir($outputDir)) {
+                $output->writeln("<error>No se pudo crear el directorio de salida: $outputDir</error>");
+                return Command::FAILURE;
+            }
         }
 
         $code = file_get_contents($inputFile);
