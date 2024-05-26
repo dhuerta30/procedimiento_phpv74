@@ -9,6 +9,7 @@ use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\DropTableCommand;
 use App\Console\Commands\CrudControllerCommand;
 use App\Console\Commands\DatabaseMigrationCommand;
+use App\Console\Commands\ObfuscateCommand;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -42,4 +43,5 @@ $app->add(new CreateTableCommand());
 $app->add(new DropTableCommand());
 $app->add(new CrudControllerCommand());
 $app->add(new DatabaseMigrationCommand($connection));
+$app->add(new ObfuscateCommand());
 $app->run();

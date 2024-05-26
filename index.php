@@ -54,3 +54,5 @@ if (file_exists($controllerFile)) {
         App\core\Redirect::to("$controllerName" . "/" . "$action");
     }
 }
+
+?>
