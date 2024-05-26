@@ -39,15 +39,41 @@ class ObfuscateCommand extends Command
         }
 
         $code = file_get_contents($inputFile);
+
+        // Ofuscar nombres de variables y funciones
+        $code = preg_replace_callback('/\b[a-zA-Z_]\w*\b/', function($matches) {
+            return substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8);
+        }, $code);
+
+        // Codificar y comprimir el código varias veces
         $compressedCode = gzcompress($code);
         $base64Encoded = base64_encode($compressedCode);
+        $doubleBase64 = base64_encode($base64Encoded);
 
+        // Generar código ofuscado
         $obfuscatedCode = "<?php\n";
         $obfuscatedCode .= "// El siguiente código ha sido ofuscado\n";
-        $obfuscatedCode .= "\$encoded = '$base64Encoded';\n";
-        $obfuscatedCode .= "\$compressed = base64_decode(\$encoded);\n";
+        
+        // Verificación de entorno
+        $obfuscatedCode .= "if (php_sapi_name() !== 'cli') { die('Este script solo puede ser ejecutado desde la línea de comandos.'); }\n";
+        
+        // Variables dinámicas
+        $varName = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8);
+        $obfuscatedCode .= "\$$varName = '$doubleBase64';\n";
+        
+        // Código ofuscado
+        $obfuscatedCode .= "\$decodedOnce = base64_decode(\$$varName);\n";
+        $obfuscatedCode .= "\$compressed = base64_decode(\$decodedOnce);\n";
         $obfuscatedCode .= "\$code = gzuncompress(\$compressed);\n";
-        $obfuscatedCode .= "eval('?>' . \$code);\n";
+        
+        // Fragmentar y ensamblar el código en tiempo de ejecución
+        $parts = str_split($obfuscatedCode, 50);
+        $obfuscatedCode = "\$finalCode = '';\n";
+        foreach ($parts as $part) {
+            $obfuscatedCode .= "\$finalCode .= '$part';\n";
+        }
+        
+        $obfuscatedCode .= "eval(\$finalCode);\n";
         $obfuscatedCode .= "?>";
 
         file_put_contents($outputFile, $obfuscatedCode);
