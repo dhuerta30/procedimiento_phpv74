@@ -823,7 +823,7 @@ class HomeController
 				profesional AS pro ON pro.id_profesional = dg_p.profesional
 			WHERE 
 				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-				AND DATE_FORMAT(ds.fecha_solicitud, '%Y-%m-%d') = DATE_FORMAT(:fechacorte, '%Y-%m-%d') AND ds.estado = :estado
+				AND YEAR(ds.fecha_solicitud) = DATE_FORMAT(:fechacorte, '%Y-%m-%d') AND ds.estado = :estado
 			GROUP BY 
 				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
