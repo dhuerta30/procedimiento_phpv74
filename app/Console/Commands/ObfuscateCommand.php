@@ -14,7 +14,7 @@ class ObfuscateCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Ofusca un archivo PHP.')
+            ->setDescription('Ofusca un archivo PHP. Ejemplo de uso php artify obfuscate-code app/Controllers/ApiController.php app/Controllers/ApiOfuscateController.php')
             ->addArgument('inputFile', InputArgument::REQUIRED, 'El archivo PHP de entrada a ofuscar.')
             ->addArgument('outputFile', InputArgument::REQUIRED, 'El archivo PHP de salida ofuscado.');
     }
