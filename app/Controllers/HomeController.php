@@ -823,7 +823,8 @@ class HomeController
 				profesional AS pro ON pro.id_profesional = dg_p.profesional
 			WHERE 
 				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-				AND YEAR(ds.fecha_solicitud) = DATE_FORMAT(:fechacorte, '%Y-%m-%d') AND ds.estado = :estado
+				AND YEAR(ds.fecha_solicitud) = DATE_FORMAT(:fechacorte, '%Y-%m-%d')
+				AND (ds.estado = :estado OR (ds.estado = 'egresado' AND ds.fecha_egreso IS NOT NULL AND :estado = 'egresado'))
 			GROUP BY 
 				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
@@ -836,7 +837,7 @@ class HomeController
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
 			'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 
-			'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 
+			'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM',
 			'AN', 'AO', 'AP', 'AQ'
 		];
 
