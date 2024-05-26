@@ -1,5 +1,6 @@
 <?php
-
+// Framweork Artify
+// Author: Daniel Huerta
 use Symfony\Component\Console\Application;
 use Doctrine\DBAL\DriverManager;
 use App\Console\Commands\MakeControllerCommand;
