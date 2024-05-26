@@ -2762,8 +2762,7 @@ class HomeController
 			GROUP_CONCAT(DISTINCT ds.tipo_examen) AS tipo_examen,
 			YEAR(ds.fecha_solicitud) AS ano,
 			ABS(MIN(DATEDIFF(ds.fecha, ds.fecha_solicitud))) AS cantidad_media,
-			COUNT(ds.examen) AS total_examen,
-			(SELECT COUNT(*) FROM detalle_de_solicitud) AS total_examen_global
+			COUNT(ds.examen) AS total_examen
 		FROM 
 			datos_paciente AS dp
 		INNER JOIN 
