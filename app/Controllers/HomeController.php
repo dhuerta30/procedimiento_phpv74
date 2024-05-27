@@ -786,49 +786,91 @@ class HomeController
 		$folio = $request->get('folio');
 		$fechacorte = $request->get('fechacorte');
 		$estado = $request->get('estado');
+
 		$fecha_corte_formateada = date("Y-m-d", strtotime($fechacorte));
 
 		$pdocrud = DB::PDOCrud();
 		$pdomodel = $pdocrud->getPDOModelObj();
 		
-		$data = $pdomodel->executeQuery("
-			SELECT
-				ds.id_detalle_de_solicitud AS ID_LOCAL,
-				codigo_fonasa AS PRESTA_MIN,
-				codigo_fonasa AS PRESTA_MIN_SALIDA,
-				SUBSTRING_INDEX(dp.rut, '-', 1) AS RUN,
-				SUBSTRING_INDEX(dp.rut, '-', -1) AS DV,
-				dp.nombres AS NOMBRES,
-				dp.apellido_paterno AS PRIMER_APELLIDO,
-				dp.apellido_materno AS SEGUNDO_APELLIDO,
-				dp.fecha_nacimiento AS FECHA_NAC,
-				dp.sexo AS SEXO,
-				NULL AS PLANO,
-				NULL AS EXTREMIDAD,
-				ds.tipo_examen AS PRESTA_EST,
-				ds.fecha_solicitud AS F_ENTRADA,
-				ds.fecha_egreso AS F_SALIDA,
-				ds.motivo_egreso AS C_SALIDA,
-				dg_p.diagnostico AS SOSPECHA_DIAG,
-				dg_p.diagnostico_libre AS CONFIR_DIAG,
-				dp.direccion AS NOM_CALLE,
-				ds.fecha AS F_CITACION
-			FROM 
-				datos_paciente AS dp
-			INNER JOIN
-				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-			INNER JOIN 
-				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
-			INNER JOIN 
-				profesional AS pro ON pro.id_profesional = dg_p.profesional
-			WHERE 
-				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-				AND YEAR(ds.fecha_solicitud) = DATE_FORMAT(:fechacorte, '%Y-%m-%d')
-				AND (ds.estado = :estado OR (ds.estado = 'egresado' AND ds.fecha_egreso IS NOT NULL AND :estado = 'egresado'))
-			GROUP BY 
-				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
-			[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
-		);
+		if($estado == "Ingresado"){
+			$data = $pdomodel->executeQuery("
+				SELECT
+					ds.id_detalle_de_solicitud AS ID_LOCAL,
+					codigo_fonasa AS PRESTA_MIN,
+					codigo_fonasa AS PRESTA_MIN_SALIDA,
+					SUBSTRING_INDEX(dp.rut, '-', 1) AS RUN,
+					SUBSTRING_INDEX(dp.rut, '-', -1) AS DV,
+					dp.nombres AS NOMBRES,
+					dp.apellido_paterno AS PRIMER_APELLIDO,
+					dp.apellido_materno AS SEGUNDO_APELLIDO,
+					dp.fecha_nacimiento AS FECHA_NAC,
+					dp.sexo AS SEXO,
+					NULL AS PLANO,
+					NULL AS EXTREMIDAD,
+					ds.tipo_examen AS PRESTA_EST,
+					ds.fecha_solicitud AS F_ENTRADA,
+					ds.fecha_egreso AS F_SALIDA,
+					ds.motivo_egreso AS C_SALIDA,
+					dg_p.diagnostico AS SOSPECHA_DIAG,
+					dg_p.diagnostico_libre AS CONFIR_DIAG,
+					dp.direccion AS NOM_CALLE,
+					ds.fecha AS F_CITACION
+				FROM 
+					datos_paciente AS dp
+				INNER JOIN
+					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					profesional AS pro ON pro.id_profesional = dg_p.profesional
+				WHERE 
+					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+					AND YEAR(ds.fecha_solicitud) = DATE_FORMAT(:fechacorte, '%Y-%m-%d') 
+					AND ds.estado = :estado
+				GROUP BY 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
+				[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
+			);
+		} else {
+			$data = $pdomodel->executeQuery("
+				SELECT
+					ds.id_detalle_de_solicitud AS ID_LOCAL,
+					codigo_fonasa AS PRESTA_MIN,
+					codigo_fonasa AS PRESTA_MIN_SALIDA,
+					SUBSTRING_INDEX(dp.rut, '-', 1) AS RUN,
+					SUBSTRING_INDEX(dp.rut, '-', -1) AS DV,
+					dp.nombres AS NOMBRES,
+					dp.apellido_paterno AS PRIMER_APELLIDO,
+					dp.apellido_materno AS SEGUNDO_APELLIDO,
+					dp.fecha_nacimiento AS FECHA_NAC,
+					dp.sexo AS SEXO,
+					NULL AS PLANO,
+					NULL AS EXTREMIDAD,
+					ds.tipo_examen AS PRESTA_EST,
+					ds.fecha_solicitud AS F_ENTRADA,
+					ds.fecha_egreso AS F_SALIDA,
+					ds.motivo_egreso AS C_SALIDA,
+					dg_p.diagnostico AS SOSPECHA_DIAG,
+					dg_p.diagnostico_libre AS CONFIR_DIAG,
+					dp.direccion AS NOM_CALLE,
+					ds.fecha AS F_CITACION
+				FROM 
+					datos_paciente AS dp
+				INNER JOIN
+					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					profesional AS pro ON pro.id_profesional = dg_p.profesional
+				WHERE 
+					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+					AND YEAR(ds.fecha_egreso) = DATE_FORMAT(:fechacorte, '%Y-%m-%d')
+					AND ds.estado = :estado
+				GROUP BY 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
+				[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
+			);
+		}
 
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet();
