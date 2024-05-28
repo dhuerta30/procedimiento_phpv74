@@ -2340,6 +2340,10 @@ class HomeController
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text nombre_paciente'>
 					</div>
 					<div class='col-md'>
+						<label class='control-label col-form-label'>Prestación</label>
+						<input type='text' class='form-control pdocrud-form-control pdocrud-text prestacion'>
+					</div>
+					<div class='col-md'>
 						<label class='control-label col-form-label'>Estado</label>
 						<select class='form-control pdocrud-form-control pdocrud-select estado'>
 							<option value=''>Seleccionar</option>
@@ -3573,6 +3577,7 @@ class HomeController
 		$nombre_paciente = $request->get('nombre_paciente');
 		$estado = $request->get('estado');
 		$procedencia = $request->get('procedencia');
+		$prestacion = $request->get('prestacion');
 		$profesional = $request->get('profesional');
 		$fecha_solicitud = $request->get('fecha_solicitud');
 
@@ -3596,6 +3601,10 @@ class HomeController
 
 		if (!empty($procedencia)) {
 			$where .= " AND ds.procedencia = '$procedencia' ";
+		}
+
+		if (!empty($prestacion)) {
+			$where .= " AND ds.examen LIKE '%$prestacion%' ";
 		}
 
 		if (!empty($profesional)) {

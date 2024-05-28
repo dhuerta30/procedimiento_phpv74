@@ -32,7 +32,7 @@
 
 				<div class="container examenes">
 					<div class="row justify-content-center">
-                        <div class="col-md-10">
+                        <div class="col-md-12">
                             <?=$render?>
                             <?=$mask;?>
                         </div>
@@ -639,11 +639,12 @@ $(document).on("click", ".exportar_excel", function(){
     let nombre_paciente = $('.nombre_paciente').val();
     let estado = $('.estado').val();
     let procedencia = $('.procedencia').val();
+    let prestacion = $('.prestacion').val();
     let profesional = $('.profesional').val();
     let fecha_solicitud = $('.fecha_solicitud').val();
 
     // Verificar si no hay ningún filtro aplicado
-    if (!run && !nombre_paciente && !estado && !procedencia && !profesional && !fecha_solicitud) {
+    if (!run && !nombre_paciente && !estado && !procedencia && !prestacion && !profesional && !fecha_solicitud) {
         let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_lista_espera_examenes_default";
         // Si no hay filtros, usar la URL por defecto
         window.open(url);
@@ -653,6 +654,7 @@ $(document).on("click", ".exportar_excel", function(){
         // Agregar filtros a la URL según estén presentes
         if (run) url += "/run/" + run;
         if (nombre_paciente) url += "/nombre_paciente/" + nombre_paciente;
+        if (prestacion) url += "/prestacion/" + prestacion;
         if (estado) url += "/estado/" + estado;
         if (procedencia) url += "/procedencia/" + procedencia;
         if (profesional) url += "/profesional/" + profesional;
