@@ -127,7 +127,14 @@ function carga_masiva_pacientes_insertar($data, $obj) {
                     $existingPacient = $pdomodel->executeQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => $Excelval['Rut']]);
 
                     if (!$existingPacient) {
-                        $fecha_nacimiento = new DateTime($Excelval['Fecha Nacimiento']);
+                        
+                        try {
+                            $fecha_nacimiento = new DateTime($Excelval['Fecha Nacimiento']);
+                        } catch (Exception $e) {
+                            $error_msg = array("message" => "", "error" => "Fecha de Nacimiento inválida: " . $rut, "redirectionurl" => "");
+                            die(json_encode($error_msg));
+                        }
+
                         $fecha_actual = new DateTime();
                         $diferencia = $fecha_actual->diff($fecha_nacimiento);
                         $edad = $diferencia->y;
