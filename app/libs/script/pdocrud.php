@@ -131,7 +131,7 @@ function carga_masiva_pacientes_insertar($data, $obj) {
                         try {
                             $fecha_nacimiento = new DateTime($Excelval['Fecha Nacimiento']);
                         } catch (Exception $e) {
-                            $error_msg = array("message" => "", "error" => "Fecha de Nacimiento inválida: " . $rut, "redirectionurl" => "");
+                            $error_msg = array("message" => "", "error" => "Fecha de Nacimiento inválida para el Rut: " . $rut, "redirectionurl" => "");
                             die(json_encode($error_msg));
                         }
 

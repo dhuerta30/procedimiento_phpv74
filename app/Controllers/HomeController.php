@@ -3696,37 +3696,57 @@ class HomeController
 
 
 	public static function validaRut($rut)
-    {
-        if (strpos($rut, "-") == false) {
-            $RUT[0] = substr($rut, 0, -1);
-            $RUT[1] = substr($rut, -1);
-        } else {
-            $RUT = explode("-", trim($rut));
-        }
-        $elRut = $RUT[0];
-        $factor = 2;
-        $suma = 0;
-        for ($i = strlen($elRut) - 1; $i >= 0; $i--) {
-            $factor = $factor > 7 ? 2 : $factor;
-            $suma += $elRut[$i] * $factor++;
-        }
-        $resto = $suma % 11;
-        $dv = 11 - $resto;
-        if ($dv == 11) {
-            $dv = 0;
-        } else if ($dv == 10) {
-            $dv = "k";
-        } else {
-            $dv = $dv;
-        }
-        if ($dv == trim(strtolower($RUT[1]))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-	
+	{
+		// Eliminar puntos y espacios del RUT
+		$rut = str_replace('.', '', trim($rut));
 
+		// Verificar que el RUT tenga al menos un guión
+		if (strpos($rut, "-") === false) {
+			// Si no hay guión, asumir que el último carácter es el dígito verificador
+			$RUT[0] = substr($rut, 0, -1);
+			$RUT[1] = substr($rut, -1);
+		} else {
+			// Separar el RUT en la parte numérica y el dígito verificador
+			$RUT = explode("-", $rut);
+		}
+
+		// Asegurarse de que $RUT[0] solo contenga dígitos
+		if (!ctype_digit($RUT[0])) {
+			return false;
+		}
+
+		// Convertir $RUT[0] a número
+		$elRut = $RUT[0];
+
+		$factor = 2;
+		$suma = 0;
+
+		// Recorrer los dígitos del RUT desde el final hacia el inicio
+		for ($i = strlen($elRut) - 1; $i >= 0; $i--) {
+			$factor = $factor > 7 ? 2 : $factor;
+			$suma += $elRut[$i] * $factor++;
+		}
+
+		// Calcular el dígito verificador esperado
+		$resto = $suma % 11;
+		$dv = 11 - $resto;
+		if ($dv == 11) {
+			$dv = 0;
+		} else if ($dv == 10) {
+			$dv = "k";
+		} else {
+			$dv = $dv;
+		}
+
+		// Comparar el dígito verificador calculado con el proporcionado
+		if ($dv == trim(strtolower($RUT[1]))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	
 	public function agregar_paciente(){
 		$request = new Request();
 
