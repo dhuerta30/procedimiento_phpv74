@@ -1,14 +1,15 @@
 <?php
-@session_start();
-/*enable this for development purpose */
-//ini_set('display_startup_errors', 1);
-//ini_set('display_errors', 1);
-//error_reporting(-1);
 date_default_timezone_set(@date_default_timezone_get());
 define('PDOCrudABSPATH', dirname(__FILE__) . '/');
 require_once PDOCrudABSPATH . "../../../vendor/autoload.php";
 $dotenv = DotenvVault\DotenvVault::createImmutable(dirname(__DIR__, 3));
 $dotenv->safeLoad();
+@session_name($_ENV['APP_NAME']);
+@session_start();
+/*enable this for development purpose */
+//ini_set('display_startup_errors', 1);
+//ini_set('display_errors', 1);
+//error_reporting(-1);
 require_once PDOCrudABSPATH . "config/config.php";
 spl_autoload_register('pdocrudAutoLoad');
 
