@@ -1,21 +1,25 @@
 <?php
 
-@session_start();
-
 Class PDOCrudAjaxCtrl {
 
     public function handleRequest() {
-        $instanceKey = $_REQUEST["pdocrud_instance"];
+        $instanceKey = isset($_REQUEST["pdocrud_instance"]) ? filter_var($_REQUEST["pdocrud_instance"], FILTER_SANITIZE_STRING) : null;
+        
         if(!isset($_SESSION["pdocrud_sess"][$instanceKey])){
-            die("Session has been expired. Please refresh your page to continue.");
+            die("La sesión ha caducado. Actualice su página para continuar.");
         }
 
-        $pdocrud = unserialize($_SESSION["pdocrud_sess"][$instanceKey]);
-        $action = $_POST["pdocrud_data"]["action"];
-        $data = $_POST["pdocrud_data"];
+        $pdocrud = @unserialize($_SESSION["pdocrud_sess"][$instanceKey]);
+        if ($pdocrud === false) {
+            die("Ocurrió un error. Por favor, inténtelo de nuevo más tarde.");
+        }
+
+        $action = isset($_POST["pdocrud_data"]["action"]) ? filter_var($_POST["pdocrud_data"]["action"], FILTER_SANITIZE_STRING) : null;
+        $data = isset($_POST["pdocrud_data"]) ? filter_var_array($_POST["pdocrud_data"], FILTER_SANITIZE_STRING) : [];
         $post = $_POST;
-        if (isset($_FILES))
+        if (isset($_FILES)) {
             $post = array_merge($_FILES, $post);
+        }
         $data["post"] = $post;
         switch (strtoupper($action)) {
             case "VIEW":
@@ -120,8 +124,9 @@ Class PDOCrudAjaxCtrl {
                 echo $pdocrud->render("CRUD", $data);
                 break;
             case "AUTOSUGGEST":
-                if(isset($_GET["callback"]))
-                    $data["callback"] = $_GET["callback"];
+                if (isset($_GET["callback"])) {
+                    $data["callback"] = filter_var($_GET["callback"], FILTER_SANITIZE_STRING);
+                }
                 echo $pdocrud->render("AUTOSUGGEST", $data);
                 break;
             case "EXPORTTABLE":
