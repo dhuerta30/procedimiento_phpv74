@@ -669,9 +669,11 @@ class HomeController
 					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
 				INNER JOIN 
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
-				WHERE 
+				WHERE
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND YEAR(ds.fecha_solicitud) = DATE_FORMAT(:hasta, '%Y-%m-%d') AND ds.estado = 'Ingresado' AND ds.folio IS NULL
+					AND YEAR(ds.fecha_solicitud) = DATE_FORMAT(:hasta, '%Y-%m-%d')
+					AND ds.estado = 'Ingresado'
+					AND ds.folio IS NULL
 				GROUP BY
 					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 				[':hasta' => $hasta_formateada]
@@ -680,6 +682,11 @@ class HomeController
 			// Contar la cantidad de registros
 			date_default_timezone_set('America/Santiago');
 			$total_registros = count($data);
+
+			print_r($total_registros);
+			//echo $pdomodel->getLastQuery();
+			die();
+
 			$sesionUsuario = $_SESSION["usuario"][0]["usuario"];
 			$fecha_exportacion = date('Y-m-d');
 
