@@ -470,6 +470,7 @@
                             title: "Genial!",
                             text: data['success'],
                             icon: "success",
+                            allowOutsideClick: false,
                             confirmButtonText: "Aceptar"
                         });
 
@@ -478,6 +479,7 @@
                         $('.nombres').val("");
                         $('.apellido_paterno').val("");
                         $('.apellido_materno').val("");
+                        $('.telefono').val("");
 
                         $('.fecha_nacimiento').val("");
 
@@ -499,11 +501,15 @@
                         $('.sintomas_principales').val("");
                         $('.diagnostico_libre').val("");
 
+                        $(".guardar").addClass("d-none");
+                        $(".agregar_paciente").removeClass("d-none");
+
                     } else {
                         Swal.fire({
                             title: "Atención!",
                             text: data['error'],
                             icon: "warning",
+                            allowOutsideClick: false,
                             confirmButtonText: "Aceptar"
                         });
                     }
@@ -554,6 +560,7 @@
                                 title: "Lo siento!",
                                 text: data.error,
                                 icon: "error",
+                                allowOutsideClick: false,
                                 confirmButtonText: "Aceptar"
                             });
                         }
@@ -666,6 +673,7 @@
                             title: "Atención!",
                             text: data['error'],
                             icon: "warning",
+                            allowOutsideClick: false,
                             confirmButtonText: "Aceptar"
                         });
                     }
@@ -927,6 +935,7 @@
                     title: "Genial!",
                     text: json.message,
                     icon: "success",
+                    allowOutsideClick: false,
                     confirmButtonText: "Aceptar"
                 });
             }
@@ -945,6 +954,12 @@
             let fecha_y_hora_ingreso = $('.fecha_y_hora_ingreso').val();
             let telefono = $('.telefono').val();
 
+            let especialidad = $('.especialidad').val();
+            let profesional = $('.profesional').val();
+            let diagnostico = $('.diagnostico').val();
+            let sintomas_principales = $('.sintomas_principales').val();
+            let diagnostico_libre = $('.diagnostico_libre').val();
+
             $.ajax({
                 type: "POST",
                 url: "<?=$_ENV["BASE_URL"]?>home/agregar_paciente",
@@ -959,7 +974,12 @@
                     direccion: direccion,
                     sexo: sexo,
                     fecha_y_hora_ingreso: fecha_y_hora_ingreso,
-                    telefono: telefono
+                    telefono: telefono,
+                    especialidad: especialidad,
+                    profesional: profesional,
+                    diagnostico: diagnostico,
+                    sintomas_principales: sintomas_principales,
+                    diagnostico_libre: diagnostico_libre
                 },
                 beforeSend: function() {
                     $("#pdocrud-ajax-loader").show();
@@ -974,14 +994,17 @@
                             title: "Genial!",
                             text: data['success'],
                             icon: "success",
+                            allowOutsideClick: false,
                             confirmButtonText: "Aceptar"
                         });
+                        $(".guardar").click();
 
                     } else {
                         Swal.fire({
                             title: "Atención!",
                             text: data['error'],
                             icon: "warning",
+                            allowOutsideClick: false,
                             confirmButtonText: "Aceptar"
                         });
                     }
