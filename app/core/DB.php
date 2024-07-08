@@ -20,6 +20,36 @@ class DB {
         return $pdocrud;
     }
 
+    public static function settingEmail($smtp = array()){
+        $smtp = array(
+            "host" => $_ENV['MAIL_HOST'],
+            "port" => $_ENV["MAIL_PORT"],
+            "SMTPAuth" =>  DB::evalBool($_ENV['SMTP_AUTH']),
+            "username" => $_ENV["MAIL_USERNAME"],
+            "password" => $_ENV["MAIL_PASSWORD"],
+            "SMTPSecure" => $_ENV["SMTP_SECURE"],
+            "SMTPKeepAlive" => DB::evalBool($_ENV['SMTP_KEEP_ALIVE'])
+        );
+        return $smtp;
+    }
+
+
+    /*  Ejemplo de uso 
+        
+        $to = array("daniel.telematico@gmail.com" => "Daniel Huerta");
+        $subject = "Test Email";
+        $message = "This is a test email.";
+        $from = array("daniel.telematico@gmail.com" => "Daniel Huerta");
+        $altMessage = "This is the alternative plain text message.";
+        $cc = array();
+        $bcc = array();
+        $attachments = array();
+        $smtp = DB::settingEmail();
+        $isHTML = true;
+
+        $pdocrud->sendEmail($to, $subject, $message, $from, $altMessage, $cc, $bcc, $attachments, $smtp, $isHTML);
+    */
+
 	public static function evalBool($value)
 	{
 		return (strcasecmp($value, 'true') ? false : true);
