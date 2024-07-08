@@ -1004,12 +1004,22 @@ function resetloginCallback($data, $obj)
         $pdomodel->where("id", $hash[0]["id"]);
         $pdomodel->update("usuario", array("password" => $encrypt));
 
-        $emailBody = "Correo enviado  tu nueva contraseña es: $pass";
-        $subject = "Nueva Contraseña de acceso al sistema de Procedimentos";
-        $to = $email;
-
         //$pdomodel->send_email_public($to, 'daniel.telematico@gmail.com', null, $subject, $emailBody);
-        App\core\DB::PHPMail($to, "daniel.telematico@gmail.com", $subject, $emailBody);
+        //App\core\DB::PHPMail($to, "daniel.telematico@gmail.com", $subject, $emailBody);
+
+        $to = array($email => "Daniel Huerta");
+        $subject = "Nueva Contraseña de acceso al sistema de Procedimentos";
+        $emailBody = "Correo enviado  tu nueva contraseña es: $pass";
+        $from = array("daniel.telematico@gmail.com" => "Daniel Huerta");
+        $altMessage = "";
+        $cc = array();
+        $bcc = array();
+        $attachments = array();
+        $smtp = App\core\DB::settingEmail();
+        $isHTML = true;
+
+        $obj->sendEmail($to, $subject, $emailBody, $from, $altMessage, $cc, $bcc, $attachments, $smtp, $isHTML);
+
         $obj->setLangData("success", "Correo enviado con éxito");
     }
 
