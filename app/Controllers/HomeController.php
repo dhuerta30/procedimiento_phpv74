@@ -3919,6 +3919,10 @@ class HomeController
 				$mensaje = 'Agregue o Busque un Paciente Para continuar';
 				echo json_encode(['error' => $mensaje]);
 				return;
+			} else if (empty($telefono)){
+				$mensaje = 'El campo Telefono es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
 			} else if(empty($especialidad)){
 				$mensaje = 'El campo Especialidad es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
@@ -4037,10 +4041,10 @@ class HomeController
 			$contrasteValue = isset($contraste) ? (array)$contraste : [];
 			$creatinina = $request->post('creatinina') ?? null;
 	
-			/*if(empty($paciente)){
+			if(empty($paciente)){
 				echo json_encode(['error' => "Agregue o Busque un Paciente Para continuar"]);
 				return;
-			}*/
+			}
 			// Validar que los campos no estén vacíos
 			$requiredFields = [
 				'tipo_solicitud' => 'Tipo de Solicitud',

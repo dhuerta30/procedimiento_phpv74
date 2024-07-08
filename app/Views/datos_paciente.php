@@ -90,7 +90,8 @@
 
                 <div class="row">
                     <div class="col-md-12 text-right">
-                        <a href='javascript:;' class='btn btn-primary agregar_paciente' data-intro='Para guardar todos los datos anteriormente ingresados presione este botón'><i class="fa fa-save"></i> Guardar</a>
+                        <a href='javascript:;' class='btn btn-primary agregar_paciente d-none' data-intro='Si desea Agregar un Paciente, el botón de Agregar Paciente también se ocultará y quedarán visibles solo los botones Buscar y Limpiar.'><i class='fa fa-plus'></i> Agregar Paciente</a>
+                        <a href="javascript:;" class="btn btn-primary btn-sm guardar" data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class="fa fa-save"></i> Guardar</a>
                     </div>
                 </div>
 
@@ -367,7 +368,6 @@
                 success: function(data){
                     $("#pdocrud-ajax-loader").hide();
                     if(data['success']){
-                       //$('.agregar_paciente').hide();
                         $('.limpiar').removeClass('d-none');
                         $(".rut").val(data["data"][0]["rut"]);
                         $(".nombres").val(data["data"][0]["nombres"]);
@@ -379,9 +379,6 @@
                         $(".direccion").val(data["data"][0]["direccion"]);
                         $(".sexo").val(data["data"][0]["sexo"]);
                         $('.paciente').val(data["data"][0]["id_datos_paciente"]);
-
-                        $(".agregar_paciente").addClass("guardar");
-                        $(".guardar").removeClass("agregar_paciente");
                        
                         Swal.fire({
                             title: "Genial!",
@@ -464,7 +461,6 @@
                 success: function(data){
                     $("#pdocrud-ajax-loader").hide();
                     if(data['success']){
-                        $('.agregar_paciente').show();
                         $('.limpiar').addClass('d-none');
                         $('.result_solicitud').html(data['render3']);
                         Swal.fire({
@@ -723,12 +719,7 @@
 
 
         $(document).on("click", ".limpiar", function(){
-
-            $(".guardar").addClass("agregar_paciente");
-            $(".agregar_paciente").removeClass("guardar");
-
             $('.limpiar').addClass('d-none');
-            //$('.agregar_paciente').show();
             $(".rut").val("");
             $(".nombres").val("");
             $(".apellido_paterno").val("");
@@ -982,9 +973,12 @@
                     if(data['success']){
                         $('.result_solicitud').html(data['render3']);
                         $('.paciente').val(data['id']);
-                        //$('.agregar_paciente').hide();
                         
                         Swal.fire({
+                            title: "Genial!",
+                            text: data['success'],
+                            icon: "success",
+                            confirmButtonText: "Aceptar",
                             text: "¿Desea agregar Esta Solicitud de Exámen al Paciente?",
                             icon: "warning",
                             showCancelButton: true,
@@ -1009,8 +1003,7 @@
                         Swal.fire({
                             title: "Atención!",
                             text: data['error'],
-                            icon: "error",
-                            allowOutsideClick: false,
+                            icon: "warning",
                             confirmButtonText: "Aceptar"
                         });
                     }
