@@ -6287,53 +6287,38 @@ Class PDOCrud {
      * @param   string    $outputFileName           Output excel file name
      *
      */
-    public function arrayToExcel($excelArray, $outputFileName = "file.xlsx") {
+    public function arrayToExcel($excelArray, $outputFileName = "file.xlsx")
+    {
+        // Verificar que el input sea un array
         if (!is_array($excelArray)) {
-            $this->addError($this->getLangData("valid_input"));
             return false;
         }
-        if ($this->append && !isset($this->existingFilePath)) {
-            $this->addError($this->getLangData("valid_existing_file"));
-            return false;
-        }
-        if (empty($outputFileName)) {
-            if ($this->excelFormat == "2007")
-                $outputFileName = "file.xlsx";
-            else
-                $outputFileName = "file.xls";
-        }
+
+        // Crear un nuevo objeto Spreadsheet
         $spreadsheet = new Spreadsheet();
-        $activeWorksheet = $spreadsheet->getActiveSheet();
-        
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        // Rellenar el archivo de Excel con los datos del array
         $rowIndex = 1;
-        foreach ($excelArray as $rows) {
-            $cellLoop = 0;
+        foreach ($excelArray as $row) {
             $columnIndex = 'A';
-            foreach ($rows as $cellValue) {
-                $activeWorksheet->setCellValue($columnIndex . $rowIndex, $cellValue);
-                $cellLoop++;
+            foreach ($row as $cellValue) {
+                $worksheet->setCellValue($columnIndex . $rowIndex, $cellValue);
+                $columnIndex++;
             }
             $rowIndex++;
         }
-        
+
+        // Guardar el archivo de Excel en el disco duro
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save($this->fileSavePath . $outputFileName);
 
-        if ($this->fileOutputMode == "browser") {
-            if ($this->excelFormat == "2007")
-                header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            else
-                header('Content-type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment; filename="' . $outputFileName . '"');
-            $objWriter->save('php://output');
-            die();
-        } else {
-            if ($this->fileSavePath && !is_dir($this->fileSavePath))
-                mkdir($this->fileSavePath);
-            $writer->save($this->fileSavePath . $outputFileName);
-            return $this->settings["downloadURL"] . $outputFileName;
-        }
-
-        return true;
+        $response = [
+            "status" => "success",
+            "message" => "Archivo Excel generado exitosamente.",
+            "downloadUrl" => $this->fileSavePath . $outputFileName
+        ];
+        echo json_encode($response);
     }
 
     /*     * *************************** Import functions (added in version 1.9) ******************************************** */

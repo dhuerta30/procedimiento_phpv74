@@ -667,10 +667,16 @@ $(document).ready(function(){
                 success: function (response) {
                     $("#pdocrud-ajax-loader").hide();
                     if (data.action === "exporttable") {
-                        if (data.exportType === "print")
+                        if (data.exportType === "print") {
                             $.pdocrud_actions.print(response, printwindow);
-                        else
+                        } else if (data.exportType === "excel") {
+                            let json = JSON.parse(response);
+                            let url = json.downloadUrl;
+                            let fileName = url.substring(url.lastIndexOf('/')+1);
+                            window.location.href = pdocrud_js.pdocrudurl + 'script/downloads/' + fileName;
+                        } else {
                             window.location.href = response;
+                        }
                     }
                     else {
                         if ($(obj).closest(".pdocrud-table-container").data("modal")) {
