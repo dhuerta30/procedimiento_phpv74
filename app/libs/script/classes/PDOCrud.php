@@ -6451,22 +6451,24 @@ Class PDOCrud {
      * @return   boolean                   return true if email function works properly
      */
     public function sendEmail($to, $subject, $message, $from = array(), $altMessage = "", $cc = array(), $bcc = array(), $attachments = array(), $mode = "PHPMAIL", $smtp = array(), $isHTML = true) {
-        require_once(dirname(__FILE__) . "/library/PHPMailer-master/PHPMailerAutoload.php");
-        $mail = new PHPMailer;
+        require_once(dirname(__FILE__) . "/library/mailer/src/Exception.php");
+        require_once(dirname(__FILE__) . "/library/mailer/src/PHPMailer.php");
+        require_once(dirname(__FILE__) . "/library/mailer/src/SMTP.php");
+       
+        $mail = new PHPMailer(true);
         $mail->Subject = $subject;
         $mail->msgHTML($message);
         $mail->AltBody = $message;
         $mailError = array();
-        if (strtoupper($mode) === "SMTP") {
-            $mail->isSMTP();
-            $mail->Host = isset($smtp["host"]) ? $smtp["host"] : "";
-            $mail->Port = isset($smtp["port"]) ? $smtp["port"] : 25;
-            $mail->SMTPAuth = isset($smtp["SMTPAuth"]) ? $smtp["SMTPAuth"] : true;
-            $mail->Username = isset($smtp["username"]) ? $smtp["username"] : "";
-            $mail->Password = isset($smtp["password"]) ? $smtp["password"] : "";
-            $mail->SMTPSecure = isset($smtp["SMTPSecure"]) ? $smtp["SMTPSecure"] : "";
-            $mail->SMTPKeepAlive = isset($smtp["SMTPKeepAlive"]) ? $smtp["SMTPKeepAlive"] : true;
-        }
+        
+        $mail->isSMTP();
+        $mail->Host = isset($smtp["host"]) ? $smtp["host"] : "";
+        $mail->Port = isset($smtp["port"]) ? $smtp["port"] : 25;
+        $mail->SMTPAuth = isset($smtp["SMTPAuth"]) ? $smtp["SMTPAuth"] : true;
+        $mail->Username = isset($smtp["username"]) ? $smtp["username"] : "";
+        $mail->Password = isset($smtp["password"]) ? $smtp["password"] : "";
+        $mail->SMTPSecure = isset($smtp["SMTPSecure"]) ? $smtp["SMTPSecure"] : "";
+        $mail->SMTPKeepAlive = isset($smtp["SMTPKeepAlive"]) ? $smtp["SMTPKeepAlive"] : true;
         
         if (isset($from)) {
             if (is_array($from)) {
