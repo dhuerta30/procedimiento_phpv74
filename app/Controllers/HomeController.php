@@ -671,7 +671,7 @@ class HomeController
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND YEAR(ds.fecha_solicitud) = DATE_FORMAT(:hasta, '%Y-%m-%d')
+					AND ds.fecha_solicitud <= :hasta
 					AND ds.estado = 'Ingresado'
 					AND ds.folio IS NULL
 				GROUP BY
@@ -683,9 +683,9 @@ class HomeController
 			date_default_timezone_set('America/Santiago');
 			$total_registros = count($data);
 
-			print_r($total_registros);
+			//print_r($total_registros);
 			//echo $pdomodel->getLastQuery();
-			die();
+			//die();
 
 			$sesionUsuario = $_SESSION["usuario"][0]["usuario"];
 			$fecha_exportacion = date('Y-m-d');
@@ -752,7 +752,9 @@ class HomeController
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND YEAR(ds.fecha_egreso) = DATE_FORMAT(:hasta, '%Y-%m-%d') AND ds.estado = 'Egresado' AND ds.folio IS NULL
+					AND ds.fecha_egreso <= :hasta
+					AND ds.estado = 'Egresado'
+					AND ds.folio IS NULL
 				GROUP BY 
 					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
 				[':hasta' => $hasta]
@@ -832,7 +834,7 @@ class HomeController
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND YEAR(ds.fecha_solicitud) = DATE_FORMAT(:fechacorte, '%Y-%m-%d') 
+					AND ds.fecha_solicitud <= :fechacorte
 					AND ds.estado = :estado
 				GROUP BY 
 					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
@@ -871,7 +873,7 @@ class HomeController
 					profesional AS pro ON pro.id_profesional = dg_p.profesional
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-					AND YEAR(ds.fecha_egreso) = DATE_FORMAT(:fechacorte, '%Y-%m-%d')
+					AND ds.fecha_egreso <= :fechacorte
 					AND ds.estado = :estado
 				GROUP BY 
 					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen",
