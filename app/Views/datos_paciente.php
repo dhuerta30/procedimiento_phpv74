@@ -90,8 +90,8 @@
 
                 <div class="row">
                     <div class="col-md-12 text-right">
-                        <a href='javascript:;' class='btn btn-primary agregar_paciente d-none' data-intro='Si desea Agregar un Paciente, el botón de Agregar Paciente también se ocultará y quedarán visibles solo los botones Buscar y Limpiar.'><i class='fa fa-plus'></i> Agregar Paciente</a>
-                        <a href="javascript:;" class="btn btn-primary btn-sm guardar" data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class="fa fa-save"></i> Guardar</a>
+                        <a href='javascript:;' class='btn btn-primary agregar_paciente' data-intro='Si desea Agregar un Paciente, el botón de Agregar Paciente también se ocultará y quedarán visibles solo los botones Buscar y Limpiar.'><i class='fa fa-plus'></i> Agregar Paciente</a>
+                        <a href="javascript:;" class="btn btn-primary btn-sm guardar d-none" data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class="fa fa-save"></i> Guardar</a>
                     </div>
                 </div>
 
@@ -379,6 +379,9 @@
                         $(".direccion").val(data["data"][0]["direccion"]);
                         $(".sexo").val(data["data"][0]["sexo"]);
                         $('.paciente').val(data["data"][0]["id_datos_paciente"]);
+
+                        $(".agregar_paciente").addClass("d-none");
+                        $(".guardar").removeClass("d-none");
                        
                         Swal.fire({
                             title: "Genial!",
@@ -719,6 +722,10 @@
 
 
         $(document).on("click", ".limpiar", function(){
+
+            $(".agregar_paciente").removeClass("d-none");
+            $(".guardar").addClass("d-none");
+
             $('.limpiar').addClass('d-none');
             $(".rut").val("");
             $(".nombres").val("");
@@ -938,12 +945,6 @@
             let fecha_y_hora_ingreso = $('.fecha_y_hora_ingreso').val();
             let telefono = $('.telefono').val();
 
-            let especialidad = $('.especialidad').val();
-            let profesional = $('.profesional').val();
-            let diagnostico = $('.diagnostico').val();
-            let sintomas_principales = $('.sintomas_principales').val();
-            let diagnostico_libre = $('.diagnostico_libre').val();
-
             $.ajax({
                 type: "POST",
                 url: "<?=$_ENV["BASE_URL"]?>home/agregar_paciente",
@@ -958,12 +959,7 @@
                     direccion: direccion,
                     sexo: sexo,
                     fecha_y_hora_ingreso: fecha_y_hora_ingreso,
-                    telefono: telefono,
-                    especialidad: especialidad,
-                    profesional: profesional,
-                    diagnostico: diagnostico,
-                    sintomas_principales: sintomas_principales,
-                    diagnostico_libre: diagnostico_libre
+                    telefono: telefono
                 },
                 beforeSend: function() {
                     $("#pdocrud-ajax-loader").show();
@@ -978,25 +974,7 @@
                             title: "Genial!",
                             text: data['success'],
                             icon: "success",
-                            confirmButtonText: "Aceptar",
-                            text: "¿Desea agregar Esta Solicitud de Exámen al Paciente?",
-                            icon: "warning",
-                            showCancelButton: true,
-                            allowOutsideClick: false,
-                            confirmButtonText: "Aceptar",
-                            cancelButtonText: "Cancelar"
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-
-                                Swal.fire({
-                                    text: data['success'],
-                                    icon: "success",
-                                    allowOutsideClick: false,
-                                    confirmButtonText: "Aceptar"
-                                });
-
-                                $(".guardar").click();
-                            }
+                            confirmButtonText: "Aceptar"
                         });
 
                     } else {

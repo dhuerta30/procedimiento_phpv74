@@ -3771,12 +3771,6 @@ class HomeController
 			$apellido_materno = $request->post('apellido_materno');
 			$fecha_y_hora_ingreso = $request->post('fecha_y_hora_ingreso');
 
-			$especialidad = $request->post('especialidad');
-			$profesional = $request->post('profesional');
-			$diagnostico = $request->post('diagnostico');
-			$sintomas_principales = $request->post('sintomas_principales');
-			$diagnostico_libre = $request->post('diagnostico_libre');
-
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
@@ -3817,32 +3811,6 @@ class HomeController
 				return;
 			} else if(empty($telefono)){
 				$mensaje = 'El campo Telefono es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
-				return;
-			} else if(empty($especialidad)){
-				$mensaje = 'El campo Especialidad es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
-				return;
-			} else if(empty($profesional)){
-				$mensaje = 'El campo Profesional es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
-				return;
-			} else if(empty($diagnostico)){
-				$mensaje = 'El campo Diagnóstico CIE-10 es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
-				return;
-			} else if(empty($sintomas_principales)){
-				$mensaje = 'El campo Síntomas Principales es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
-				return;
-			} else if(empty($diagnostico_libre)){
-				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
-				return;
-			} else if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
-				$_SESSION['detalle_de_solicitud'] = [];
-
-				$mensaje = 'Agregue al menos 1 Detalle de Solicitud';
 				echo json_encode(['error' => $mensaje]);
 				return;
 			}
@@ -3916,7 +3884,7 @@ class HomeController
 			$pdomodel = $pdocrud->getPDOModelObj();
 
 			if (empty($paciente)){
-				$mensaje = 'Agregue o Busque un Paciente Para continuar';
+				$mensaje = 'Ingrese o Busque un Paciente Para continuar';
 				echo json_encode(['error' => $mensaje]);
 				return;
 			} else if (empty($telefono)){
@@ -4042,7 +4010,7 @@ class HomeController
 			$creatinina = $request->post('creatinina') ?? null;
 	
 			if(empty($paciente)){
-				echo json_encode(['error' => "Agregue o Busque un Paciente Para continuar"]);
+				echo json_encode(['error' => "Ingrese o Busque un Paciente Para continuar"]);
 				return;
 			}
 			// Validar que los campos no estén vacíos
