@@ -1963,7 +1963,7 @@ class HomeController
 		$pdocrud->formStaticFields("buscar", "html", "
 			<div class='row'>
 				<div class='col-md-9 mt-4'>
-					<a href='javascript:;' class='btn btn-primary buscar mt-3' data-intro='Si desea Buscar un Paciente, el botón de Agregar Paciente se ocultará y aparecerá un botón llamado limpiar, que es el encargado de borrar los datos ingresados.'><i class='fa fa-search'></i> Buscar</a>
+					<a href='javascript:;' class='btn btn-primary buscar mt-3' data-intro='Presione este boton para buscar un paciente o ingrese un paciente rellenando todo el formulario'><i class='fa fa-search'></i> Buscar</a>
 					<a href='javascript:;' class='btn btn-danger limpiar d-none mt-3'><i class='fas fa-eraser'></i> Limpiar</a>
 				</div>
 			</div>               
