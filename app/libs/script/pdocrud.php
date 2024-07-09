@@ -1,4 +1,9 @@
 <?php
+
+ini_set('session.gc_maxlifetime', 0);
+
+ini_set('session.cookie_lifetime', 0);
+
 date_default_timezone_set(@date_default_timezone_get());
 define('PDOCrudABSPATH', dirname(__FILE__) . '/');
 require_once PDOCrudABSPATH . "../../../vendor/autoload.php";

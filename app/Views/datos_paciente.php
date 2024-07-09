@@ -90,8 +90,8 @@
 
                 <div class="row">
                     <div class="col-md-12 text-right">
-                        <a href='javascript:;' class='btn btn-primary btn-sm agregar_paciente' data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class='fa fa-save'></i> Guardar</a>
-                        <a href="javascript:;" class="btn btn-primary btn-sm guardar d-none" data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class="fa fa-save"></i> Guardar</a>
+                        <a href='javascript:;' class='btn btn-primary btn-sm agregar_paciente'><i class='fa fa-plus'></i> Agregar Paciente y Guardar Todo</a>
+                        <a href="javascript:;" class="btn btn-primary btn-sm guardar d-none"><i class="fa fa-save"></i> Guardar Todo</a>
                     </div>
                 </div>
 
@@ -510,6 +510,66 @@
                             confirmButtonText: "Aceptar"
                         });
 
+                        $(".rut").removeAttr("readonly", true);
+                        $(".nombres").removeAttr("readonly", true);
+                        $(".telefono").removeAttr("readonly", true);
+                        $(".apellido_paterno").removeAttr("readonly", true);
+                        $(".apellido_materno").removeAttr("readonly", true);
+                        $(".fecha_nacimiento").removeAttr("readonly", true);
+                        $(".edad").removeAttr("readonly", true);
+                        $(".direccion").removeAttr("readonly", true);
+                        $(".sexo").removeAttr("disabled", true);
+
+                        $(".fecha_nacimiento").flatpickr({
+                            dateFormat: "d-m-Y",
+                            allowInput: true,
+                            locale: {
+                                firstDayOfWeek: 1, // Lunes como primer día de la semana
+                                weekdays: {
+                                    shorthand: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                                    longhand: [
+                                        'Domingo',
+                                        'Lunes',
+                                        'Martes',
+                                        'Miércoles',
+                                        'Jueves',
+                                        'Viernes',
+                                        'Sábado'
+                                    ]
+                                },
+                                months: {
+                                    shorthand: [
+                                        'Ene',
+                                        'Feb',
+                                        'Mar',
+                                        'Abr',
+                                        'May',
+                                        'Jun',
+                                        'Jul',
+                                        'Ago',
+                                        'Sep',
+                                        'Oct',
+                                        'Nov',
+                                        'Dic'
+                                    ],
+                                    longhand: [
+                                        'Enero',
+                                        'Febrero',
+                                        'Marzo',
+                                        'Abril',
+                                        'Mayo',
+                                        'Junio',
+                                        'Julio',
+                                        'Agosto',
+                                        'Septiembre',
+                                        'Octubre',
+                                        'Noviembre',
+                                        'Diciembre'
+                                    ]
+                                }
+                            }
+                        });
+                                    
                         $('.rut').val("");
                         $('.paciente').val("");
                         $('.nombres').val("");
