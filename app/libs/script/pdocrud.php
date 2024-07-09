@@ -279,12 +279,10 @@ function carga_masiva_profesionales_insertar($data, $obj){
                 $existingProfesionales = $pdomodel->executeQuery(
                     "SELECT * FROM profesional 
                     WHERE nombre_profesional = :nombre_profesional 
-                    AND apellido_profesional = :apellido_profesional
-                    AND rut_profesional = :rut_profesional", 
+                    AND apellido_profesional = :apellido_profesional",
                     [
                         'nombre_profesional' => $Excelval['Nombre Profesional'], 
-                        'apellido_profesional' => $Excelval['Apellido Profesional'],
-                        'rut_profesional' => $Excelval['Rut Profesional']
+                        'apellido_profesional' => $Excelval['Apellido Profesional']
                     ]
                 );
 
