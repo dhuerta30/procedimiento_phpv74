@@ -2125,7 +2125,7 @@ class HomeController
 		$detalle_solicitud->addPlugin("chosen");
 		$detalle_solicitud->formDisplayInPopup();
 		$detalle_solicitud->where("id_datos_paciente", "null");
-		$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar Procedimiento", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
+		$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
 		$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","examen", "contraste", "plano","extremidad", "procedencia"));
 		$detalle_solicitud->setLangData("add", "");
 		$detalle_solicitud->setLangData("actions", "Eliminar");
@@ -4043,7 +4043,7 @@ class HomeController
 				$detalle_solicitud->setSettings("pdfBtn", false);
 				$detalle_solicitud->setSettings("csvBtn", false);
 				$detalle_solicitud->setSettings("excelBtn", false);
-				$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar Procedimiento", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
+				$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
 				$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","examen", "contraste", "plano","extremidad", "procedencia"));
 				$detalle_solicitud->where("id_datos_paciente", "null");
 				$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
