@@ -282,7 +282,9 @@
                     }
                 }
             });
+        });
 
+        function fecha_nacimiento(){
             $(".fecha_nacimiento").flatpickr({
                 dateFormat: "d-m-Y",
                 allowInput: true,
@@ -332,7 +334,9 @@
                     }
                 }
             });
-        });
+        }
+
+        fecha_nacimiento();
 
         $(document).on("click", ".buscar", function(){
             let rut = $('.rut').val();
@@ -760,6 +764,8 @@
 
             $(".agregar_paciente").removeClass("d-none");
             $(".guardar").addClass("d-none");
+
+            fecha_nacimiento();
 
             $(".rut").removeAttr("readonly", true);
             $(".nombres").removeAttr("readonly", true);
