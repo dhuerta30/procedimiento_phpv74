@@ -3976,6 +3976,10 @@ class HomeController
 				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
+			} else if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
+				$mensaje = 'Ingrese al menos 1 Detalle de Solicitud';
+				echo json_encode(['error' => $mensaje]);
+				return;
 			}
 
 			$pdomodel->where("rut", $rut, "=", "AND");
