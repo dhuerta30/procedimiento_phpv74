@@ -374,7 +374,6 @@
                         $(".telefono").val(data["data"][0]["telefono"]);
                         $(".apellido_paterno").val(data["data"][0]["apellido_paterno"]);
                         $(".apellido_materno").val(data["data"][0]["apellido_materno"]);
-                        $(".fecha_nacimiento").val(data["data"][0]["fecha_nacimiento"]);
                         $(".edad").val(data["data"][0]["edad"]);
                         $(".direccion").val(data["data"][0]["direccion"]);
                         $(".sexo").val(data["data"][0]["sexo"]);
@@ -397,6 +396,8 @@
                             $(".apellido_materno").attr("readonly", true);
                         }
                         if(data["data"][0]["fecha_nacimiento"]){
+                            $(".fecha_nacimiento").flatpickr().destroy();
+                            $(".fecha_nacimiento").val(data["data"][0]["fecha_nacimiento"]);
                             $(".fecha_nacimiento").attr("readonly", true);
                         }
                         if(data["data"][0]["edad"]){
