@@ -405,8 +405,8 @@
                         if(data["data"][0]["direccion"]){
                             $(".direccion").attr("readonly", true);
                         }
-                        if(data["data"][0]["sexo"]){
-                            $(".sexo").attr("readonly", true);
+                        if(data["data"][0]["sexo"] == "1" || data["data"][0]["sexo"] == "2"){
+                            $(".sexo").attr("disabled", true);
                         }
                        
                         Swal.fire({
@@ -768,7 +768,7 @@
             $(".fecha_nacimiento").removeAttr("readonly", true);
             $(".edad").removeAttr("readonly", true);
             $(".direccion").removeAttr("readonly", true);
-            $(".sexo").removeAttr("readonly", true);
+            $(".sexo").removeAttr("disabled", true);
 
             $('.limpiar').addClass('d-none');
             $(".rut").val("");
