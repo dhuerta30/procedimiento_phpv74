@@ -1013,6 +1013,7 @@ class HomeController
 
 	public function profesionales(){
 		$pdocrud = DB::PDOCrud();
+		$pdocrud->enqueueBtnTopActions("Report",  "<i class='fa fa-upload'></i> Carga Masiva", "javascript:;", array(), "btn-report btn btn-light carga_masiva");
 		$pdocrud->addPlugin("bootstrap-inputmask");
 		$pdocrud->formDisplayInPopup();
 		$pdocrud->fieldCssClass("rut_profesional", array("rut_profesional"));
@@ -1029,10 +1030,19 @@ class HomeController
 		$pdocrud->addCallback("before_update", "modificar_profesional");
 		$render = $pdocrud->dbTable("profesional")->render();
 		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut_profesional", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+
+		$crud = DB::PDOCrud(true);
+		$crud->fieldRenameLable("archivo", "Archivo Excel");
+		$crud->setLangData("save", "Subir");
+		$crud->setSettings("required", false);
+		$crud->fieldTypes("archivo", "FILE_NEW");
+		$crud->addCallback("before_insert", "carga_masiva_profesionales_insertar");
+		$masivo = $crud->dbTable("carga_masiva_profesionales")->render("insertform");
 		View::render(
 			'profesional', [
 				'render' => $render,
-				'mask' => $mask
+				'mask' => $mask,
+				'masivo' => $masivo
 			]
 		);
 	}

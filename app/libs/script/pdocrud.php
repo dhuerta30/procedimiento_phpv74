@@ -104,7 +104,6 @@ function eliminar_submenu($data, $obj){
     return $data;
 }
 
-
 function carga_masiva_pacientes_insertar($data, $obj) {
     $archivo = basename($data["carga_masiva_pacientes"]["archivo"]);
     $extension = pathinfo($archivo, PATHINFO_EXTENSION);
@@ -255,6 +254,39 @@ function carga_masiva_codigo_insertar($data, $obj){
     }
     return $data;
 }
+
+function carga_masiva_profesionales_insertar(){
+    $archivo = basename($data["carga_masiva_profesionales"]["archivo"]);
+    $extension = pathinfo($archivo, PATHINFO_EXTENSION);
+
+    $pdomodel = $obj->getPDOModelObj();
+   
+    if (empty($archivo)) { 
+        $error_msg = array("message" => "", "error" => "No se ha subido ningún Archivo", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else {
+        if ($extension != "xlsx") { /* comprobamos si la extensión del archivo es diferente de excel */
+            //unlink(__DIR__ . "/uploads/".$archivo); /* eliminamos el archivo que se subió */
+            $error_msg = array("message" => "", "error" => "El Archivo Subido no es un Archivo Excel Válido", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        } else {
+
+            $records = $pdomodel->excelToArray("uploads/".$archivo); /* Acá capturamos el nombre del archivo excel a importar */
+
+            $sql = array();
+            foreach ($records as $Excelval) {
+                $sql['nombre_profesional'] = $Excelval['Nombre Profesional'];
+                $sql['apellido_profesional'] = $Excelval['Apellido Profesional'];
+                $sql['rut_profesional'] = $Excelval['Rut Profesional'];
+
+                $pdomodel->insertBatch("profesional", array($sql));
+            }
+            $data["carga_masiva_profesionales"]["archivo"] = basename($data["carga_masiva_profesionales"]["archivo"]);
+        }
+    }
+    return $data;
+}
+
 
 function carga_masiva_prestaciones_insertar($data, $obj){
     $archivo = basename($data["carga_masiva_prestaciones"]["archivo"]);
