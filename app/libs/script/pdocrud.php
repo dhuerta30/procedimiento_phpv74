@@ -255,7 +255,7 @@ function carga_masiva_codigo_insertar($data, $obj){
     return $data;
 }
 
-function carga_masiva_profesionales_insertar(){
+function carga_masiva_profesionales_insertar($data, $obj){
     $archivo = basename($data["carga_masiva_profesionales"]["archivo"]);
     $extension = pathinfo($archivo, PATHINFO_EXTENSION);
 
