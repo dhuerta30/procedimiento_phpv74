@@ -276,7 +276,17 @@ function carga_masiva_profesionales_insertar($data, $obj){
             $sql = array();
             foreach ($records as $Excelval) {
 
-                $existingProfesionales = $pdomodel->executeQuery("SELECT * FROM profesional WHERE nombre_profesional = :nombre_profesional AND rut_profesional = :rut_profesional", ['nombre_profesional' => $Excelval['Nombre Profesional'], 'rut_profesional' => $Excelval['Rut Profesional']]);
+                $existingProfesionales = $pdomodel->executeQuery(
+                    "SELECT * FROM profesional 
+                    WHERE nombre_profesional = :nombre_profesional 
+                    AND apellido_profesional = :apellido_profesional
+                    AND rut_profesional = :rut_profesional", 
+                    [
+                        'nombre_profesional' => $Excelval['Nombre Profesional'], 
+                        'apellido_profesional' => $Excelval['Apellido Profesional'],
+                        'rut_profesional' => $Excelval['Rut Profesional']
+                    ]
+                );
 
                 if(!$existingProfesionales){
                     $sql['nombre_profesional'] = $Excelval['Nombre Profesional'];
