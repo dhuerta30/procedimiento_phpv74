@@ -90,7 +90,7 @@
 
                 <div class="row">
                     <div class="col-md-12 text-right">
-                        <a href='javascript:;' class='btn btn-primary agregar_paciente' data-intro='Si desea Agregar un Paciente, el botón de Agregar Paciente también se ocultará y quedarán visibles solo los botones Buscar y Limpiar.'><i class='fa fa-plus'></i> Agregar Paciente</a>
+                        <a href='javascript:;' class='btn btn-primary agregar_paciente' data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class='fa fa-save'></i> Guardar</a>
                         <a href="javascript:;" class="btn btn-primary btn-sm guardar d-none" data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class="fa fa-save"></i> Guardar</a>
                     </div>
                 </div>
