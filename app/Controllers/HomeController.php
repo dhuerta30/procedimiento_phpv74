@@ -3913,7 +3913,42 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
-			if (empty($paciente)){
+			if (empty($rut)) {
+				$mensaje = 'El campo Rut es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if (!self::validaRut($rut)) {
+				echo json_encode(['error' => 'RUT inválido']);
+				return;
+			} else if(empty($nombres)){
+				$mensaje = 'El campo Nombres es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($apellido_paterno)){
+				$mensaje = 'El campo Apellido paterno es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($apellido_materno)){
+				$mensaje = 'El campo Apellido materno es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($fecha_nacimiento)){
+				$mensaje = 'El campo Fecha nacimiento es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($edad)){
+				$mensaje = 'El campo Edad es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($direccion)){
+				$mensaje = 'El campo Dirección es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if(empty($sexo)){
+				$mensaje = 'El campo Sexo es Obligatorio';
+				echo json_encode(['error' => $mensaje]);
+				return;
+			} else if (empty($paciente)){
 				$mensaje = 'Ingrese o Busque un Paciente Para continuar';
 				echo json_encode(['error' => $mensaje]);
 				return;

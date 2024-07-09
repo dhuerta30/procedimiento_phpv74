@@ -407,9 +407,14 @@
                         if(data["data"][0]["edad"]){
                             $(".edad").attr("readonly", true);
                         }
-                        if(data["data"][0]["direccion"]){
+                        if(data["data"][0]["direccion"] != "sin registro"){
                             $(".direccion").attr("readonly", true);
                         }
+
+                        if(data["data"][0]["direccion"] == "sin registro"){
+                            $(".direccion").val("");
+                        }
+
                         if(data["data"][0]["sexo"] == "1" || data["data"][0]["sexo"] == "2"){
                             $(".sexo").attr("disabled", true);
                         }
