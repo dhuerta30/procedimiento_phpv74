@@ -90,7 +90,7 @@
 
                 <div class="row">
                     <div class="col-md-12 text-right">
-                        <a href='javascript:;' class='btn btn-primary agregar_paciente' data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class='fa fa-save'></i> Guardar</a>
+                        <a href='javascript:;' class='btn btn-primary btn-sm agregar_paciente' data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class='fa fa-save'></i> Guardar</a>
                         <a href="javascript:;" class="btn btn-primary btn-sm guardar d-none" data-intro='Ahora para guardar todos los datos anteriormente ingresados presione este botón'><i class="fa fa-save"></i> Guardar</a>
                     </div>
                 </div>
@@ -382,6 +382,32 @@
 
                         $(".agregar_paciente").addClass("d-none");
                         $(".guardar").removeClass("d-none");
+
+                        if(data["data"][0]["rut"]){
+                            $(".rut").attr("readonly", true);
+                        }
+                        $(".nombres").attr("readonly", true);
+                        if(data["data"][0]["telefono"]){
+                            $(".telefono").attr("readonly", true);
+                        }
+                        if(data["data"][0]["apellido_paterno"]){
+                            $(".apellido_paterno").attr("readonly", true);
+                        }
+                        if(data["data"][0]["apellido_materno"]){
+                            $(".apellido_materno").attr("readonly", true);
+                        }
+                        if(data["data"][0]["fecha_nacimiento"]){
+                            $(".fecha_nacimiento").attr("readonly", true);
+                        }
+                        if(data["data"][0]["edad"]){
+                            $(".edad").attr("readonly", true);
+                        }
+                        if(data["data"][0]["direccion"]){
+                            $(".direccion").attr("readonly", true);
+                        }
+                        if(data["data"][0]["sexo"]){
+                            $(".sexo").attr("readonly", true);
+                        }
                        
                         Swal.fire({
                             title: "Genial!",
@@ -733,6 +759,16 @@
 
             $(".agregar_paciente").removeClass("d-none");
             $(".guardar").addClass("d-none");
+
+            $(".rut").removeAttr("readonly", true);
+            $(".nombres").removeAttr("readonly", true);
+            $(".telefono").removeAttr("readonly", true);
+            $(".apellido_paterno").removeAttr("readonly", true);
+            $(".apellido_materno").removeAttr("readonly", true);
+            $(".fecha_nacimiento").removeAttr("readonly", true);
+            $(".edad").removeAttr("readonly", true);
+            $(".direccion").removeAttr("readonly", true);
+            $(".sexo").removeAttr("readonly", true);
 
             $('.limpiar').addClass('d-none');
             $(".rut").val("");
