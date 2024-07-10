@@ -1020,6 +1020,9 @@ class HomeController
 		$pdocrud->colRename("id_profesional", "ID");
 		$pdocrud->setSearchCols(array("nombre_profesional","apellido_profesional", "rut_profesional"));
 		$pdocrud->buttonHide("submitBtnSaveBack");
+		$pdocrud->setSettings("checkboxCol", false);
+		$pdocrud->setSettings("deleteMultipleBtn", false);
+		$pdocrud->setSettings("delbtn", false);
 		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setSettings("printBtn", false);
 		$pdocrud->where("apellido_profesional", "y apellido no especificado", "!=");
