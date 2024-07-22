@@ -2295,6 +2295,9 @@ class HomeController
 	public function mostrar_grilla_lista_espera(){
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
+
+		$currentWeekStart = date('Y-m-d', strtotime('monday this week'));
+
 		$data = $pdomodel->executeQuery(
 			"SELECT 
 			dp.id_datos_paciente,
@@ -2322,11 +2325,16 @@ class HomeController
 			diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
 		INNER JOIN 
 			profesional AS pro ON pro.id_profesional = dg_p.profesional
-		WHERE 
+		WHERE
 			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+			AND ds.fecha_solicitud >= '$currentWeekStart'
+            AND ds.fecha_solicitud < DATE_ADD('$currentWeekStart', INTERVAL 1 WEEK)
 		GROUP BY 
 			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
 		);
+
+		//echo $pdomodel->getLastQuery();
+		//die();
 
 		echo json_encode(['data' => $data]);
 	}
@@ -3452,6 +3460,8 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
+			$currentWeekStart = date('Y-m-d', strtotime('monday this week'));
+
 			$where = "";
 			$run = $request->post('run');
 			$nombre_paciente = $request->post('nombre_paciente');
@@ -3461,15 +3471,20 @@ class HomeController
 			$profesional = $request->post('profesional');
 			$fecha_solicitud = $request->post('fecha_solicitud');
 
+			if (empty($run) && empty($nombre_paciente) && empty($estado) && empty($procedencia) && empty($prestacion) && empty($profesional) && empty($fecha_solicitud)) {
+				echo json_encode(["error" => "Debe ingresar al menos un campo para realizar la búsqueda"]);
+				return;
+			}
+
 			if (!empty($run)) {
 
 				if (!self::validaRut($run)) {
-					echo "<div class='alert alert-danger text-center'>RUT inválido</div>";
+					echo json_encode(["error" => "Rut Inválido"]);
 					return;
 				}
 
 				$where .= " AND dp.rut = '$run' ";
-			}
+			} 
 
 			if (!empty($nombre_paciente)) {
 				$where .= " AND (dp.nombres = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_materno) = '$nombre_paciente')";
@@ -3491,7 +3506,7 @@ class HomeController
 				$where .= " AND (pro.nombre_profesional = '$profesional' OR CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional) = '$profesional' OR pro.apellido_profesional = '$profesional')";
 			}
 
-			if (!empty($fecha_solicitud)) {
+			if (!empty($fecha_solicitud)) { 
 				$where .= " AND dg_p.fecha_solicitud_paciente = '$fecha_solicitud' ";
 			}
 

@@ -294,6 +294,16 @@ $(document).on("click", ".buscar", function(){
         },
         success: function(response){
             $("#pdocrud-ajax-loader").hide();
+
+            if(response["error"]){
+                Swal.fire({
+                    title: 'error!',
+                    text: response["error"],
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false
+                });
+            }
             // Reconstruir la tabla DataTable con los nuevos datos
             table = $('.tabla_reportes').DataTable({
                 searching: false,
@@ -417,7 +427,6 @@ $(document).on("click", ".buscar", function(){
     });
 });
 
-
 $(document).on("click", ".limpiar_filtro", function(){
     $('.rut').val("");
     $('.nombre_paciente').val("");
@@ -426,7 +435,7 @@ $(document).on("click", ".limpiar_filtro", function(){
     $('.prestacion').val("");
     $('.profesional').val("");
     $('.fecha_solicitud').val("");
-    $('.buscar').click();
+    //$('.buscar').click();
     $('.cargar_modal').empty();
 });
 
