@@ -2296,7 +2296,13 @@ class HomeController
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
 
-		$currentWeekStart = date('Y-m-d', strtotime('monday this week'));
+		$currentDate = date('Y-m-d');
+    
+		// Primer día del mes actual
+		$firstDayOfMonth = date('Y-m-01');
+		
+		// Último día del mes actual
+		$lastDayOfMonth = date('Y-m-t');
 
 		$data = $pdomodel->executeQuery(
 			"SELECT 
@@ -2327,8 +2333,8 @@ class HomeController
 			profesional AS pro ON pro.id_profesional = dg_p.profesional
 		WHERE
 			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-			AND ds.fecha_solicitud >= '$currentWeekStart'
-            AND ds.fecha_solicitud < DATE_ADD('$currentWeekStart', INTERVAL 1 WEEK)
+			AND ds.fecha_solicitud >= '$firstDayOfMonth'
+            AND ds.fecha_solicitud <= '$lastDayOfMonth'
 		GROUP BY 
 			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
 		);
