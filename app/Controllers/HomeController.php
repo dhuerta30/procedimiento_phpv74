@@ -1951,6 +1951,7 @@ class HomeController
 		$pdocrud->fieldCssClass("direccion", array("direccion"));
 		$pdocrud->fieldCssClass("sexo", array("sexo"));
 		$pdocrud->fieldCssClass("rut", array("rut"));
+		$pdocrud->fieldCssClass("pasaporte_o_codigo_interno", array("pasaporte_o_codigo_interno"));
 		$pdocrud->formFields(array("rut", "pasaporte_o_codigo_interno", "nombres", "telefono", "fecha_y_hora_ingreso", "apellido_paterno","apellido_materno", "fecha_nacimiento", "edad", "direccion", "sexo"));
 		$pdocrud->fieldGroups("Name",array("rut", "pasaporte_o_codigo_interno", "nombres", "apellido_paterno"));
 		$pdocrud->fieldGroups("Name2",array("apellido_materno", "fecha_nacimiento","edad","direccion"));
@@ -1977,7 +1978,7 @@ class HomeController
 		$diagnostico = DB::PDOCrud(true);
 		$diagnostico->addPlugin("chosen");
 		$diagnostico->fieldTypes("profesional", "select");
-		//$diagnostico->fieldTooltip("diagnostico", "Para los no encontrados escriba la palabra Linea");
+		$diagnostico->fieldTooltip("diagnostico", "Para los no encontrados escriba la palabra Linea");
 		//$diagnostico->fieldDataBinding("profesional", "profesional", "id_profesional", array("nombre_profesional","apellido_profesional"), "db", " ");
 		$diagnostico->fieldAddOnInfo("diagnostico", "after", 
 			'<div class="input-group-append">
@@ -4013,10 +4014,10 @@ class HomeController
 				$mensaje = 'El campo Síntomas Principales es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
-			/*} else if(empty($diagnostico_libre)){
+			} else if(strpos($diagnostico, '--------------------') !== false && empty($diagnostico_libre)){
 				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
-				return;*/
+				return;
 			} else if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
 				$mensaje = 'Ingrese al menos 1 Detalle de Solicitud';
 				echo json_encode(['error' => $mensaje]);

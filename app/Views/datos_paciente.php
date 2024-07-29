@@ -389,6 +389,9 @@
                         if(data["data"][0]["rut"]){
                             $(".rut").attr("readonly", true);
                         }
+                        if(data["data"][0]["pasaporte_o_codigo_interno"]){
+                            $(".pasaporte_o_codigo_interno").attr("readonly", true);
+                        }
                         $(".nombres").attr("readonly", true);
                         if(data["data"][0]["telefono"]){
                             $(".telefono").attr("readonly", true);
@@ -511,6 +514,7 @@
                         });
 
                         $(".rut").removeAttr("readonly", true);
+                        $(".pasaporte_o_codigo_interno").removeAttr("readonly", true);
                         $(".nombres").removeAttr("readonly", true);
                         $(".telefono").removeAttr("readonly", true);
                         $(".apellido_paterno").removeAttr("readonly", true);
@@ -571,6 +575,7 @@
                         });
                                     
                         $('.rut').val("");
+                        $('.pasaporte_o_codigo_interno').val("");
                         $('.paciente').val("");
                         $('.nombres').val("");
                         $('.apellido_paterno').val("");
@@ -833,6 +838,7 @@
             fecha_nacimiento();
 
             $(".rut").removeAttr("readonly", true);
+            $(".pasaporte_o_codigo_interno").removeAttr("readonly", true);
             $(".nombres").removeAttr("readonly", true);
             $(".telefono").removeAttr("readonly", true);
             $(".apellido_paterno").removeAttr("readonly", true);
