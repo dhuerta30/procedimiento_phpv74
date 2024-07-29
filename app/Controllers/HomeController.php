@@ -1951,12 +1951,12 @@ class HomeController
 		$pdocrud->fieldCssClass("direccion", array("direccion"));
 		$pdocrud->fieldCssClass("sexo", array("sexo"));
 		$pdocrud->fieldCssClass("rut", array("rut"));
-		$pdocrud->formFields(array("rut","nombres", "telefono", "fecha_y_hora_ingreso", "apellido_paterno","apellido_materno", "fecha_nacimiento", "edad", "direccion", "sexo"));
-		$pdocrud->fieldGroups("Name",array("rut","nombres", "apellido_paterno", "apellido_materno"));
-		$pdocrud->fieldGroups("Name2",array("fecha_nacimiento","edad","direccion", "sexo"));
-		$pdocrud->fieldGroups("Name3", array("fecha_y_hora_ingreso", "telefono"));
+		$pdocrud->formFields(array("rut", "pasaporte_o_codigo_interno", "nombres", "telefono", "fecha_y_hora_ingreso", "apellido_paterno","apellido_materno", "fecha_nacimiento", "edad", "direccion", "sexo"));
+		$pdocrud->fieldGroups("Name",array("rut", "pasaporte_o_codigo_interno", "nombres", "apellido_paterno"));
+		$pdocrud->fieldGroups("Name2",array("apellido_materno", "fecha_nacimiento","edad","direccion"));
+		$pdocrud->fieldGroups("Name3", array("sexo", "fecha_y_hora_ingreso", "telefono"));
 		//$pdocrud->fieldAttributes("edad", array("placeholder"=>"*Verificar Fecha de Nacimiento"));
-		$pdocrud->fieldDisplayOrder(array("rut","nombres", "apellido_paterno", "apellido_materno","fecha_nacimiento", "edad", "direccion", "sexo", "fecha_y_hora_ingreso", "telefono"));
+		$pdocrud->fieldDisplayOrder(array("rut", "pasaporte_o_codigo_interno", "nombres", "apellido_paterno", "apellido_materno","fecha_nacimiento", "edad", "direccion", "sexo", "fecha_y_hora_ingreso", "telefono"));
 		$pdocrud->fieldTypes("direccion", "input");
 		$pdocrud->fieldTypes("sexo", "select");
 		$pdocrud->setSettings("required", false);
@@ -1977,8 +1977,15 @@ class HomeController
 		$diagnostico = DB::PDOCrud(true);
 		$diagnostico->addPlugin("chosen");
 		$diagnostico->fieldTypes("profesional", "select");
+		//$diagnostico->fieldTooltip("diagnostico", "Para los no encontrados escriba la palabra Linea");
 		//$diagnostico->fieldDataBinding("profesional", "profesional", "id_profesional", array("nombre_profesional","apellido_profesional"), "db", " ");
-		$diagnostico->fieldAddOnInfo("diagnostico", "after", '<div class="input-group-append"><span class="btn btn-default border eliminar_diagnostico" data-intro="Y al presionar este botón podrá borrar más rápido el contenido ingresado por si se equivoca al ingresarlo." id="basic-addon1"><i class="fa fa-trash"></i></span></div>');
+		$diagnostico->fieldAddOnInfo("diagnostico", "after", 
+			'<div class="input-group-append">
+				<span class="btn btn-default border eliminar_diagnostico" data-intro="Y al presionar este botón podrá borrar más rápido el contenido ingresado por si se equivoca al ingresarlo." id="basic-addon1">
+					<i class="fa fa-trash"></i>
+				</span>
+			</div>'
+		);
 		$diagnostico->fieldAddOnInfo("profesional", "after", '<div class="input-group-append"><span class="btn btn-default border agregar_profesional" data-intro="Si desea Agregar mas Profesionales que no existan en el listado, puede hacerlo presionando este botón. " id="basic-addon1"><i class="fa fa-plus"></i></span></div>');
 		$diagnostico->formFields(array("especialidad","profesional","diagnostico","sintomas_principales", "diagnostico_libre"));
 		$diagnostico->fieldRenameLable("diagnostico", "Diagnóstico CIE-10");
@@ -2032,7 +2039,7 @@ class HomeController
 		$crud->fieldRenameLable("tipo_solicitud", "Tipo Solicitud (*)");
 		$crud->fieldRenameLable("tipo_examen", "Tipo Exámen (*)");
 		$crud->fieldRenameLable("examen", "Exámen (*)");
-		$crud->fieldRenameLable("observacion", "Observación (*)");
+		$crud->fieldRenameLable("observacion", "Observación");
 		$crud->fieldTypes("examen", "input");
 		//$crud->fieldTypes("id_datos_paciente", "select");
 		//$crud->fieldDataBinding("id_datos_paciente", "datos_paciente", "id_datos_paciente", array("nombres","apellido_paterno", "apellido_materno"), "db", " ");
@@ -4006,10 +4013,10 @@ class HomeController
 				$mensaje = 'El campo Síntomas Principales es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
-			} else if(empty($diagnostico_libre)){
+			/*} else if(empty($diagnostico_libre)){
 				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
-				return;
+				return;*/
 			} else if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
 				$mensaje = 'Ingrese al menos 1 Detalle de Solicitud';
 				echo json_encode(['error' => $mensaje]);
@@ -4121,8 +4128,8 @@ class HomeController
 			$requiredFields = [
 				'tipo_solicitud' => 'Tipo de Solicitud',
 				'tipo_examen' => 'Tipo Exámen',
-				'examen' => 'Exámen',
-				'observacion' => 'Observación'
+				'examen' => 'Exámen'
+				//'observacion' => 'Observación'
 			];
 	
 			foreach ($requiredFields as $fieldName => $fieldLabel) {

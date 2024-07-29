@@ -2092,16 +2092,21 @@ Class PDOCrud {
      * @param   string   $callback                        Name of callback function
      * @return   object                                    Object of class
      */
-    public function addCallback($eventName, $callback) {
-        $this->callback[$eventName][] = $callback;
+    public function addCallback($eventName, $callback, $params = array()) {
+        $this->callback[$eventName][] = ['callback' => $callback, 'params' => $params];
         return $this;
     }
 
     private function handleCallback($eventName, $data) {
         if (isset($this->callback[$eventName])) {
-            foreach ($this->callback[$eventName] as $callback) {
-                if (is_callable($callback))
-                    return call_user_func($callback, $data, $this);
+            foreach ($this->callback[$eventName] as $callbackData) {
+                $callback = $callbackData['callback'];
+                $params = $callbackData['params'];
+
+                if (is_callable($callback)) {
+                    $argsToPass = array_merge([$data, $this], $params);
+                    $data = call_user_func_array($callback, $argsToPass);
+                }
             }
         }
         return $data;

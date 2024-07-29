@@ -953,6 +953,14 @@
                     var text = $(this).text();
                     $(this).html(text.replace(matcher, "<span style='color:black; font-weight: bold;'>$1</span>"));
                 });
+            },
+            select: function (event, ui) {
+                let selectedValue = ui.item.value.replace("Linea - ", "").trim();
+                
+                $(".diagnostico").val("");
+               setTimeout(() => {
+                $(".diagnostico").val(selectedValue);
+               }, 100);
             }
         });
 
