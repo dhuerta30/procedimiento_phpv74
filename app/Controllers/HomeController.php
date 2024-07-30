@@ -2052,7 +2052,7 @@ class HomeController
 		$crud->fieldRenameLable("examen", "Exámen (*)");
 		$crud->fieldRenameLable("observacion", "Observación");
 		$crud->fieldTypes("examen", "input");
-		$crud->fieldTypes("adjuntar", "file");
+		$crud->fieldTypes("adjuntar", "FILE_NEW");
 		//$crud->fieldTypes("id_datos_paciente", "select");
 		//$crud->fieldDataBinding("id_datos_paciente", "datos_paciente", "id_datos_paciente", array("nombres","apellido_paterno", "apellido_materno"), "db", " ");
 		$crud->formFields(array("id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "procedencia", "observacion", "contraste", "adjuntar", "fecha_solicitud"));
