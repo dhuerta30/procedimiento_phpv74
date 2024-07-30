@@ -4074,7 +4074,7 @@ class HomeController
 					$sql['procedencia'] = $sesionVal['procedencia'];
 					$sql['observacion'] = $sesionVal['observacion'];
 					$sql['contraste'] = $sesionVal['contraste'];
-					$sql['adjuntar'] = $sesionVal['adjuntar'];
+					$sql['adjuntar'] = isset($sesionVal['adjuntar']) ? $sesionVal['adjuntar'] : ''; // Manejar archivo adjunto
 					$sql['creatinina'] = $sesionVal['creatinina'];
 					$sql['estado'] = $sesionVal['estado'];
 					$sql['usuario'] = $usuario;
@@ -4130,14 +4130,42 @@ class HomeController
 			$procedencia = $request->post('procedencia');
 			$observacion = $request->post('observacion');
 			$contraste = $request->post('contraste');
-			$adjuntar = $request->post('adjuntar');
 			$contrasteValue = isset($contraste) ? (array)$contraste : [];
 			$creatinina = $request->post('creatinina') ?? null;
-	
-			/*if(empty($paciente)){
-				echo json_encode(['error' => "Ingrese o Busque un Paciente Para continuar"]);
-				return;
-			}*/
+
+			$archivoAdjunto = null; // Inicializa la variable
+
+			if (isset($_FILES['adjuntar'])) {
+				$adjuntar = $_FILES['adjuntar'];
+				$uploadDir = __DIR__ . '/../libs/uploads/';
+
+				if (!file_exists($uploadDir)) {
+					mkdir($uploadDir, 0777, true); // Crea el directorio si no existe
+				}
+
+				$uploadFile = $uploadDir . basename($adjuntar['name']);
+
+				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
+					// Validar tipo y tamaño de archivo si es necesario
+					$allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+					if (!in_array($adjuntar['type'], $allowedTypes) || $adjuntar['size'] > 5000000) {
+						echo json_encode(['error' => 'Tipo o tamaño de archivo no permitido.']);
+						return;
+					}
+
+					if (!move_uploaded_file($adjuntar['tmp_name'], $uploadFile)) {
+						echo json_encode(['error' => 'Error al mover el archivo subido.']);
+						return;
+					}
+
+					$uploadDirWeb = 'app/libs/uploads/';
+					$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . basename($adjuntar['name']);
+					$archivoAdjunto = $archivoAdjuntoURL;
+				} elseif ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
+					echo json_encode(['error' => 'Error en el archivo subido.']);
+					return;
+				}
+			}
 
 			// Validar que los campos no estén vacíos
 			$requiredFields = [
@@ -4203,7 +4231,7 @@ class HomeController
 					"procedencia" => $procedencia,
 					"observacion" => $observacion,
 					"contraste" => implode(", ", $contrasteValue),
-					"adjuntar" => $adjuntar,
+					"adjuntar" => $archivoAdjunto,
 					"creatinina" => $creatinina,
 					"estado" => "Ingresado"
 				];

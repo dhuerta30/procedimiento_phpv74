@@ -743,7 +743,7 @@
                                     <td>${dato.tipo_examen}</td>
                                     <td>${dato.examen}</td>
                                     <td>${(dato.contraste != "") ? dato.contraste : '<div class="badge badge-danger">Sin Contraste</div>'}</td>
-                                    <td>${(dato.adjuntar != "") ? dato.adjuntar : '<div class="badge badge-danger">Sin Adjunto</div>'}</td>
+                                    <td>${(dato.adjuntar == null) ? '<div class="badge badge-danger">Sin Adjunto</div>' : dato.adjuntar }</td>
                                     <td>${(dato.plano != "") ? dato.plano : '<div class="badge badge-danger">Sin Plano</div>'}</td>
                                     <td>${(dato.extremidad) ? dato.extremidad : '<div class="badge badge-danger">Sin Extremidad</div>'}</td>
                                     <td>${(dato.procedencia) ? dato.procedencia : '<div class="badge badge-danger">Sin Procedencia</div>'}</td>
