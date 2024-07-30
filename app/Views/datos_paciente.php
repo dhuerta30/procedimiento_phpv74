@@ -696,25 +696,31 @@
                 creatinina = $('.creatinina').val();
             }
 
+            let formData = new FormData();
+            formData.append('codigo_fonasa', codigo_fonasa);
+            formData.append('paciente', paciente);
+            formData.append('tipo_solicitud', tipo_solicitud);
+            formData.append('fecha_solicitud', fecha_solicitud);
+            formData.append('tipo_examen', tipo_examen);
+            formData.append('examen', examen);
+            formData.append('plano', plano);
+            formData.append('extremidad', extremidad);
+            formData.append('procedencia', procedencia);
+            formData.append('observacion', observacion);
+            formData.append('contraste', contraste);
+            formData.append('creatinina', creatinina);
+
+            if (adjuntar) {
+                formData.append('adjuntar', adjuntar); // Agrega el archivo al FormData
+            }
+
             $.ajax({
                 type: "POST",
                 url: "<?=$_ENV["BASE_URL"]?>home/ingresar_detalle_solicitud",
+                data: formData,
+                processData: false, // Importante para no procesar los datos
+                contentType: false,
                 dataType: "json",
-                data: {
-                    codigo_fonasa: codigo_fonasa,
-                    paciente: paciente,
-                    tipo_solicitud: tipo_solicitud,
-                    fecha_solicitud: fecha_solicitud,
-                    tipo_examen: tipo_examen,
-                    examen: examen,
-                    plano: plano,
-                    extremidad: extremidad,
-                    procedencia: procedencia,
-                    observacion: observacion,
-                    contraste: contraste,
-                    adjuntar: adjuntar,
-                    creatinina: creatinina
-                },
                 beforeSend: function() {
                     $("#pdocrud-ajax-loader").show();
                 },
