@@ -2021,7 +2021,17 @@ class HomeController
 			"Urologia y nefrología" => "Urologia y nefrología",
 			"Ginecología y obstetricia" => "Ginecología y obstetricia",
 			"Traumatología" => "Traumatología",
-			"Imagenológicos odontológica" => "Imagenológicos odontológica"
+			"Imagenológicos odontológica" => "Imagenológicos odontológica",
+			"servicio neomatologia" => "servicio neomatologia",
+			"servicio cuidados intermedio adulto (uti)" => "servicio cuidados intermedio adulto (uti)",
+			"servicio obstetrica" => "servicio obstetrica",
+			"servicio hospitalización domiciliaria" => "servicio hospitalización domiciliaria",
+			"servicio medico pediatrico" => "servicio medico pediatrico",
+			"servicio medico quirurgico cirugia" => "servicio medico quirurgico cirugia",
+			"servicio medico quirurgico medicina" => "servicio medico quirurgico medicina",
+			"servicio medico quirurgico UPC adulto" => "servicio medico quirurgico UPC adulto",
+			"servicio pensionado" => "servicio pensionado",
+			"servicio cirugia mayor ambulatoria" => "servicio cirugia mayor ambulatoria"
 		), "", "","array");
 		$diagnostico->fieldGroups("Name",array("especialidad","profesional", "diagnostico", "sintomas_principales"));
 		$render2 = $diagnostico->dbTable("diagnostico_antecedentes_paciente")->render("insertform");
@@ -2042,9 +2052,10 @@ class HomeController
 		$crud->fieldRenameLable("examen", "Exámen (*)");
 		$crud->fieldRenameLable("observacion", "Observación");
 		$crud->fieldTypes("examen", "input");
+		$crud->fieldTypes("adjuntar", "file");
 		//$crud->fieldTypes("id_datos_paciente", "select");
 		//$crud->fieldDataBinding("id_datos_paciente", "datos_paciente", "id_datos_paciente", array("nombres","apellido_paterno", "apellido_materno"), "db", " ");
-		$crud->formFields(array("id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "procedencia", "observacion", "contraste", "fecha_solicitud"));
+		$crud->formFields(array("id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "procedencia", "observacion", "contraste", "adjuntar", "fecha_solicitud"));
 		$crud->fieldDisplayOrder(array("codigo_fonasa","id_datos_paciente","tipo_solicitud", "codigo_fonasa", "tipo_examen","examen","sintomas_principales", "diagnostico_libre", "plano", "extremidad", "procedencia", "observacion", "contraste"));
 		$crud->fieldAddOnInfo("examen", "after", '<div class="input-group-append eliminar_examen"><span class="btn btn-default border eliminar_examen" id="basic-addon1"><i class="fa fa-remove"></i></span></div>');
 		$crud->fieldCssClass("id_datos_paciente", array("paciente"));
@@ -2099,7 +2110,7 @@ class HomeController
 		$crud->formFieldValue("procedencia", "Ambulatorio");
 		$crud->fieldGroups("Name",array("tipo_solicitud","tipo_examen", "examen"));
 		$crud->fieldGroups("Name2",array("plano","extremidad", "procedencia"));
-		$crud->fieldGroups("Name3",array("observacion","contraste"));
+		$crud->fieldGroups("Name3",array("observacion","contraste", "adjuntar"));
 		$crud->fieldTypes("contraste", "checkbox");
 		$crud->fieldDataBinding("contraste", array(
 			"Examen con contraste" => "Examen con contraste",
