@@ -4137,7 +4137,7 @@ class HomeController
 
 			if (isset($_FILES['adjuntar'])) {
 				$adjuntar = $_FILES['adjuntar'];
-				$uploadDir = __DIR__ . '/../libs/uploads/';
+				$uploadDir = __DIR__ . '/../libs/script/uploads/';
 
 				if (!file_exists($uploadDir)) {
 					mkdir($uploadDir, 0777, true); // Crea el directorio si no existe
