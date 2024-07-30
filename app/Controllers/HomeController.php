@@ -4158,7 +4158,7 @@ class HomeController
 						return;
 					}
 
-					$uploadDirWeb = 'app/libs/uploads/';
+					$uploadDirWeb = 'app/libs/script/uploads/';
 					$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . basename($adjuntar['name']);
 					$archivoAdjunto = $archivoAdjuntoURL;
 				} elseif ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -4259,6 +4259,27 @@ class HomeController
 
 			foreach ($_SESSION['detalle_de_solicitud'] as $key => $detalle) {
 				if ($detalle['codigo_fonasa'] == $codigo_fonasa) {
+					// Eliminar el archivo asociado si existe
+					if (isset($detalle['adjuntar']) && !empty($detalle['adjuntar'])) {
+						$archivoURL = $detalle['adjuntar'];
+						
+						$uploadDir = __DIR__ . '/../libs/script/uploads/';
+                    	
+						 // Extraer el nombre del archivo de la URL
+						$archivoNombre = basename($archivoURL);
+
+					   	// Crear la ruta del archivo en el servidor
+						$archivoPath = $uploadDir . $archivoNombre;
+						
+						// Asegúrate de que la ruta sea segura
+						if (file_exists($archivoPath)) {
+							unlink($archivoPath); // Elimina el archivo del servidor
+						} else {
+							echo json_encode(['error' => 'El archivo no existe.']);
+							return;
+						}
+					}
+					
 					unset($_SESSION['detalle_de_solicitud'][$key]);
 				}
 			}
