@@ -689,7 +689,7 @@
                 contraste.push($(this).val());
             });
 
-            let adjuntar = $(".adjuntar").val();
+            let adjuntar = $(".adjuntar[type='file']")[0].files[0];
 
             let creatinina = '';
             if(contraste.includes('Examen con contraste')) {
@@ -737,6 +737,7 @@
                                     <td>${dato.tipo_examen}</td>
                                     <td>${dato.examen}</td>
                                     <td>${(dato.contraste != "") ? dato.contraste : '<div class="badge badge-danger">Sin Contraste</div>'}</td>
+                                    <td>${(dato.adjuntar != "") ? dato.adjuntar : '<div class="badge badge-danger">Sin Adjunto</div>'}</td>
                                     <td>${(dato.plano != "") ? dato.plano : '<div class="badge badge-danger">Sin Plano</div>'}</td>
                                     <td>${(dato.extremidad) ? dato.extremidad : '<div class="badge badge-danger">Sin Extremidad</div>'}</td>
                                     <td>${(dato.procedencia) ? dato.procedencia : '<div class="badge badge-danger">Sin Procedencia</div>'}</td>
@@ -769,6 +770,7 @@
 
                         $('.observacion').val("");
                         $('.contraste').prop('checked', false);
+                        $('.adjuntar').val("");
 
                         $('.filed_creatinina').addClass("d-none");
                         $('.creatinina').val("");
