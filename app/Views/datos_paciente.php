@@ -689,6 +689,8 @@
                 contraste.push($(this).val());
             });
 
+            let adjuntar = $(".adjuntar").val();
+
             let creatinina = '';
             if(contraste.includes('Examen con contraste')) {
                 creatinina = $('.creatinina').val();
@@ -710,6 +712,7 @@
                     procedencia: procedencia,
                     observacion: observacion,
                     contraste: contraste,
+                    adjuntar: adjuntar,
                     creatinina: creatinina
                 },
                 beforeSend: function() {

@@ -2117,7 +2117,7 @@ class HomeController
 			"Examen con contraste" => "Examen con contraste",
 			"Concentimiento informado completo" => "Concentimiento informado completo", 
 			"Premedicación" => "Premedicación", 
-			"Clearence de creatinina" => "Clearence de creatinina", 
+			"Clearence de creatinina" => "Clearence de creatinina",
 			"Protección renal" => "Protección renal"
 		), "", "","array");
 		$crud->fieldTypes("extremidad", "select");
@@ -4074,6 +4074,7 @@ class HomeController
 					$sql['procedencia'] = $sesionVal['procedencia'];
 					$sql['observacion'] = $sesionVal['observacion'];
 					$sql['contraste'] = $sesionVal['contraste'];
+					$sql['adjuntar'] = $sesionVal['adjuntar'];
 					$sql['creatinina'] = $sesionVal['creatinina'];
 					$sql['estado'] = $sesionVal['estado'];
 					$sql['usuario'] = $usuario;
@@ -4129,6 +4130,7 @@ class HomeController
 			$procedencia = $request->post('procedencia');
 			$observacion = $request->post('observacion');
 			$contraste = $request->post('contraste');
+			$adjuntar = $request->post('adjuntar');
 			$contrasteValue = isset($contraste) ? (array)$contraste : [];
 			$creatinina = $request->post('creatinina') ?? null;
 	
@@ -4201,6 +4203,7 @@ class HomeController
 					"procedencia" => $procedencia,
 					"observacion" => $observacion,
 					"contraste" => implode(", ", $contrasteValue),
+					"adjuntar" => $adjuntar,
 					"creatinina" => $creatinina,
 					"estado" => "Ingresado"
 				];
