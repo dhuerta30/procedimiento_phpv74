@@ -4147,11 +4147,11 @@ class HomeController
 
 				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
 					// Validar tipo y tamaño de archivo si es necesario
-					$allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+					/*$allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 					if (!in_array($adjuntar['type'], $allowedTypes) || $adjuntar['size'] > 5000000) {
 						echo json_encode(['error' => 'Tipo o tamaño de archivo no permitido.']);
 						return;
-					}
+					}*/
 
 					if (!move_uploaded_file($adjuntar['tmp_name'], $uploadFile)) {
 						echo json_encode(['error' => 'Error al mover el archivo subido.']);
