@@ -2068,6 +2068,7 @@ class HomeController
 		$crud->fieldCssClass("examen", array("examen"));
 		$crud->fieldCssClass("observacion", array("observacion"));
 		$crud->fieldCssClass("contraste", array("contraste"));
+		$crud->fieldCssClass("adjuntar", array("adjuntar"));
 		$crud->fieldAttributes("examen", array("placeholder"=>"Buscar Prestación"));
 		$crud->fieldAttributes("observacion", array("placeholder"=>"Observación"));
 		$crud->fieldAttributes("observacion", array("style"=>"min-height: 150px"));
