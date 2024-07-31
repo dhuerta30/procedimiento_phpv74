@@ -4061,6 +4061,28 @@ class HomeController
 
 			if(isset($_SESSION['detalle_de_solicitud'])){
 
+				$uploadDir = __DIR__ . '/../libs/script/uploads/';
+				if (!file_exists($uploadDir)) {
+					mkdir($uploadDir, 0777, true);
+				}
+
+				$uploadedFiles = [];
+
+				foreach ($_SESSION['detalle_de_solicitud'] as $key => $sesionVal) {
+					if (isset($sesionVal['adjuntar']) && $sesionVal['adjuntar']['error'] === UPLOAD_ERR_OK) {
+						$uploadFile = $uploadDir . basename($sesionVal['adjuntar']['name']);
+						if (move_uploaded_file($sesionVal['adjuntar']['tmp_name'], $uploadFile)) {
+							$uploadedFiles[$key] = $_ENV['BASE_URL'] . 'app/libs/script/uploads/' . basename($sesionVal['adjuntar']['name']);
+						} else {
+							echo json_encode(['error' => 'Error al mover el archivo subido.']);
+							return;
+						}
+					} else if (isset($sesionVal['adjuntar']) && $sesionVal['adjuntar']['error'] !== UPLOAD_ERR_NO_FILE) {
+						echo json_encode(['error' => 'Error en el archivo subido.']);
+						return;
+					}
+				}
+
 				$sql = array();
 				foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
 					$sql['id_datos_paciente'] = $id;
@@ -4137,7 +4159,7 @@ class HomeController
 
 			if (isset($_FILES['adjuntar'])) {
 				$adjuntar = $_FILES['adjuntar'];
-				$uploadDir = __DIR__ . '/../libs/script/uploads/';
+				/*$uploadDir = __DIR__ . '/../libs/script/uploads/';
 
 				if (!file_exists($uploadDir)) {
 					mkdir($uploadDir, 0777, true); // Crea el directorio si no existe
@@ -4146,13 +4168,6 @@ class HomeController
 				$uploadFile = $uploadDir . basename($adjuntar['name']);
 
 				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
-					// Validar tipo y tamaño de archivo si es necesario
-					/*$allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-					if (!in_array($adjuntar['type'], $allowedTypes) || $adjuntar['size'] > 5000000) {
-						echo json_encode(['error' => 'Tipo o tamaño de archivo no permitido.']);
-						return;
-					}*/
-
 					if (!move_uploaded_file($adjuntar['tmp_name'], $uploadFile)) {
 						echo json_encode(['error' => 'Error al mover el archivo subido.']);
 						return;
@@ -4161,10 +4176,10 @@ class HomeController
 					$uploadDirWeb = 'app/libs/script/uploads/';
 					$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . basename($adjuntar['name']);
 					$archivoAdjunto = $archivoAdjuntoURL;
-				} elseif ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
+				} else if ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
 					echo json_encode(['error' => 'Error en el archivo subido.']);
 					return;
-				}
+				}*/
 			}
 
 			// Validar que los campos no estén vacíos
