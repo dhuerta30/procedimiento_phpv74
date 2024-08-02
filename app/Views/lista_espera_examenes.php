@@ -805,9 +805,10 @@ $(document).on("click", ".exportar_excel", function(){
     let prestacion = $('.prestacion').val();
     let profesional = $('.profesional').val();
     let fecha_solicitud = $('.fecha_solicitud').val();
+    let adjuntar = $('.adjuntar').val();
 
     // Verificar si no hay ningún filtro aplicado
-    if (!run && !nombre_paciente && !estado && !procedencia && !prestacion && !profesional && !fecha_solicitud) {
+    if (!run && !nombre_paciente && !estado && !procedencia && !prestacion && !profesional && !fecha_solicitud && !adjuntar) {
         let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_lista_espera_examenes_default";
         // Si no hay filtros, usar la URL por defecto
         window.open(url);
@@ -822,6 +823,7 @@ $(document).on("click", ".exportar_excel", function(){
         if (procedencia) url += "/procedencia/" + procedencia;
         if (profesional) url += "/profesional/" + profesional;
         if (fecha_solicitud) url += "/fecha_solicitud/" + fecha_solicitud;
+        if (adjuntar) url += "/adjuntar/" + adjuntar;
 
         // Abrir la URL en una nueva ventana
         window.open(url);

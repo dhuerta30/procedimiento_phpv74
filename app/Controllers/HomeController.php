@@ -3624,7 +3624,8 @@ class HomeController
 				ds.procedencia AS procedencia,
 				ds.fecha as fecha,
 				especialidad AS especialidad,
-				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
+				CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
 			FROM 
 				datos_paciente AS dp
 			INNER JOIN 
