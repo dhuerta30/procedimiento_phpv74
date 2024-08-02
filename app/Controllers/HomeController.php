@@ -3915,10 +3915,10 @@ class HomeController
 				$mensaje = 'El campo Diagnóstico CIE-10 es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
-			} else if(empty($sintomas_principales)){
+			/*} else if(empty($sintomas_principales)){
 				$mensaje = 'El campo Síntomas Principales es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
-				return;
+				return;*/
 			} else if(strpos($diagnostico, '--------------------') !== false && empty($diagnostico_libre)){
 				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
@@ -4053,10 +4053,10 @@ class HomeController
 				$mensaje = 'El campo Diagnóstico CIE-10 es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
-			} else if(empty($sintomas_principales)){
+			/*} else if(empty($sintomas_principales)){
 				$mensaje = 'El campo Síntomas Principales es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
-				return;
+				return;*/
 			} else if(strpos($diagnostico, '--------------------') !== false && empty($diagnostico_libre)){
 				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
