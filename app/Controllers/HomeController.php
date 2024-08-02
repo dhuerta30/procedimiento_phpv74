@@ -1742,6 +1742,7 @@ class HomeController
 		$pdocrud->fieldRenameLable("operacion", "Descripción");
 		$pdocrud->tableHeading("Mantenedor CIE-10");
 		$pdocrud->formDisplayInPopup();
+		$pdocrud->where("codigo_o", "Linea", "!=");
 		$pdocrud->crudRemoveCol(array("id"));
 		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setSettings("printBtn", false);
