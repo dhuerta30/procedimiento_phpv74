@@ -2430,7 +2430,7 @@ class HomeController
 					</div>
 
 					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
-						<label class='control-label col-form-label'>Adjuntar</label>
+						<label class='control-label col-form-label'>Tiene Adjunto</label>
 						<div class='input-group'>
 							<select class='form-control pdocrud-form-control pdocrud-select adjuntar'>
 								<option value=''>Seleccionar</option>
