@@ -139,7 +139,7 @@ class HomeController
 		$pdocrud->buttonHide("submitBtn");
 		$pdocrud->buttonHide("cancel");
 		$render = $pdocrud->dbTable("procedimiento")->render("insertform");
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-(K|k|9)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "true"));
 
 		View::render(
 			'procedimientos', ['render' => $render, 'mask' => $mask]
@@ -1032,7 +1032,7 @@ class HomeController
 		$pdocrud->addCallback("before_insert", "agregar_profesional");
 		$pdocrud->addCallback("before_update", "modificar_profesional");
 		$render = $pdocrud->dbTable("profesional")->render();
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut_profesional", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut_profesional", array("mask"=> "'9{1,2}9{3}9{2,3}-(K|k|9)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "true"));
 
 		$crud = DB::PDOCrud(true);
 		$crud->fieldRenameLable("archivo", "Archivo Excel");
@@ -1439,7 +1439,7 @@ class HomeController
 		$pdocrud->setSettings("csvBtn", false);
 		$pdocrud->setSettings("excelBtn", false);
 		$render = $pdocrud->dbTable("procedimiento")->render();
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-(K|k|9)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "true"));
 		View::render(
 			'listar_procedimiento_por_rut', ['render' => $render, 'mask' => $mask]
 		);
@@ -1973,7 +1973,7 @@ class HomeController
 			</div>               
 		");
 		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-(K|k|9)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "true"));
 		
 		$diagnostico = DB::PDOCrud(true);
 		$diagnostico->addPlugin("chosen");
@@ -2457,7 +2457,7 @@ class HomeController
 		$pdocrud->buttonHide("submitBtn");
 		$pdocrud->buttonHide("cancel");
 		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-(K|k|9)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "true"));
 
 		//$render_crud = $this->mostrar_grilla_lista_espera();
 		
@@ -2977,7 +2977,7 @@ class HomeController
 		</form>
 		');
 		$render = $pdocrud->render("HTML", $html_data);
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-(K|k|9)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "true"));
 		$select2 = $pdocrud->loadPluginJsCode("select2",".ano_desde, .ano_hasta");
 
 		View::render(
@@ -4694,7 +4694,7 @@ class HomeController
 		</form>
 		');
 		$render = $pdocrud->render("HTML", $html_data);
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-9|K|k'", "casing" => "'upper'"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-(K|k|9)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "true"));
 
 		$grilla_ingreso_egreso = $this->crud_ingreso_egreso();
 
