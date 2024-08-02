@@ -1079,6 +1079,7 @@
 
         $(document).on("click", ".agregar_paciente", function(){
             let rut = $('.rut').val();
+            let pasaporte_o_codigo_interno = $('.pasaporte_o_codigo_interno').val();
             let nombres = $('.nombres').val();
             let apellido_paterno = $('.apellido_paterno').val();
             let apellido_materno = $('.apellido_materno').val();
@@ -1101,6 +1102,7 @@
                 dataType: "json",
                 data: {
                     rut: rut,
+                    pasaporte_o_codigo_interno: pasaporte_o_codigo_interno,
                     nombres: nombres,
                     apellido_materno: apellido_materno,
                     apellido_paterno: apellido_paterno,

@@ -3846,6 +3846,7 @@ class HomeController
 			$fecha_nacimiento = $request->post("fecha_nacimiento");
 			$edad = $request->post('edad');
 			$rut = $request->post('rut');
+			$pasaporte_o_codigo_interno = $request->post('pasaporte_o_codigo_interno');
 			$nombres = $request->post('nombres');
 			$direccion = $request->post('direccion');
 			$apellido_paterno = $request->post('apellido_paterno');
@@ -3995,8 +3996,8 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
-			if (empty($rut)) {
-				$mensaje = 'El campo Rut es Obligatorio';
+			if (empty($rut) && empty($pasaporte_o_codigo_interno)) {
+				$mensaje = 'Debe ingresar al menos el RUT o el pasaporte';
 				echo json_encode(['error' => $mensaje]);
 				return;
 			} else if (!self::validaRut($rut)) {
