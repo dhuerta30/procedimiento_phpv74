@@ -274,7 +274,6 @@ $(document).on("click", ".limpiar_filtro", function(){
     $('.profesional').val("");
     $('.fecha_solicitud').val("");
     $('.adjuntar').val("");
-    //$('.buscar').click();
     $('.cargar_modal').empty();
 
     if ($('.tabla_reportes').DataTable()) {
