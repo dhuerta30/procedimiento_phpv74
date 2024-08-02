@@ -30,9 +30,9 @@
 				<h5>Búsqueda Lista Espera Exámenes</h5>
 				<hr>
 
-				<div class="container examenes">
+				<div class="container-fluid examenes">
 					<div class="row justify-content-center">
-                        <div class="col-md-12">
+                        <div class="col-md-12 pl-0 pr-0">
                             <?=$render?>
                             <?=$mask;?>
                         </div>
@@ -564,6 +564,7 @@ $(document).on("click", ".limpiar_filtro", function(){
     $('.prestacion').val("");
     $('.profesional').val("");
     $('.fecha_solicitud').val("");
+    $('.adjuntar').val("");
     //$('.buscar').click();
     $('.cargar_modal').empty();
 });
