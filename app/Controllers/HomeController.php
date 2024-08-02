@@ -3947,6 +3947,7 @@ class HomeController
 			} else {
 				$pdomodel->insert("datos_paciente", array(
 					"rut" => $rut,
+					"pasaporte_o_codigo_interno" => $pasaporte_o_codigo_interno,
 					"nombres" => $nombres,
 					"telefono" => $telefono,
 					"apellido_paterno" => $apellido_paterno,
