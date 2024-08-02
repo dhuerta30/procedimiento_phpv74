@@ -3862,8 +3862,8 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
-			if (empty($rut)) {
-				$mensaje = 'El campo Rut es Obligatorio';
+			if (empty($rut) && empty($pasaporte_o_codigo_interno)) {
+				$mensaje = 'Debe ingresar al menos el RUT o el pasaporte';
 				echo json_encode(['error' => $mensaje]);
 				return;
 			} else if (!self::validaRut($rut)) {
