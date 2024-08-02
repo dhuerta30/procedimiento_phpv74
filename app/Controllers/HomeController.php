@@ -3919,7 +3919,7 @@ class HomeController
 				$mensaje = 'El campo Síntomas Principales es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
-			} else if(empty($diagnostico_libre)){
+			} else if(strpos($diagnostico, '--------------------') !== false && empty($diagnostico_libre)){
 				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
