@@ -3930,6 +3930,7 @@ class HomeController
 			}
 
 			$pdomodel->where("rut", $rut, "=", "AND");
+			$pdomodel->where("pasaporte_o_codigo_interno", $pasaporte_o_codigo_interno, "=", "AND");
 			$pdomodel->where("nombres", $nombres, "=", "AND");
 			$pdomodel->where("apellido_paterno", $apellido_paterno, "=", "AND");
 			$pdomodel->where("apellido_materno", $apellido_materno, "=", "AND");
@@ -4068,6 +4069,7 @@ class HomeController
 			}
 
 			$pdomodel->where("rut", $rut, "=", "AND");
+			$pdomodel->where("pasaporte_o_codigo_interno", $pasaporte_o_codigo_interno, "=", "AND");
 			$pdomodel->where("nombres", $nombres, "=", "AND");
 			$pdomodel->where("apellido_paterno", $apellido_paterno, "=", "AND");
 			$pdomodel->where("apellido_materno", $apellido_materno, "=", "AND");
