@@ -3548,8 +3548,17 @@ class HomeController
 				$where .= " AND dg_p.fecha_solicitud_paciente = '$fecha_solicitud' ";
 			}
 
-			if(!empty($adjuntar)){
-				$where .= " AND ds.adjuntar = '$adjuntar' ";
+			if (!empty($adjuntar)) {
+				// Check if $adjuntar is 'si' or 'no'
+				if (strtolower($adjuntar) === 'si') {
+					$where .= " AND ds.adjuntar IS NOT NULL AND ds.adjuntar != '' "; // Check for non-empty URL
+				} elseif (strtolower($adjuntar) === 'no') {
+					$where .= " AND (ds.adjuntar IS NULL OR ds.adjuntar = '') "; // Check for NULL or empty string
+				} else {
+					// Handle invalid 'adjuntar' value
+					echo json_encode(["error" => "Valor inválido para el campo 'adjuntar'"]);
+					return;
+				}
 			}
 
 			$data = $pdomodel->executeQuery(
