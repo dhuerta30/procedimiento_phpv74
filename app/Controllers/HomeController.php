@@ -3597,7 +3597,7 @@ class HomeController
 			);
 
 			echo json_encode(['data' => $data]);
-			
+
 		}
 	}
 
