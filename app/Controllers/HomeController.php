@@ -3507,8 +3507,9 @@ class HomeController
 			$prestacion = $request->post('prestacion');
 			$profesional = $request->post('profesional');
 			$fecha_solicitud = $request->post('fecha_solicitud');
+			$adjuntar = $request->post('adjuntar');
 
-			if (empty($run) && empty($nombre_paciente) && empty($estado) && empty($procedencia) && empty($prestacion) && empty($profesional) && empty($fecha_solicitud)) {
+			if (empty($run) && empty($nombre_paciente) && empty($estado) && empty($procedencia) && empty($prestacion) && empty($profesional) && empty($fecha_solicitud) && empty($adjuntar)) {
 				echo json_encode(["error" => "Debe ingresar al menos un campo para realizar la búsqueda"]);
 				return;
 			}
@@ -3547,6 +3548,10 @@ class HomeController
 				$where .= " AND dg_p.fecha_solicitud_paciente = '$fecha_solicitud' ";
 			}
 
+			if(!empty($adjuntar)){
+				$where .= " AND ds.adjuntar = '$adjuntar' ";
+			}
+
 			$data = $pdomodel->executeQuery(
 				"SELECT 
 					dp.id_datos_paciente,
@@ -3561,6 +3566,7 @@ class HomeController
 					ds.estado AS estado,
 					codigo_fonasa AS codigo,
 					ds.examen,
+					ds.adjuntar,
 					ds.procedencia AS procedencia,
 					ds.fecha as fecha,
 					especialidad AS especialidad,

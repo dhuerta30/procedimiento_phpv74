@@ -401,6 +401,7 @@ $(document).on("click", ".buscar", function(){
     let prestacion = $('.prestacion').val();
     let profesional = $('.profesional').val();
     let fecha_solicitud = $('.fecha_solicitud').val();
+    let adjuntar = $(".adjuntar").val();
 
     $.ajax({
         type: "POST",
@@ -413,7 +414,8 @@ $(document).on("click", ".buscar", function(){
             procedencia: procedencia,
             prestacion: prestacion,
             profesional: profesional,
-            fecha_solicitud: fecha_solicitud
+            fecha_solicitud: fecha_solicitud,
+            adjuntar: adjuntar
         },
         beforeSend: function() {
             // Puedes mostrar un indicador de carga aquí
