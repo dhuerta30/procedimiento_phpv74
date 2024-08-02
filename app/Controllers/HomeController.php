@@ -3672,6 +3672,7 @@ class HomeController
 		$prestacion = $request->get('prestacion');
 		$profesional = $request->get('profesional');
 		$fecha_solicitud = $request->get('fecha_solicitud');
+		$adjuntar = $request->get('adjuntar');
 
 		if (!empty($run)) {
 
@@ -3707,6 +3708,19 @@ class HomeController
 			$where .= " AND dg_p.fecha_solicitud_paciente = '$fecha_solicitud' ";
 		}
 
+		if (!empty($adjuntar)) {
+			// Check if $adjuntar is 'si' or 'no'
+			if (strtolower($adjuntar) === 'si') {
+				$where .= " AND ds.adjuntar IS NOT NULL AND ds.adjuntar != '' "; // Check for non-empty URL
+			} elseif (strtolower($adjuntar) === 'no') {
+				$where .= " AND (ds.adjuntar IS NULL OR ds.adjuntar = '') "; // Check for NULL or empty string
+			} else {
+				// Handle invalid 'adjuntar' value
+				echo json_encode(["error" => "Valor inválido para el campo 'adjuntar'"]);
+				return;
+			}
+		}
+
 		$data = $pdomodel->executeQuery(
 			"SELECT 
 				dp.id_datos_paciente,
@@ -3724,7 +3738,8 @@ class HomeController
 				ds.procedencia AS procedencia,
 				ds.fecha as fecha,
 				especialidad AS especialidad,
-				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
+				CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
 			FROM 
 				datos_paciente AS dp
 			INNER JOIN 
