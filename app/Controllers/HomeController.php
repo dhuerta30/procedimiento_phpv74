@@ -2022,16 +2022,16 @@ class HomeController
 			"Ginecología y obstetricia" => "Ginecología y obstetricia",
 			"Traumatología" => "Traumatología",
 			"Imagenológicos odontológica" => "Imagenológicos odontológica",
-			"servicio neomatologia" => "servicio neomatologia",
-			"servicio cuidados intermedio adulto (uti)" => "servicio cuidados intermedio adulto (uti)",
-			"servicio obstetrica" => "servicio obstetrica",
-			"servicio hospitalización domiciliaria" => "servicio hospitalización domiciliaria",
-			"servicio medico pediatrico" => "servicio medico pediatrico",
-			"servicio medico quirurgico cirugia" => "servicio medico quirurgico cirugia",
-			"servicio medico quirurgico medicina" => "servicio medico quirurgico medicina",
-			"servicio medico quirurgico UPC adulto" => "servicio medico quirurgico UPC adulto",
-			"servicio pensionado" => "servicio pensionado",
-			"servicio cirugia mayor ambulatoria" => "servicio cirugia mayor ambulatoria"
+			"Servicio Neomatologia" => "Servicio Neomatologia",
+			"Servicio Cuidados Intermedio Adulto (uti)" => "Servicio Cuidados Intermedio Adulto (uti)",
+			"Servicio Obstetrica" => "Servicio Obstetrica",
+			"Servicio Hospitalización Domiciliaria" => "Servicio Hospitalización Domiciliaria",
+			"Servicio Médico Pediátrico" => "Servicio Médico Pediátrico",
+			"Servicio Médico Quirurgico Cirugia" => "Servicio Médico Quirurgico Cirugia",
+			"Servicio Médico Quirurgico Medicina" => "Servicio Médico Quirurgico Medicina",
+			"Servicio Médico Quirurgico UPC Adulto" => "Servicio Médico Quirurgico UPC Adulto",
+			"Servicio Pensionado" => "Servicio Pensionado",
+			"Servicio Cirugia Mayor Ambulatoria" => "Servicio Cirugia Mayor Ambulatoria"
 		), "", "","array");
 		$diagnostico->fieldGroups("Name",array("especialidad","profesional", "diagnostico", "sintomas_principales"));
 		$render2 = $diagnostico->dbTable("diagnostico_antecedentes_paciente")->render("insertform");
