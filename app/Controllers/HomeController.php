@@ -3646,7 +3646,7 @@ class HomeController
 		// Definir los títulos de las columnas
 		$columnTitles = [
 			'ID Paciente', 'ID Solicitud', 'RUT', 'Paciente', 'Teléfono', 'Edad', 'Fecha Egreso', 'Motivo Egreso',
-			'Fecha Solicitud', 'Estado', 'Código Fonasa', 'Examen', 'Procedencia', 'Fecha', 'Especialidad', 'Profesional'
+			'Fecha Solicitud', 'Estado', 'Código Fonasa', 'Examen', 'Procedencia', 'Fecha', 'Especialidad', 'Profesional', 'Adjuntar'
 		];
 
 		// Insertar los títulos en la primera fila de los datos
@@ -3760,7 +3760,7 @@ class HomeController
 		// Definir los títulos de las columnas
 		$columnTitles = [
 			'ID Paciente', 'ID Solicitud', 'RUT', 'Paciente', 'Teléfono', 'Edad', 'Fecha Egreso', 'Motivo Egreso',
-			'Fecha Solicitud', 'Estado', 'Código Fonasa', 'Examen', 'Procedencia', 'Fecha', 'Especialidad', 'Profesional'
+			'Fecha Solicitud', 'Estado', 'Código Fonasa', 'Examen', 'Procedencia', 'Fecha', 'Especialidad', 'Profesional', 'Adjuntar'
 		];
 
 		// Insertar los títulos en la primera fila de los datos
