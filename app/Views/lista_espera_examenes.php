@@ -266,6 +266,17 @@ $(document).ready(function(){
 
 $(document).on("click", ".limpiar_filtro", function(){
 
+    $('.rut').val("");
+    $('.nombre_paciente').val("");
+    $('.estado').val("");
+    $('.procedencia').val("");
+    $('.prestacion').val("");
+    $('.profesional').val("");
+    $('.fecha_solicitud').val("");
+    $('.adjuntar').val("");
+    //$('.buscar').click();
+    $('.cargar_modal').empty();
+
     if ($('.tabla_reportes').DataTable()) {
         $('.tabla_reportes').DataTable().destroy();
     }
@@ -298,7 +309,13 @@ $(document).on("click", ".limpiar_filtro", function(){
         ajax: {
             url: "<?=$_ENV["BASE_URL"]?>home/mostrar_grilla_lista_espera",
             type: "POST",
-            dataType: "json"
+            dataType: "json",
+            beforeSend: function() {
+                $("#pdocrud-ajax-loader").show();
+            },
+            complete: function() {
+                $("#pdocrud-ajax-loader").hide();
+            }
         },
         columns: [
             { data: 'estado' },
@@ -554,19 +571,6 @@ $(document).on("click", ".buscar", function(){
 
         }
     });
-});
-
-$(document).on("click", ".limpiar_filtro", function(){
-    $('.rut').val("");
-    $('.nombre_paciente').val("");
-    $('.estado').val("");
-    $('.procedencia').val("");
-    $('.prestacion').val("");
-    $('.profesional').val("");
-    $('.fecha_solicitud').val("");
-    $('.adjuntar').val("");
-    //$('.buscar').click();
-    $('.cargar_modal').empty();
 });
 
 
