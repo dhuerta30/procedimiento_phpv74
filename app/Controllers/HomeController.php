@@ -2342,7 +2342,8 @@ class HomeController
 			examen,
 			ds.fecha as fecha,
 			especialidad,
-			CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+			CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
+			CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
 		FROM 
 			datos_paciente AS dp
 		INNER JOIN
@@ -3575,11 +3576,11 @@ class HomeController
 					ds.estado AS estado,
 					codigo_fonasa AS codigo,
 					ds.examen,
-					ds.adjuntar,
 					ds.procedencia AS procedencia,
 					ds.fecha as fecha,
 					especialidad AS especialidad,
-					CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
+					CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
+					CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
 				FROM 
 					datos_paciente AS dp
 				INNER JOIN 

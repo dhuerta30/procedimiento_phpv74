@@ -61,6 +61,7 @@
                                     <th>Fecha Solicitud</th>
                                     <th>Fecha Agendada</th>
                                     <th>Fecha Egreso</th>
+                                    <th>Tiene Adjunto</th>
                                     <th>Profesional</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -197,6 +198,15 @@ $(document).ready(function(){
                     return fechaFormateada;
                 } 
              },
+             { data: 'tiene_adjunto',
+                render: function(data, type, row, meta){
+                    if(data == "Si"){
+                        return "<div class='badge badge-success'>"+ data +"</div>";
+                    } else {
+                        return "<div class='badge badge-danger'>"+ data +"</div>";
+                    }
+                }
+              }, 
             { data: 'profesional' },
             {
                 render: function(data, type, row) {
@@ -391,6 +401,15 @@ $(document).on("click", ".limpiar_filtro", function(){
                     return fechaFormateada;
                 } 
              },
+             { data: 'tiene_adjunto',
+                render: function(data, type, row, meta){
+                    if(data == "Si"){
+                        return "<div class='badge badge-success'>"+ data +"</div>";
+                    } else {
+                        return "<div class='badge badge-danger'>"+ data +"</div>";
+                    }
+                }
+              }, 
             { data: 'profesional' },
             {
                 render: function(data, type, row) {
@@ -552,6 +571,15 @@ $(document).on("click", ".buscar", function(){
                             return fechaFormateada;
                         } 
                     },
+                    { data: 'tiene_adjunto',
+                        render: function(data, type, row, meta){
+                            if(data == "Si"){
+                                return "<div class='badge badge-success'>"+ data +"</div>";
+                            } else {
+                                return "<div class='badge badge-danger'>"+ data +"</div>";
+                            }
+                        }
+                    }, 
                     { data: 'profesional' },
                     {
                         render: function(data, type, row) {
