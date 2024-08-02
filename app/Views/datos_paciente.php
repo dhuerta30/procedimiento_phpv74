@@ -340,6 +340,7 @@
 
         $(document).on("click", ".buscar", function(){
             let rut = $('.rut').val();
+            let pasaporte_o_codigo_interno = $(".pasaporte_o_codigo_interno").val();
             let nombres = $('.nombres').val();
             let telefono = $('.telefono').val();
             let apellido_paterno = $('.apellido_paterno').val();
@@ -356,6 +357,7 @@
                 dataType: "json",
                 data: {
                     rut: rut,
+                    pasaporte_o_codigo_interno: pasaporte_o_codigo_interno,
                     nombres: nombres,
                     telefono: telefono,
                     apellido_materno: apellido_materno,
@@ -374,6 +376,7 @@
                     if(data['success']){
                         $('.limpiar').removeClass('d-none');
                         $(".rut").val(data["data"][0]["rut"]);
+                        $(".pasaporte_o_codigo_interno").val(data["data"][0]["pasaporte_o_codigo_interno"]);
                         $(".nombres").val(data["data"][0]["nombres"]);
                         $(".telefono").val(data["data"][0]["telefono"]);
                         $(".apellido_paterno").val(data["data"][0]["apellido_paterno"]);

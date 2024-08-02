@@ -4346,7 +4346,7 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
-			$searchFields = ['rut', 'nombres', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento', 'edad', 'direccion', 'sexo'];
+			$searchFields = ['rut', 'pasaporte_o_codigo_interno', 'nombres', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento', 'edad', 'direccion', 'sexo'];
 			$searchCriteria = [];
 
 			// Check if any search parameter is provided
