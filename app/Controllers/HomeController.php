@@ -2874,7 +2874,7 @@ class HomeController
 				</div>
 				
 			");
-			$pdocrud->fieldDisplayOrder(array("id_datos_paciente","empresas_en_convenio","id_detalle_de_solicitud","motivo_egreso","observacion", "fecha_egreso", "fecha_solicitud", "adjuntar", "compra_servicio", "buttons"));  
+			$pdocrud->fieldDisplayOrder(array("id_datos_paciente","listado_empresas_en_convenio","empresas_en_convenio","id_detalle_de_solicitud","motivo_egreso","observacion", "fecha_egreso", "fecha_solicitud", "adjuntar", "compra_servicio", "buttons"));  
 
 			$pdocrud->addPlugin("bootstrap-inputmask");
 			$pdocrud->fieldTypes("motivo_egreso", "select");
