@@ -2023,7 +2023,7 @@ class HomeController
 			"Traumatología" => "Traumatología",
 			"Imagenológicos odontológica" => "Imagenológicos odontológica",
 			"Servicio Neomatologia" => "Servicio Neomatologia",
-			"Servicio Cuidados Intermedio Adulto (uti)" => "Servicio Cuidados Intermedio Adulto (uti)",
+			"Servicio Cuidados Intermedio Adulto (UTI)" => "Servicio Cuidados Intermedio Adulto (UTI)",
 			"Servicio Obstetrica" => "Servicio Obstetrica",
 			"Servicio Hospitalización Domiciliaria" => "Servicio Hospitalización Domiciliaria",
 			"Servicio Médico Pediátrico" => "Servicio Médico Pediátrico",
