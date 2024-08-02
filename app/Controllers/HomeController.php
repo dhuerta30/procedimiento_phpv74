@@ -1937,6 +1937,7 @@ class HomeController
 		$pdocrud->fieldHideLable("estado");
 		$pdocrud->fieldDataAttr("estado", array("style"=>"display:none"));
 		$pdocrud->addPlugin("bootstrap-inputmask");
+		$pdocrud->fieldRenameLable("pasaporte_o_codigo_interno", "Pasaporte o Código Interno");
 		$pdocrud->fieldRenameLable("direccion", "Dirección");
 		$pdocrud->setLangData("select", "Seleccione sexo");
 		$pdocrud->fieldAttributes("direccion", array("placeholder"=>"Buscar Dirección"));
