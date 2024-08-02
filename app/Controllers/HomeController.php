@@ -2874,14 +2874,14 @@ class HomeController
 				</div>
 				
 			");
-			$pdocrud->fieldDisplayOrder(array("id_datos_paciente","listado_empresas_en_convenio","empresas_en_convenio","id_detalle_de_solicitud","motivo_egreso","observacion", "fecha_egreso", "fecha_solicitud", "adjuntar", "compra_servicio", "buttons"));  
+			$pdocrud->fieldDisplayOrder(array("id_datos_paciente","listado_empresas_en_convenio","empresas_en_convenio","id_detalle_de_solicitud","motivo_egreso","observacion", "fecha_egreso", "fecha_solicitud", "adjuntar", "agregar_mas_adjuntos", "compra_servicio", "buttons"));  
 
 			$pdocrud->addPlugin("bootstrap-inputmask");
 			$pdocrud->fieldTypes("motivo_egreso", "select");
 			$pdocrud->fieldTypes("adjuntar", "FILE_NEW");
 			$pdocrud->fieldAddOnInfo("fecha_egreso", "after", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span></div>');
 			$pdocrud->fieldDataBinding("motivo_egreso", "causal_salida", "id_causal_salida", "nombre");
-			$pdocrud->formFields(array("id_datos_paciente","empresas_en_convenio","id_detalle_de_solicitud","motivo_egreso","observacion", "fecha_egreso", "fecha_solicitud", "adjuntar", "compra_servicio"));
+			$pdocrud->formFields(array("id_datos_paciente","empresas_en_convenio","id_detalle_de_solicitud","motivo_egreso","observacion", "fecha_egreso", "fecha_solicitud", "adjuntar", "agregar_mas_adjuntos", "compra_servicio"));
 			$pdocrud->setSettings("required", false);
 			$pdocrud->fieldNotMandatory("observacion");
 			$pdocrud->fieldNotMandatory("adjuntar");
@@ -2898,13 +2898,13 @@ class HomeController
 			$pdocrud->fieldCssClass("observacion", array("observacion"));
 			$pdocrud->fieldCssClass("motivo_egreso", array("motivo_egreso"));
 			$pdocrud->fieldCssClass("compra_servicio", array("compra_servicio"));
+			$pdocrud->fieldCssClass("agregar_mas_adjuntos", array("agregar_mas_adjuntos"));
 			$pdocrud->fieldCssClass("empresas_en_convenio", array("empresas_en_convenio"));
 
 			//$pdomodel->where("id_datos_paciente", $id);
 			//$observacion = $pdomodel->select("detalle_de_solicitud");
 
 			$pdocrud->addCallback("before_select", "editar_egresar_solicitud");
-			
 			$pdocrud->setLangData("login", "Guardar");
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
 			HomeController::modal("egresar_solicitud", "<i class='fas fa-sign-out-alt'></i> Egresar Solicitud", $render);
@@ -3978,6 +3978,7 @@ class HomeController
 			$fecha_nacimiento = $request->post("fecha_nacimiento");
 			$edad = $request->post('edad');
 			$rut = $request->post('rut');
+			$pasaporte_o_codigo_interno = $request->post('pasaporte_o_codigo_interno');
 			$nombres = $request->post('nombres');
 			$direccion = $request->post('direccion');
 			$apellido_paterno = $request->post('apellido_paterno');

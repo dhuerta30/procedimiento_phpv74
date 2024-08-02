@@ -457,6 +457,7 @@
             // Datos Paciente
             let paciente = $('.paciente').val();
             let rut = $('.rut').val();
+            let pasaporte_o_codigo_interno = $(".pasaporte_o_codigo_interno").val();
             let nombres = $('.nombres').val();
             let apellido_paterno = $('.apellido_paterno').val();
             let apellido_materno = $('.apellido_materno').val();
@@ -482,6 +483,7 @@
                 data: {
                     paciente: paciente,
                     rut: rut,
+                    pasaporte_o_codigo_interno: pasaporte_o_codigo_interno,
                     nombres: nombres,
                     apellido_paterno: apellido_paterno,
                     apellido_materno: apellido_materno,
