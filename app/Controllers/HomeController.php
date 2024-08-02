@@ -2385,20 +2385,20 @@ class HomeController
 		$pdocrud->fieldAttributes("nombre_profesional", array("autocomplete"=>"off"));
 		
 		$pdocrud->formStaticFields("filtros_busqueda", "html", "
-				<div class='row'>
-					<div class='col-md'>
+				<div class='row d-flex'>
+					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>RUN</label>
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text rut'>
 					</div>
-					<div class='col-md'>
+					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>Nombre Paciente</label>
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text nombre_paciente'>
 					</div>
-					<div class='col-md'>
+					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>Prestación</label>
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text prestacion'>
 					</div>
-					<div class='col-md'>
+					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>Estado</label>
 						<select class='form-control pdocrud-form-control pdocrud-select estado'>
 							<option value=''>Seleccionar</option>
@@ -2407,7 +2407,7 @@ class HomeController
 							<option value='Egresado'>Egresado</option>
 						</select>
 					</div>
-					<div class='col-md'>
+					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>Procedencia</label>
 						<select class='form-control pdocrud-form-control pdocrud-select procedencia'>
 							<option value=''>Seleccionar</option>
@@ -2417,16 +2417,27 @@ class HomeController
 							<option value=''>Sin Procedencia</option>
 						</select>
 					</div>
-					<div class='col-md'>
+					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>Fecha Solicitud</label>
 						<div class='input-group'>
 							<input type='text' class='form-control pdocrud-form-control pdocrud-text fecha_solicitud pdocrud-date flatpickr-input' data-type='date'>                
 							<div class='input-group-append'>
-							<span class='input-group-text' id='basic-addon1'>
-								<i class='fa fa-calendar'></i>
-							</span>
-						</div> 
+								<span class='input-group-text' id='basic-addon1'>
+									<i class='fa fa-calendar'></i>
+								</span>
+							</div> 
+						</div>
 					</div>
+
+					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
+						<label class='control-label col-form-label'>Adjuntar</label>
+						<div class='input-group'>
+							<select class='form-control pdocrud-form-control pdocrud-select adjuntar'>
+								<option value=''>Seleccionar</option>
+								<option value='Si'>Si</option>
+								<option value='No'>No</option>
+							</select>
+						</div>
 					</div>
 				</div>
 		");
