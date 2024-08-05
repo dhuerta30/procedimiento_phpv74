@@ -44,7 +44,7 @@
                     list( $key, $text, $attr, $url, $cssClass) = $action;
                      ?>
                     <div class="btn-group pull-right">
-                        <a  title="<?php echo $text; ?>" class="pdocrud-top-actions pdocrud-button <?php echo $cssClass; ?> pdocrud-button-<?php echo $action_name; ?> btn btn-success"  
+                        <a  title="<?php echo $text; ?>" class="pdocrud-top-actions pdocrud-button <?php echo $cssClass; ?> pdocrud-button-<?php echo $action_name; ?>"  
                             href="<?php echo $url;?>"
                             data-action="<?php echo $action_name; ?>" data-obj-key="<?php echo $objKey; ?>">
                             <?php echo $text; ?>
