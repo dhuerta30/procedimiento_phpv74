@@ -3563,8 +3563,7 @@ class HomeController
 				}
 			}
 
-			$data = $pdomodel->executeQuery(
-				"SELECT 
+			$query = "SELECT 
 					dp.id_datos_paciente,
 					ds.id_detalle_de_solicitud,
 					dp.rut,
@@ -3593,7 +3592,9 @@ class HomeController
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
 				GROUP BY 
 					dp.id_datos_paciente, ds.id_detalle_de_solicitud, dp.rut, dp.edad, ds.fecha_egreso, ds.fecha_solicitud, ds.examen
-			");			
+			";
+
+			$data = $pdomodel->DBQuery($query);
 
 			echo json_encode(['data' => $data]);
 
