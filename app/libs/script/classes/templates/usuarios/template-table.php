@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table pdocrud-table table-bordered table-striped table-sm <?php if(isset($settings["tableCellEdit"]) && $settings["tableCellEdit"]) echo "pdocrud-excel-table" ?>" data-obj-key="<?php echo $objKey; ?>">
+    <table class="pdocrud-table table table-striped table-hover table-bordered table-condensed <?php if(isset($settings["tableCellEdit"]) && $settings["tableCellEdit"]) echo "pdocrud-excel-table" ?>" data-obj-key="<?php echo $objKey; ?>">
         <?php if ($settings["headerRow"]) { ?>
         <thead>
             <tr class="pdocrud-header-row">
@@ -114,34 +114,11 @@
                             $specificActions = ["view", "edit", "inline_edit", "clone", "delete", "url"];
 
                             if (in_array($action_name, $specificActions)) {
-                                switch ($action_name) {
-                                    case "view":
-                                        $btnClass .= "btn-info";
-                                        break;
-                                    case "edit":
-                                    case "inline_edit":
-                                    case "clone":
-                                        $btnClass .= "btn-warning";
-                                        break;
-                                    case "delete":
-                                        $btnClass .= "btn-danger";
-                                        break;
-                                    case "url":
-                                        $btnClass .= "btn-default";
-                                        break;
-                                }
                                 $btnClass .= " pdocrud-actions";  // Agrega esta clase solo para los actions específicos
-                            } else {
-                                $btnClass .= "btn-default";  // Para cualquier otro action_name
                             }
 
-                            // Agrega clases adicionales si están definidas
                             $btnClass .= (isset($cssClass) && !empty($cssClass)) ? " $cssClass" : "";
-
-                            // Sobrescribe btnClass para el caso "url"
-                            if ($action_name == "url") {
-                                $btnClass = "btn btn-default";
-                            }
+                           
                             ?>
                             <a class="<?php echo $btnClass; ?> btn-sm pdocrud-button <?php echo $action_name;?>"
                                 href="<?php echo $url;?>"
