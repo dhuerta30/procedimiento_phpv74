@@ -406,12 +406,24 @@ class HomeController
 		$pdocrud = DB::PDOCrud();
 		$pdocrud->colRename("idrol", "Rol");
 		$pdocrud->colRename("id", "ID");
+
+		$action = "javascript:;";
+		$text = '<i class="fa fa-eye"></i>';
+		$attr = array("title"=> "Ver");
+		$pdocrud->enqueueBtnActions("url", $action, "url", $text, "", $attr, "btn-info ver_menu_usuario");
+
+		$action = "javascript:;";
+		$text = '<i class="fa fa-save"></i>';
+		$attr = array("title"=> "Asignar");
+		$pdocrud->enqueueBtnActions("url2", $action, "url", $text, "", $attr, "btn-success asignar_menu_usuario");
+
 		$pdocrud->relatedData('idrol','rol','idrol','nombre_rol');
 		$pdocrud->tableColFormatting("avatar", "html",array("type" =>"html","str"=>'<img width="50" src="'.$_ENV["BASE_URL"].'app/libs/script/uploads/{col-name}">'));
 		$pdocrud->crudRemoveCol(array("rol","estatus","password", "token", "token_api", "expiration_token"));
 		$pdocrud->setSearchCols(array("id","nombre","email", "usuario", "idrol"));
 		$pdocrud->setSettings("addbtn", false);
 		$pdocrud->setSettings("viewbtn", false);
+		$pdocrud->setSettings("editbtn", false);
 		$pdocrud->setSettings("delbtn", false);
 		$pdocrud->setSettings("printBtn", false);
 		$pdocrud->setSettings("pdfBtn", false);
