@@ -2911,9 +2911,9 @@ class HomeController
 			$pdocrud->setSettings("hideAutoIncrement", false);
 			$pdocrud->fieldRenameLable("observacion", "Observación");
 
-			$pdocrud->fieldRenameLable("adjuntar2", "adjuntar");
-			$pdocrud->fieldRenameLable("adjuntar3", "adjuntar");
-			$pdocrud->fieldRenameLable("adjuntar4", "adjuntar");
+			$pdocrud->fieldRenameLable("adjuntar2", "Adjuntar");
+			$pdocrud->fieldRenameLable("adjuntar3", "Adjuntar");
+			$pdocrud->fieldRenameLable("adjuntar4", "Adjuntar");
 
 			$pdocrud->fieldTypes("compra_servicio", "radio");
 			$pdocrud->fieldTypes("empresas_en_convenio", "select");
