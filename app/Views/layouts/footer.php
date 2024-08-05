@@ -19,10 +19,35 @@
 <script src="<?=$_ENV["BASE_URL"]?>theme/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script>
-    $('#loader').show();
-    setTimeout(function() {
-    $('#loader').hide();
-    }, 1500);
+$('#loader').show();
+setTimeout(function() {
+$('#loader').hide();
+}, 1500);
+
+function verificarSesion() {
+    fetch('<?=$_ENV["BASE_URL"]?>home/comprobarSessionActiva')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'expired') {
+                // Redirigir al usuario a la página de login si la sesión ha expirado
+                Swal.fire({
+                    title: 'Genial!',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        window.location.href = '<?=$_ENV["BASE_URL"]?>login/salir';
+                    }
+                });
+            }
+        })
+        .catch(error => console.error('Error al verificar la sesión:', error));
+}
+
+// Ejecutar la verificación cada 1 minuto (60000 ms)
+setInterval(verificarSesion, 60000);
 </script>
 </body>
 

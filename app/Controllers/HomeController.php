@@ -33,6 +33,16 @@ class HomeController
         $this->token = Token::generateFormToken('send_message');
 	}
 
+	public function comprobarSessionActiva(){
+		SessionManager::startSession();
+		$Sesusuario = SessionManager::get('usuario');
+		if (!isset($Sesusuario)) {
+			echo json_encode(['status' => 'active', 'message' => 'La sesión sigue Activa']);
+		} else {
+			echo json_encode(['status' => 'expired', 'message' => 'La sesión ha expirado']);
+		}
+	}
+
 	public function index(){
 		date_default_timezone_set('America/Santiago');
 		$fecha_actual = date('d-m-Y');
