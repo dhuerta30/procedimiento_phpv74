@@ -3003,11 +3003,6 @@ Class PDOCrud {
 
     private function dbCRUD($data) {
         $data = $this->handleCallback('before_table_data', $data);
-
-        if(empty($this->tableName)){
-            return $this->dbSQL($data);
-        }
-                
         $pdoModelObj = $this->getPDOModelObj();
         $pdoModelObj = $this->addWhereCondition($pdoModelObj, $data);
         $pdoModelObj = $this->addJoinCondtion($pdoModelObj, false);
