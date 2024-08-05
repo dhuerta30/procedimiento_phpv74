@@ -6,7 +6,12 @@ class SessionManager {
     
     // Método estático para iniciar una sesión
     public static function startSession() {
-        @session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            // Configurar parámetros de sesión antes de iniciar
+            ini_set('session.gc_maxlifetime', 31536000);  // 1 año en segundos
+            ini_set('session.cookie_lifetime', 31536000); // 1 año en segundos
+            session_start();
+        }
     }
 
     // Método estático para establecer un valor en la sesión
