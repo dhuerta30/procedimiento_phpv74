@@ -76,7 +76,7 @@ Class PDOCrud {
     private $plugins;
     private $message;
     private $tableFieldJoin = "#$";
-    private $callback;
+    private $callback = [];
     private $joinTable;
     private $leftJoin;
     private $columns;
@@ -195,6 +195,7 @@ Class PDOCrud {
     public $formFieldHide;
     public $ajaxActions;
 
+
     /**
      * Constructor 
      * @param   string   $multi              If multiple instance of form used on the same page, then set this true to avoid loading multiple js/css
@@ -212,9 +213,9 @@ Class PDOCrud {
         $this->pdocrudhelper = new PDOCrudHelper($this->pdocrudErrCtrl);
         $this->pdoTableFormatObj = new PDOCrudTableFormat($this->pdocrudErrCtrl);
         $this->multi = $multi;
-        if(!$this->pdocrudhelper->verifyPurchaseCode($this->settings)){
+        /*if(!$this->pdocrudhelper->verifyPurchaseCode($this->settings)){
             die();
-        }
+        }*/
         if (!empty($template))
             $this->settings["template"] = $template;
         if (!empty($skin))
@@ -246,16 +247,16 @@ Class PDOCrud {
     {
         if ($this->settings["actionbtn"]) {
             if ($this->settings["viewbtn"]) {
-                $this->enqueueBtnActions("view btn btn-info btn-sm", "javascript:;", "view", "<i class=\"fa fa-info-circle\"></i>", "", array("title" => $this->langData["view"]), "btn-info");
+                $this->enqueueBtnActions("view", "javascript:;", "view", "<i class=\"fa fa-info-circle\"></i>", "btn btn-info", array("title" => $this->langData["view"]), "btn-info");
             }
             if ($this->settings["editbtn"]) {
-                $this->enqueueBtnActions("edit btn btn-warning btn-sm", "javascript:;", "edit", "<i class=\"fa fa-pencil-square-o\"></i>", "", array("title" => $this->langData["edit"]), "btn-warning");
+                $this->enqueueBtnActions("edit", "javascript:;", "edit", "<i class=\"fa fa-pencil-square-o\"></i>", "", array("title" => $this->langData["edit"]), "btn-warning");
             }
             if ($this->settings["inlineEditbtn"]) {
-                $this->enqueueBtnActions("inline_edit btn-warning btn-sm", "javascript:;", "inline_edit", "<i class=\"fa fa-pencil\"></i>", "", array("title" => $this->langData["inline_edit"]), "btn-warning");
+                $this->enqueueBtnActions("inline_edit", "javascript:;", "inline_edit", "<i class=\"fa fa-pencil\"></i>", "", array("title" => $this->langData["inline_edit"]), "btn-warning");
             }
             if ($this->settings["delbtn"]) {
-                $this->enqueueBtnActions("delete btn-danger btn-sm", "javascript:;", "delete", "<i class=\"fa fa-times fa-fw\"></i>", "", array("title" => $this->langData["delete"]), "btn-danger");
+                $this->enqueueBtnActions("delete", "javascript:;", "delete", "<i class=\"fa fa-times\"></i>", "", array("title" => $this->langData["delete"]), "btn-danger");
             }
             if (isset($this->settings["clonebtn"]) && $this->settings["clonebtn"]) {
                 $title = isset($this->langData["clone"]) ? $this->langData["clone"] : "sffd";
@@ -410,7 +411,7 @@ Class PDOCrud {
      * @param   string   $tooltipIcon                            Icon for the tooltip
      * @return   object                                           Object of class
      */
-    public function crudColTooltip($colName, $tooltip, $tooltipIcon = "<i class='fa fa-info-circle'></i>") {
+    public function crudColTooltip($colName, $tooltip, $tooltipIcon = "<i class='glyphicon glyphicon-info-sign'></i>") {
         $this->crudTooltip[$colName] = array(
             "tooltip" => $tooltip,
             "tooltipIcon" => $tooltipIcon
@@ -680,6 +681,12 @@ Class PDOCrud {
             "Extra" => $extra,
             "DbField" => $dbField
         );
+
+        if($fieldType == "button"){
+            $this->fieldHideLable($fieldName);
+            $this->fieldNotMandatory($fieldName);
+        }
+
         $this->fieldDataBinding($fieldName, $fieldValue, "", "", "array");
         return $this;
     }
@@ -893,7 +900,7 @@ Class PDOCrud {
         if (is_array($fields) && count($fields) > 0) {
             $colDiv = 12 / count($fields);
             foreach ($fields as $field) {
-                $this->fieldBlockClass($field, "col-md-" . $colDiv);
+                $this->fieldBlockClass($field, "col-md-" . $colDiv . " form-group");
             }
         }
         return $this;
@@ -926,7 +933,7 @@ Class PDOCrud {
      * @param   string   $tooltipIcon                            Icon for the tooltip
      * @return   object                                           Object of class
      */
-    public function fieldTooltip($fieldName, $tooltip, $tooltipIcon = "<i class='fa fa-info-circle'></i>") {
+    public function fieldTooltip($fieldName, $tooltip, $tooltipIcon = "<i class='glyphicon glyphicon-info-sign'></i>") {
         $this->tooltip[$fieldName] = array(
             "tooltip" => $tooltip,
             "tooltipIcon" => $tooltipIcon
@@ -1451,11 +1458,14 @@ Class PDOCrud {
      * @param   string  $bind                                  whether datasource is db table or array, default is db table
      * @return   object                                         Object of class
      */
-    public function setFilterSource($filterName, $dataSource, $key, $val, $bind = "db") {
-        $this->crudFilterSource[$filterName] = array("dataSource" => $dataSource,
+    public function setFilterSource($filterName, $dataSource, $key, $val, $bind = "db", $whereCondition = array()) {
+        $this->crudFilterSource[$filterName] = array(
+            "dataSource" => $dataSource,
             "key" => $key,
             "val" => $val,
-            "bind" => $bind);
+            "bind" => $bind,
+            "whereCondition" => $whereCondition
+        );
         return $this;
     }
 
@@ -1596,6 +1606,7 @@ Class PDOCrud {
         
         return $this;
     }
+    
     /**
      * Add where condition in action buttons
      * @param   string    $actionName                           Name of the action button
@@ -1622,7 +1633,7 @@ Class PDOCrud {
      * @param   string   $cssClass                             Css Class of buton
      * @return   object                                         Object of class
      */
-    public function enqueueBtnTopActions($actionName, $text = "",$url ="javascript:;", $attr = array(),$cssClass = "") {
+    public function enqueueBtnTopActions($actionName, $text = "",$url ="javascript:;", $attr = array(), $cssClass = "") {
         $this->btnTopAction[strtolower($actionName)] = array(
             $this->getRandomKey(false),
             $text,
@@ -2337,8 +2348,14 @@ Class PDOCrud {
      * @param   array    $otherElements               Other elements to be passed along if any
      * @return   object                                Object of class
      */
-    public function setAjaxActions($elementName,$event, $callbackFunc, $returnValueElement = "", $otherElements = array()) {
-        $this->ajaxActions[$elementName] = array("event"=>$event,"returnValueElement"=>$returnValueElement, "otherElements"=>$otherElements);
+    public function setAjaxActions($elementName, $event, $callbackFunc, $returnValueElement = "", $otherElements = array(), $callbackParams = array()) {
+        $this->ajaxActions[$elementName] = array(
+            "event"=> $event,
+            "returnValueElement"=> $returnValueElement, 
+            "otherElements"=> $otherElements
+        );
+
+
         $this->fieldCssClass($elementName, array("pdocrud_ajax_action_".$elementName));// add css classes
         $this->fieldAttributes($elementName, array("data-action"=>"ajax_action"));
 
@@ -2348,14 +2365,22 @@ Class PDOCrud {
           }
         }
 
-        if(trim($returnValueElement))
+        if(trim($returnValueElement)){
           $this->fieldCssClass($returnValueElement, array("pdocrud_ajax_action_return_".$returnValueElement));
+        }
 
-        $this->jsSettings["ajax_actions"][] = array("element_name" => $elementName, "event"=>$event,
-          "callback_function" => $callbackFunc,"return_value_element"=>$returnValueElement ,
-          "class"=> "pdocrud_ajax_action_".$elementName, "other_elements"=>$otherElements);
+        $this->jsSettings["ajax_actions"][] = array(
+            "element_name" => $elementName,
+            "event"=> $event,
+            "callback_function" => $callbackFunc,
+            "return_value_element"=> $returnValueElement,
+            "class"=> "pdocrud_ajax_action_" . $elementName, 
+            "other_elements"=>$otherElements,
+            "callback_params" => $callbackParams
+        );
         return $this;
     }
+
 
     /**
      * Set/Call js actions for the form elements on some js event
@@ -2633,16 +2658,28 @@ Class PDOCrud {
 
     private function dbDelete($data) {
         $data = $this->handleCallback('before_delete', $data);
+
+        if (empty($this->tableName)) {
+            return;
+        }
+        
         $pdoModelObj = $this->getPDOModelObj();
         $this->pkVal = $data["id"];
+
         $pdoModelObj->where($this->pk, $this->pkVal);
         $pdoModelObj->delete($this->tableName);
+
         $this->handleCallback('after_delete', $this->pkVal);
         $this->dbDelJoinData($pdoModelObj, $data, $this->pkVal);
     }
 
     private function dbDeleteSelected($data) {
         $data = $this->handleCallback('before_delete_selected', $data);
+
+        if (empty($this->tableName)) {
+            return;
+        }
+
         $pdoModelObj = $this->getPDOModelObj();
         $values = $data["selected_ids"];
         foreach ($values as $value) {
@@ -2803,6 +2840,7 @@ Class PDOCrud {
                     }
 
                     $data[$tableName][$field] = $val;
+                    $data = $this->handleCallback('before_upload_file_data', $data);
                     
                     if (is_array($val) && $tableName === $this->tableName && count($val) == count($val, COUNT_RECURSIVE)) {
                         $data[$tableName][$field] = implode(",", $val);
@@ -3003,8 +3041,14 @@ Class PDOCrud {
 
     private function dbCRUD($data) {
         $data = $this->handleCallback('before_table_data', $data);
+
+        if(empty($this->tableName)){
+            return $this->dbSQL($data);
+        }
+
         $pdoModelObj = $this->getPDOModelObj();
         $pdoModelObj = $this->addWhereCondition($pdoModelObj, $data);
+
         $pdoModelObj = $this->addJoinCondtion($pdoModelObj, false);
         $modal = "";
         $cols = array();
@@ -3012,6 +3056,7 @@ Class PDOCrud {
             "count(*) as totalrecords"
         );
         $result = $pdoModelObj->select($this->tableName);
+
         $totalRecords = $result[0]["totalrecords"];
         $recordPerPage = $this->settings["recordsPerPage"];
         if (isset($this->crudCall) && $this->crudCall === false) {
@@ -3042,12 +3087,18 @@ Class PDOCrud {
             $pdoModelObj = $this->addLimitOrderBy($pdoModelObj, $data, $recordPerPage);
             $pdoModelObj = $this->addGroupBy($pdoModelObj, $data, $recordPerPage);
             $result = $pdoModelObj->select($this->tableName);
+
+            //echo $pdoModelObj->getLastQuery();
+            //die();
+
             $result = $this->reorderColumn($result);
             $cols = array_keys($result[0]);
             $this->searchCols = $cols;
             $pk = $this->getPrimaryKey($this->tableName, $cols[0]);
             $cols = $this->getColumnNames($cols);
+            $result = $this->handleCallback('before_result_data', $result);
             $result = $this->formatTableData($result);
+
             $from = ($this->currentpage - 1) * $recordPerPage + 1;
             $to = $totalRecords > (($this->currentpage - 1) * $recordPerPage + $recordPerPage) ? ($this->currentpage - 1) * $recordPerPage + $recordPerPage : $totalRecords;
             $this->langData["dispaly_records_info"] = $this->langData["showing"] . " " . $from . " " . $this->langData["to"] . " " . $to . " " . $this->langData["of"] . " " . $totalRecords . " " . $this->langData["entries"];
@@ -3084,14 +3135,26 @@ Class PDOCrud {
             $output = "<form " . $formtag . ">" . $output . "</form>";
         }
 
-        if ($this->formPopup)
+        if ($this->formPopup){
             $modal = $this->getMoodelContent($this->objKey . "_modal", "", "", "");
+        }
         $crud = $this->pdocrudView->renderCrud($output, $search, $pagination, $perPageRecords, $this->langData, $this->objKey, $modal, $this->settings, $extraData);
         $crud = $this->handleCallback('after_table_data', $crud);
-        if (is_array($filterbox) && count($filterbox) && !isset($data["action"]))
+        if (is_array($filterbox) && count($filterbox) && !isset($data["action"])){
             $crud = $this->pdocrudView->renderCrudFilter($filterbox, $crud, $this->langData, $this->objKey, $this->settings);
-
+        }
         return $crud;
+    }
+
+    private function setErrors($error)
+    {
+        if (isset($this->pdocrudErrCtrl)) {
+            $this->pdocrudErrCtrl->addError($error, TRUE);
+        } else {
+            $this->error[] = $error;
+            if ($this->displayError)
+                echo $error;
+        }
     }
 
     private function dbSQL($data) {
@@ -3187,6 +3250,51 @@ Class PDOCrud {
         }
         return $output;
     }
+    
+    
+
+    /*private function dbSQL($data) {
+        $this->setSettings("pagination", false);
+        $this->setSettings("recordsPerPageDropdown", false);
+        $this->setSettings("totalRecordsInfo", false);
+        $data = $this->handleCallback('before_sql_data', $data);
+        $pdoModelObj = $this->getPDOModelObj();
+        
+        $result = $pdoModelObj->executeQuery($this->sql, $data);
+        
+        $totalRecords = count($result);
+        $recordPerPage = $this->settings["recordsPerPage"];
+
+        //echo $pdoModelObj->getLastQuery();
+        //die();
+
+        if (strtolower($recordPerPage) === "all")
+            $recordPerPage = $totalRecords;
+        $pagination = $this->pdocrudhelper->pagination($this->currentpage, $totalRecords, $recordPerPage, $this->settings["adjacents"], $this->langData);
+
+        if (isset($this->columns)) {
+            $cols = $this->getColumnNames($this->columns);
+        }
+
+        if ($totalRecords > 0) {
+            $cols = array_keys($result[0]);
+            $cols = $this->getColumnNames($cols);
+            $result = $this->formatTableData($result);
+            $from = ($this->currentpage - 1) * $recordPerPage + 1;
+            $to = $totalRecords > (($this->currentpage - 1) * $recordPerPage + $recordPerPage) ? ($this->currentpage - 1) * $recordPerPage + $recordPerPage : $totalRecords;
+            $this->langData["dispaly_records_info"] = $this->langData["showing"] . " " . $from . " " . $this->langData["to"] . " " . $to . " " . $this->langData["of"] . " " . $totalRecords . " " . $this->langData["entries"];
+            $this->settings["row_no"] = ($this->currentpage - 1) * $recordPerPage;
+        }
+
+        $result = $this->handleCallback('format_sql_data', $result);
+        $cols = $this->handleCallback('format_sql_col', $cols);
+        $this->setTableHeadings();
+        $search = $this->getSearchBox($cols, $data);
+        $perPageRecords = $this->perPageRecords($totalRecords, $data);
+        $output = $this->pdocrudView->renderSQL($cols, $result, $this->objKey, $this->langData, $this->settings, $pagination, $perPageRecords);
+        $output = $this->handleCallback('after_sql_data', $output);
+        return $output;
+    }*/
 
     private function dbAdvSearch() {
         $advanceSearch = $this->getAdvSearchControls();
@@ -3241,7 +3349,8 @@ Class PDOCrud {
       foreach($this->subSelectQuery as $col => $query){
         $query = $this->parseSubQuery($query, $pdoModelObj->columns);
         $query = "(". $query. " )  as $col";
-        array_push($pdoModelObj->columns, $query);  
+
+        array_push($pdoModelObj->columns, $query);
         } 
         return  $pdoModelObj;
     }
@@ -3497,6 +3606,13 @@ Class PDOCrud {
     }
 
     private function getInsertForm() {
+
+        if(empty($this->tableName)){
+            $data = array();
+            $data = $this->handleCallback('before_insert_form_sql', $data);
+            return;
+        }
+
         $pdoModelObj = $this->getPDOModelObj();
         $this->pk = $this->getPrimaryKey($this->tableName);
         $fields = $pdoModelObj->tableFieldInfo($this->tableName);
@@ -3518,11 +3634,20 @@ Class PDOCrud {
     }
 
     private function getEditForm($data = array()) {
-        if (isset($data["id"]))
+       
+        if (isset($data["id"])){
             $this->pkVal = $data["id"];
+        }
+
+        if(empty($this->tableName)){
+            $data = $this->handleCallback('before_edit_form_sql', $data);
+            return;
+        }
+
         $pdoModelObj = $this->getPDOModelObj();
         $pdoModelObj->where($this->pk, $this->pkVal);
         $result = $pdoModelObj->select($this->tableName);
+
         if (!count($result)) {
             $this->addError($this->getLangData("Edit_Form_No_Data_Found"));
             exit();
@@ -3558,8 +3683,16 @@ Class PDOCrud {
     }
 
     private function getViewForm($data) {
-        if (isset($data["id"]))
+        if (isset($data["id"])){
             $this->pkVal = $data["id"];
+        }
+
+        if(empty($this->tableName)){
+            $this->setSettings("viewBackButton", false);
+            $data = $this->handleCallback('before_view_form_sql', $data);
+            return;
+        }
+
         $pdoModelObj = $this->getPDOModelObj();
         $leftJoinData = array();
         if (isset($this->viewColumns)) {
@@ -3680,7 +3813,7 @@ Class PDOCrud {
     }
 
     private function ajaxAction($data){
-        $callback = isset($data["post"]["pdocrud_data"]["function"])?$data["post"]["pdocrud_data"]["function"]:"";
+        $callback = isset($data["post"]["pdocrud_data"]["function"]) ? $data["post"]["pdocrud_data"]["function"] : "";
         if (is_callable($callback))
               return call_user_func($callback, $data, $this);
       }
@@ -4089,7 +4222,7 @@ Class PDOCrud {
     }
 
     private function getFormTag($inlineform = false) {
-        $form = "data-toggle=\"validator\" data-disable=\"false\"  method=\"post\" enctype=\"multipart/form-data\" ";
+        $form = "data-toggle=\"validator\" data-disable=\"false\"  method=\"post\" enctype=\"multipart/form-data\" novalidate=\"true\" ";
         $class = "pdocrud-form";
 
         if (!isset($this->formId))
@@ -4183,7 +4316,12 @@ Class PDOCrud {
                 $data[$loop][$blockclass] = $this->getHTMLElementBlockClass($fieldName);
                 $data[$loop]["group"] = $this->getHTMLElementGroup($fieldName);
                 $data[$loop]["tooltip"] = $this->getHTMLElementTooltip($fieldName);
-                $data[$loop]["desc"] = $this->getHTMLElementDesc($fieldName);
+
+                if (strtolower($htmlType) === "button") {
+                    $data[$loop]["desc"] = "";
+                } else {
+                    $data[$loop]["desc"] = $this->getHTMLElementDesc($fieldName);
+                }
                 $data[$loop]["addOnBefore"] = $this->getHTMLElementAddOn($fieldName, "before");
                 $data[$loop]["addOnAfter"] = $this->getHTMLElementAddOn($fieldName, "after");
                 $data[$loop]["order"] = $this->getHTMLElementFieldOrder($fieldName);
@@ -4392,13 +4530,14 @@ Class PDOCrud {
     }
 
     private function generateFilterControls() {
+        
         $filterBox = array();
         if (isset($this->crudFilter)) {
             foreach ($this->crudFilter as $key => $filter) {
                 $fieldData = array();
-                $ds = $this->crudFilterSource[$key];
+                $ds = isset($this->crudFilterSource[$key]) ? $this->crudFilterSource[$key] : null;
 
-                if (isset($ds)) {
+                if ($ds && isset($ds["bind"])) {
                     if ($ds["bind"] === "db") {
                         $pdoModelObj = $this->getPDOModelObj();
                         $pdoModelObj->backtick = "";
@@ -4406,6 +4545,11 @@ Class PDOCrud {
                             " distinct (" . $ds["key"] . ")",
                             $ds["val"]
                         );
+
+                        if (isset($ds["whereCondition"]) && is_array($ds["whereCondition"]) && count($ds["whereCondition"]) > 0) {
+                            list($value, $operator) = $ds["whereCondition"];
+                            $pdoModelObj->where($value, $operator);
+                        }
 
                         $fieldData = $pdoModelObj->select($ds["dataSource"]);
                     } else if ($ds["bind"] === "array") {
@@ -4425,6 +4569,12 @@ Class PDOCrud {
                     $filterControl = $this->getRadioButtonField($fieldName, $attr, $data, $fieldData, $fieldClass);
                 else if ($filter["filterType"] === "text")
                     $filterControl = $this->getInputField($fieldName, $attr, $data, "text", $fieldClass);
+                else if ($filter["filterType"] === "date")
+                    $filterControl = $this->getInputField($fieldName, $attr, $data, "date", $fieldClass);
+                else if ($filter["filterType"] === "range")
+                    $filterControl = $this->getInputField($fieldName, $attr, $data, "range", $fieldClass);
+                else if ($filter["filterType"] === "checkbox")
+                    $filterControl = $this->getCheckboxField($fieldName, $attr, $data, $fieldData, $fieldClass);
 
                 $filterBox[$key] = $this->pdocrudView->renderFilter($filterControl, $filter["displayText"], $this->settings);
             }
@@ -4558,6 +4708,8 @@ Class PDOCrud {
                 return "SELECT";
             case "radio":
                 return "RADIO";
+            case "button":
+                return "BUTTON";
             case "password":
                 return "PASSWORD";
             case "multiselect":
@@ -4647,6 +4799,8 @@ Class PDOCrud {
                 return $this->getGoogleMap($fieldName, $attr, $data, $fieldClass);
             case "RADIO":
                 return $this->getRadioButtonField($fieldName, $attr, $data, $fieldData, $fieldClass);
+            case "BUTTON":
+                return $this->getButtonField($fieldName, $attr, $data, $fieldData, $fieldClass);
             case "CHECKBOX":
                 $fieldName = $fieldName . "[]";
                 return $this->getCheckboxField($fieldName, $attr, $data, $fieldData, $fieldClass);
@@ -4665,13 +4819,13 @@ Class PDOCrud {
                 ));
                 return $this->getSelectField($fieldName, $attr, $data, $fieldData);
             case "DATE":
-                $fieldClass = array_merge($fieldClass, array(
+                /*$fieldClass = array_merge($fieldClass, array(
                     "pdocrud-date"
                 ));
                 $attr = array_merge($attr, array(
                     "data-type" => "date"
-                ));
-                return $this->getInputField($fieldName, $attr, $data, "text", $fieldClass, $fieldId);
+                ));*/
+                return $this->getInputField($fieldName, $attr, $data, "date", $fieldClass, $fieldId);
             case "DATETIME":
                 $fieldClass = array_merge($fieldClass, array(
                     "pdocrud-datetime"
@@ -4708,6 +4862,7 @@ Class PDOCrud {
     }
 
     private function getSubmitData($action = "insert", $submitClass = "") {
+
         $hiddenExportTypeData = "";
         $cancelBtn = "";
         $submitBtnSaveBack = "";
@@ -5118,7 +5273,7 @@ Class PDOCrud {
         }
         
         if (isset($data["action"]) && $data["action"] === "filter" && !isset($data["filter_data"])) {
-             $this->filterData = $data;
+            $this->filterData = $data;
         }
         
         if (isset($data["filter_data"]) && is_array($data["filter_data"]) && count($data["filter_data"])) {
@@ -5452,7 +5607,7 @@ Class PDOCrud {
     public function getSubmitField($fieldName, $attr = array(), $data = array(), $fieldClass = array()) {
         $class = implode(" ", $fieldClass);
         $formId = $this->formId;
-        $field = "<input data-form-id=\"$formId\" type=\"submit\" class=\"btn btn-info pdocrud-form-control pdocrud-submit $class\" id=\"$fieldName\" name=\"$fieldName\" ";
+        $field = "<input data-form-id=\"$formId\" type=\"submit\" class=\"btn btn-primary pdocrud-form-control pdocrud-submit mb-3 $class\" id=\"$fieldName\" name=\"$fieldName\" ";
         if (is_array($attr) && count($attr)) {
             foreach ($attr as $c => $v) {
                 $field .= " $c=\"$v\" ";
@@ -5469,8 +5624,8 @@ Class PDOCrud {
     public function getButtonField($fieldName, $attr, $data = array(), $fieldClass = array()) {
         $class = implode(" ", $fieldClass);
         $formId = $this->formId;
-        $field = "<button data-form-id=\"$formId\" type=\"button\" class=\"btn btn-info pdocrud-form-control pdocrud-button $class\" id=\"$fieldName\" name=\"$fieldName\" ";
-        $buttonText = "";
+        $field = "<button data-form-id=\"$formId\" type=\"button\" class=\"btn btn-danger pdocrud-form-control pdocrud-button mb-3 $class\" id=\"$fieldName\" name=\"$fieldName\" ";
+        $buttonText = $this->langData["texto_boton"];
 
         if (is_array($attr) && count($attr)) {
             foreach ($attr as $c => $v) {
@@ -5560,7 +5715,7 @@ Class PDOCrud {
         if (is_array($fieldData) && count($fieldData)) {
             $loopFields = 0;
             foreach ($fieldData as $fieldsval) {
-                $field .= "<div class=\"form-check form-check-inline\">";
+                $field .= "<div class=\"form-check form-radio-inline\">";
                 $field .= "<input type=\"radio\" class=\"form-check-input pdocrud-form-control pdocrud-radio $class\" id=\"$fieldName.$loopFields\" name=\"$fieldName\" ";
 
                 if (is_array($attr) && count($attr)) {
@@ -5911,7 +6066,63 @@ Class PDOCrud {
 
         $search .= "</div>";
         $search .= "<div class=\"col-md-1 col-2 col-xs-1 pdo-search-cols no-padding\">";
-        $search .= "<a href=\"javascript:;\" id=\"pdocrud_search_btn\" name=\"pdocrud_search_btn\" class=\"pdocrud-form-control btn btn-primary pdocrud-actions $class\" data-action=\"search\">";
+        $search .= "<a href=\"javascript:;\" id=\"pdocrud_search_btn\" name=\"pdocrud_search_btn\" class=\"pdocrud-form-control btn btn-primary pdocrud-actions $class\" data-action=\"search\" data-rendertype=\"CRUD\">";
+        $search .= $this->langData["go"];
+        $search .= "</a>";
+        $search .= "</div>";
+        return $search;
+    }
+
+    public function getSearchBoxSQL($columns, $data = array()) {
+        $searchContent = "";
+        $searchContent2 = "";
+        $search = "<div class=\"col-md-5 col-sm-12 col-xs-12 pdo-search-cols form-group\">";
+        $search .= "<select class=\"form-control pdocrud-form-control pdocrud_search_cols\">";
+        if(isset($this->settings["showAllSearch"]) && $this->settings["showAllSearch"])
+            $search .= "<option value=\"all\">" . $this->langData["all"] . "</option>";
+        if (is_array($columns) && count($columns)) {
+            foreach ($columns as $k => $v) {
+                if(isset($this->searchBoxCols) && count($this->searchBoxCols)){
+                    if(!in_array($v["col"], $this->searchBoxCols))
+                        continue;
+                }
+                $selected = "";
+                if (isset($data["search_col"]) && $data["search_col"] == $k)
+                    $selected = "selected=selected";
+                $search .= "<option $selected value=\"$k\" data-type='" . $v["type"] . "'>" . $v["colname"] . "</option>";
+            }
+        }
+        $search .= "</select></div>";
+        $search .= "<div class=\"col-md-5 col-10 col-xs-10 pdo-table-search form-group no-padding-right\">";
+        if (isset($data["search_col"]))
+            $searchContent = array(
+                $data["search_text"]
+            );
+        $search .= $this->getInputField("pdocrud_search_box", array(
+            "placeholder" => $this->getLangData("search"),
+        ), $searchContent, "text", array(
+            "pdocrud_search_input"
+        ));
+        $searchTextToClass = "pdocrud-hide";
+        if (isset($data["search_text2"])) {
+            $searchContent2 = array(
+                $data["search_text2"]
+            );
+            $searchTextToClass = "";
+        }
+        $search .= $this->getInputField("pdocrud_search_box_to", array(
+            "placeholder" => $this->getLangData("to"),
+        ), $searchContent2, "text", array(
+            "pdocrud_search_input", $searchTextToClass
+        ));
+    
+        $class = "";
+        if ($this->settings["template"] === "pure")
+            $class = "btn btn-primary";
+    
+        $search .= "</div>";
+        $search .= "<div class=\"col-md-1 col-2 col-xs-1 pdo-search-cols no-padding\">";
+        $search .= "<a href=\"javascript:;\" id=\"pdocrud_search_btn\" name=\"pdocrud_search_btn\" class=\"pdocrud-form-control btn btn-primary pdocrud-actions $class\" data-action=\"search\" data-rendertype=\"SQL\">";
         $search .= $this->langData["go"];
         $search .= "</a>";
         $search .= "</div>";
@@ -5949,11 +6160,47 @@ Class PDOCrud {
                 )
             );
         }
-        return $this->getSelectField("pdocrud_records_per_page", array(
-                    "data-action" => "records_per_page"
-                        ), $data, $records, array(
-                    "pdocrud-records-per-page"
-        ));
+        return $this->getSelectField("pdocrud_records_per_page", 
+            array("data-action" => "records_per_page", "data-rendertype" => "CRUD"), 
+                $data, $records,
+                array("pdocrud-records-per-page"));
+    }
+
+    public function perPageRecordsSQL($totalRecords, $data = array()) {
+        if (isset($this->recordsPerPageList) && count($this->recordsPerPageList)) {
+            
+            foreach($this->recordsPerPageList as $val){
+                $records[] = array($val,$val);
+            }
+            
+        } else {
+            $records = array(
+                array(
+                    "10",
+                    "10"
+                ),
+                array(
+                    "25",
+                    "25"
+                ),
+                array(
+                    "50",
+                    "50"
+                ),
+                array(
+                    "100",
+                    "100"
+                ),
+                array(
+                    "All",
+                    "Todo"
+                )
+            );
+        }
+        return $this->getSelectField("pdocrud_records_per_page", 
+            array("data-action" => "records_per_page", "data-rendertype" => "SQL"), 
+                $data, $records,
+                array("pdocrud-records-per-page"));
     }
 
     public function getStepHeader($stepId, $stepName, $type = "tab") {
@@ -5994,7 +6241,9 @@ Class PDOCrud {
 
     private function getMoodleHeader($headerContent) {
         $moodleHeader = "<div class=\"modal-header\">
-        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
+        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">x</span>
+        </button>
         <h4 class=\"modal-title\" >$headerContent</h4>
         </div>";
         return $moodleHeader;
@@ -6309,7 +6558,7 @@ Class PDOCrud {
      *
      */
     public function arrayToPDF($pdfArray, $outputFileName = "") {
-        error_reporting(0);
+        //error_reporting(0);
         if (!is_array($pdfArray)) {
             $this->addError($this->getLangData("valid_input"));
             return false;
@@ -6361,12 +6610,59 @@ Class PDOCrud {
         $spreadsheet = new Spreadsheet();
         $worksheet = $spreadsheet->getActiveSheet();
 
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+            ],
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'FFD3D3D3', // Color gris claro
+                ],
+            ],
+        ];
+
+        $dataStyle = [
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+        ];
+
+        $columnCount = count($excelArray[0]);
+
+        $lastColumn = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnCount);
+
+        for ($i = 1; $i <= $columnCount; $i++) {
+            $worksheet->getColumnDimension(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i))->setWidth(30);
+        }
+
         // Rellenar el archivo de Excel con los datos del array
         $rowIndex = 1;
+
+        $dataCount = count($excelArray) - 1;
+        $worksheet->setCellValue('A1', 'Cantidad de Pacientes Registrados: ' . $dataCount);
+        $worksheet->mergeCells('A1:' . $lastColumn . '1');
+        $worksheet->getStyle('A1')->getFont()->setBold(true);
+
+        $rowIndex = 2;
+
+        $titlesRange = 'A2:' . $lastColumn . '2';
+        $worksheet->getStyle($titlesRange)->applyFromArray($headerStyle);
+
+        // Agregar datos
         foreach ($excelArray as $row) {
             $columnIndex = 'A';
             foreach ($row as $cellValue) {
                 $worksheet->setCellValue($columnIndex . $rowIndex, $cellValue);
+                $worksheet->getStyle($columnIndex . $rowIndex)->applyFromArray($dataStyle);
                 $columnIndex++;
             }
             $rowIndex++;
@@ -6513,7 +6809,7 @@ Class PDOCrud {
      *
      * @return   boolean                   return true if email function works properly
      */
-    public function sendEmail($to, $subject, $message, $from = array(), $altMessage = "", $cc = array(), $bcc = array(), $attachments = array(), $smtp = array(), $isHTML = true) {
+    public function sendEmail($to, $subject, $message, $from = array(), $altMessage = "", $cc = array(), $bcc = array(), $attachments = array(), $mode = "PHPMAIL", $smtp = array(), $isHTML = true) {
         require_once(dirname(__FILE__) . "/library/mailer/src/Exception.php");
         require_once(dirname(__FILE__) . "/library/mailer/src/PHPMailer.php");
         require_once(dirname(__FILE__) . "/library/mailer/src/SMTP.php");
@@ -6532,7 +6828,6 @@ Class PDOCrud {
         $mail->Password = isset($smtp["password"]) ? $smtp["password"] : "";
         $mail->SMTPSecure = isset($smtp["SMTPSecure"]) ? $smtp["SMTPSecure"] : "";
         $mail->SMTPKeepAlive = isset($smtp["SMTPKeepAlive"]) ? $smtp["SMTPKeepAlive"] : true;
-        $mail->CharSet = 'UTF-8';
         
         if (isset($from)) {
             if (is_array($from)) {

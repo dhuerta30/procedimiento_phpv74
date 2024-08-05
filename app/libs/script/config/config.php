@@ -51,6 +51,8 @@ $config["savebtn"] = false;
 $config["addbtn"] = true;
 //show edit button (true = show)
 $config["editbtn"] = true;
+
+$config["refresh"] = false;
 //show view button (true = show)
 $config["viewbtn"] = true;
 //show delete button (true = show)

@@ -88,7 +88,7 @@ function eliminar_submenu($data, $obj){
     $pdomodel->where("id_submenu", $id_submenu);
     $id_menu = $pdomodel->select("submenu");
 
-    $result = $pdomodel->executeQuery("SELECT COUNT(*) AS total FROM submenu WHERE id_menu = :id_menu", [":id_menu" => $id_menu[0]["id_menu"]]);
+    $result = $pdomodel->DBQuery("SELECT COUNT(*) AS total FROM submenu WHERE id_menu = :id_menu", [":id_menu" => $id_menu[0]["id_menu"]]);
 
     $num_submenus = $result[0]["total"];
 
@@ -129,7 +129,7 @@ function carga_masiva_pacientes_insertar($data, $obj) {
                 if (!App\Controllers\HomeController::validaRut($rut)) {
                     $rutInvalidos[] = $rut;
                 } else {
-                    $existingPacient = $pdomodel->executeQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => $Excelval['Rut']]);
+                    $existingPacient = $pdomodel->DBQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => $Excelval['Rut']]);
 
                     if (!$existingPacient) {
                         
@@ -276,7 +276,7 @@ function carga_masiva_profesionales_insertar($data, $obj){
             $sql = array();
             foreach ($records as $Excelval) {
 
-                $existingProfesionales = $pdomodel->executeQuery(
+                $existingProfesionales = $pdomodel->DBQuery(
                     "SELECT * FROM profesional 
                     WHERE nombre_profesional = :nombre_profesional 
                     AND apellido_profesional = :apellido_profesional",
@@ -780,7 +780,7 @@ function editar_perfil($data, $obj){
     }
 
     $pdomodel = $obj->getPDOModelObj();
-    $result = $pdomodel->executeQuery("SELECT * FROM usuario WHERE (usuario = :user OR email = :email) AND id != :id", [':user' => $user, ':email' => $email, ':id' => $id]);
+    $result = $pdomodel->DBQuery("SELECT * FROM usuario WHERE (usuario = :user OR email = :email) AND id != :id", [':user' => $user, ':email' => $email, ':id' => $id]);
 
     if($result){
         $error_msg = array("message" => "", "error" => "El correo o el usuario ya existe.", "redirectionurl" => "");
@@ -840,7 +840,7 @@ function insetar_usuario($data, $obj){
     }
 
     $pdomodel = $obj->getPDOModelObj();
-    $result = $pdomodel->executeQuery("SELECT * FROM usuario WHERE usuario = '$user' OR email = '$email'");
+    $result = $pdomodel->DBQuery("SELECT * FROM usuario WHERE usuario = '$user' OR email = '$email'");
 
     if($result){
         $error_msg = array("message" => "", "error" => "El correo o el usuario ya existe.", "redirectionurl" => "");
@@ -900,7 +900,7 @@ function editar_usuario($data, $obj){
     }
 
     $pdomodel = $obj->getPDOModelObj();
-    $result = $pdomodel->executeQuery("SELECT * FROM usuario WHERE (usuario = :user OR email = :email) AND id != :id", [':user' => $user, ':email' => $email, ':id' => $id]);
+    $result = $pdomodel->DBQuery("SELECT * FROM usuario WHERE (usuario = :user OR email = :email) AND id != :id", [':user' => $user, ':email' => $email, ':id' => $id]);
     
     if ($result) {
         $error_msg = array("message" => "", "error" => "El correo o el usuario ya existe.", "redirectionurl" => "");
