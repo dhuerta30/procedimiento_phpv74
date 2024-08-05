@@ -933,7 +933,7 @@ Class PDOCrud {
      * @param   string   $tooltipIcon                            Icon for the tooltip
      * @return   object                                           Object of class
      */
-    public function fieldTooltip($fieldName, $tooltip, $tooltipIcon = "<i class='glyphicon glyphicon-info-sign'></i>") {
+    public function fieldTooltip($fieldName, $tooltip, $tooltipIcon = "<i class='fa fa-info-circle'></i>") {
         $this->tooltip[$fieldName] = array(
             "tooltip" => $tooltip,
             "tooltipIcon" => $tooltipIcon
