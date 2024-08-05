@@ -653,7 +653,7 @@ class HomeController
 	
 			$crud = DB::PDOCrud();
 			$pdomodel = $crud->getPDOModelObj();
-			$data = $pdomodel->executeQuery("
+			$data = $pdomodel->DBQuery("
 				SELECT 
 					dp.id_datos_paciente,
 					ds.id_detalle_de_solicitud,
@@ -734,7 +734,7 @@ class HomeController
 	
 			$crud = DB::PDOCrud();
 			$pdomodel = $crud->getPDOModelObj();
-			$data = $pdomodel->executeQuery("
+			$data = $pdomodel->DBQuery("
 				SELECT 
 					dp.id_datos_paciente,
 					ds.id_detalle_de_solicitud,
@@ -814,7 +814,7 @@ class HomeController
 		$pdomodel = $pdocrud->getPDOModelObj();
 		
 		if($estado == "Ingresado"){
-			$data = $pdomodel->executeQuery("
+			$data = $pdomodel->DBQuery("
 				SELECT
 					ds.id_detalle_de_solicitud AS ID_LOCAL,
 					codigo_fonasa AS PRESTA_MIN,
@@ -853,7 +853,7 @@ class HomeController
 				[':fechacorte' => $fecha_corte_formateada, ':estado' => $estado]
 			);
 		} else {
-			$data = $pdomodel->executeQuery("
+			$data = $pdomodel->DBQuery("
 				SELECT
 					ds.id_detalle_de_solicitud AS ID_LOCAL,
 					codigo_fonasa AS PRESTA_MIN,
@@ -1070,7 +1070,7 @@ class HomeController
 
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$data = $pdomodel->executeQuery(
+			$data = $pdomodel->DBQuery(
 				"SELECT 
 				dp.id_datos_paciente,
 				ds.id_detalle_de_solicitud,
@@ -2338,7 +2338,7 @@ class HomeController
 		// Último día del mes actual
 		$lastDayOfMonth = date('Y-m-t');
 
-		$data = $pdomodel->executeQuery(
+		$data = $pdomodel->DBQuery(
 			"SELECT 
 			dp.id_datos_paciente,
 			ds.id_detalle_de_solicitud,
@@ -2927,7 +2927,7 @@ class HomeController
 	public function reportes_all(){
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
-		$data = $pdomodel->executeQuery(
+		$data = $pdomodel->DBQuery(
 			"SELECT 
 			ds.codigo_fonasa AS codigo_fonasa,
 			ds.procedencia AS procedencia,
@@ -3355,7 +3355,7 @@ class HomeController
 				}
 			}
 	
-			$data = $pdomodel->executeQuery(
+			$data = $pdomodel->DBQuery(
 				"SELECT
 				ds.codigo_fonasa AS codigo_fonasa,
 				ds.procedencia AS procedencia,
@@ -3387,7 +3387,7 @@ class HomeController
 		$pdocrud = DB::PDOCrud(true);
 		$pdomodel = $pdocrud->getPDOModelObj();
 
-		$data = $pdomodel->executeQuery(
+		$data = $pdomodel->DBQuery(
 			"SELECT
 			ds.codigo_fonasa AS codigo_fonasa,
 			ds.procedencia AS procedencia,
@@ -3456,7 +3456,7 @@ class HomeController
 				}
 			}
 
-			$data = $pdomodel->executeQuery(
+			$data = $pdomodel->DBQuery(
 				"SELECT
 				ds.codigo_fonasa AS codigo_fonasa,
 				ds.procedencia AS procedencia,
@@ -3619,7 +3619,7 @@ class HomeController
 		$pdocrud = DB::PDOCrud(true);
 		$pdomodel = $pdocrud->getPDOModelObj();
 
-		$data = $pdomodel->executeQuery(
+		$data = $pdomodel->DBQuery(
 			"SELECT 
 				dp.id_datos_paciente,
 				ds.id_detalle_de_solicitud,
@@ -3733,7 +3733,7 @@ class HomeController
 			}
 		}
 
-		$data = $pdomodel->executeQuery(
+		$data = $pdomodel->DBQuery(
 			"SELECT 
 				dp.id_datos_paciente,
 				ds.id_detalle_de_solicitud,
@@ -3790,7 +3790,7 @@ class HomeController
 
 		$pdocrud = DB::PDOCrud(true);
 		$pdomodel = $pdocrud->getPDOModelObj();
-		$data = $pdomodel->executeQuery(
+		$data = $pdomodel->DBQuery(
 			"SELECT 
 			dp.id_datos_paciente,
 			ds.id_detalle_de_solicitud,
@@ -4773,10 +4773,10 @@ class HomeController
 		$pdocrud = DB::PDOCrud();
 
 		$pdomodel = $pdocrud->getPDOModelObj();
-		$datamenu = $pdomodel->executeQuery("SELECT MAX(orden_menu) as orden FROM menu");
+		$datamenu = $pdomodel->DBQuery("SELECT MAX(orden_menu) as orden FROM menu");
 		$newOrdenMenu = $datamenu[0]["orden"] + 1;
 
-		$datasubmenu = $pdomodel->executeQuery("SELECT MAX(orden_submenu) as orden_submenu FROM submenu");
+		$datasubmenu = $pdomodel->DBQuery("SELECT MAX(orden_submenu) as orden_submenu FROM submenu");
 		$newOrdenSubMenu = $datasubmenu[0]["orden_submenu"] + 1;
 
 		$action = "javascript:;";
