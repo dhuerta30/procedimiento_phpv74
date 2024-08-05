@@ -2337,7 +2337,6 @@ class HomeController
 			dp.apellido_materno,
 			dp.edad,
 			ds.fecha_egreso,
-			ds.motivo_egreso,
 			fecha_solicitud as fecha_solicitud,
 			ds.estado AS estado,
 			codigo_fonasa AS codigo,
@@ -3569,32 +3568,32 @@ class HomeController
 					dp.id_datos_paciente,
 					ds.id_detalle_de_solicitud,
 					dp.rut,
-					CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+					CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) AS paciente,
 					dp.telefono,
 					dp.edad,
 					ds.fecha_egreso,
-					ds.motivo_egreso,
-					fecha_solicitud as fecha_solicitud,
+					ds.fecha_solicitud AS fecha_solicitud,
 					ds.estado AS estado,
-					codigo_fonasa AS codigo,
+					ds.codigo_fonasa AS codigo,
 					ds.examen,
 					ds.procedencia AS procedencia,
-					ds.fecha as fecha,
-					especialidad AS especialidad,
-					CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
+					ds.fecha AS fecha,
+					dg_p.especialidad AS especialidad,
+					CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional) AS profesional,
 					CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
 				FROM 
-					datos_paciente AS dp
+					datos_paciente dp
 				INNER JOIN 
-					detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+					detalle_de_solicitud ds ON ds.id_datos_paciente = dp.id_datos_paciente
 				INNER JOIN 
-					diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+					diagnostico_antecedentes_paciente dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
 				INNER JOIN 
-					profesional AS pro ON pro.id_profesional = dg_p.profesional
-				WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
+					profesional pro ON pro.id_profesional = dg_p.profesional
+				WHERE 
+					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
 				GROUP BY 
-				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
-			);
+					dp.id_datos_paciente, ds.id_detalle_de_solicitud, dp.rut, dp.edad, ds.fecha_egreso, ds.fecha_solicitud, ds.examen
+			");			
 
 			echo json_encode(['data' => $data]);
 
