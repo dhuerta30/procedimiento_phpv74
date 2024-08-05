@@ -1009,7 +1009,7 @@
         $(document).ready(function() {
 
             $(".diagnostico").closest(".input-group").after(`
-                <p class="bg-info mt-2 text-center">Para los no encontrados Escriba la Palabra Linea</p>
+                <p class="bg-info mt-2 text-center">Para los no encontrados, escriba la palabra "Línea", luego selecciónela en el listado y el campo "Diagnóstico Libre" será obligatorio.</p>
             `);
 
             $('.profesional').select2();

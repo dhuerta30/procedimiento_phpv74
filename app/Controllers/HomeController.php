@@ -1992,7 +1992,7 @@ class HomeController
 		$diagnostico = DB::PDOCrud(true);
 		$diagnostico->addPlugin("chosen");
 		$diagnostico->fieldTypes("profesional", "select");
-		$diagnostico->fieldTooltip("diagnostico", "Para los no encontrados escriba la palabra Linea");
+		//$diagnostico->fieldTooltip("diagnostico", "Para los no encontrados escriba la palabra Linea");
 		//$diagnostico->fieldDataBinding("profesional", "profesional", "id_profesional", array("nombre_profesional","apellido_profesional"), "db", " ");
 		$diagnostico->fieldAddOnInfo("diagnostico", "after", 
 			'<div class="input-group-append">
@@ -2865,7 +2865,7 @@ class HomeController
 			$pdocrud->formFieldValue("adjuntar2", $detalle_de_solicitud[0]["adjuntar2"]);
 			$pdocrud->formFieldValue("adjuntar3", $detalle_de_solicitud[0]["adjuntar3"]);
 			$pdocrud->formFieldValue("adjuntar4", $detalle_de_solicitud[0]["adjuntar4"]);
-			
+
 			$pdocrud->formFieldValue("observacion", $detalle_de_solicitud[0]["observacion"]);
 
 			$pdocrud->formFieldValue("compra_servicio", $detalle_de_solicitud[0]["compra_servicio"]);
