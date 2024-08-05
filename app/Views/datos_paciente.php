@@ -977,7 +977,7 @@
                 });
             },
             select: function (event, ui) {
-                let selectedValue = ui.item.value.replace("Linea - ", "").trim();
+                let selectedValue = ui.item.value.replace("Línea - ", "").trim();
                 
                 $(".diagnostico").val("");
                setTimeout(() => {
