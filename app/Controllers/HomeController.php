@@ -39,7 +39,7 @@ class HomeController
 		if (!isset($Sesusuario)) {
 			echo json_encode(['status' => 'active', 'message' => 'La sesión sigue Activa']);
 		} else {
-			echo json_encode(['status' => 'expired', 'message' => 'La sesión ha expirado']);
+			echo json_encode(['status' => 'expired', 'message' => 'La sesión ha expirado vuelva a iniciar sesión']);
 		}
 	}
 
