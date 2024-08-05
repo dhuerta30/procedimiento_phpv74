@@ -2862,6 +2862,10 @@ class HomeController
 			$pdocrud->fieldAttributes("fecha_egreso", array("autocomplete"=>"off"));
 
 			$pdocrud->formFieldValue("adjuntar", $detalle_de_solicitud[0]["adjuntar"]);
+			$pdocrud->formFieldValue("adjuntar2", $detalle_de_solicitud[0]["adjuntar2"]);
+			$pdocrud->formFieldValue("adjuntar3", $detalle_de_solicitud[0]["adjuntar3"]);
+			$pdocrud->formFieldValue("adjuntar4", $detalle_de_solicitud[0]["adjuntar4"]);
+			
 			$pdocrud->formFieldValue("observacion", $detalle_de_solicitud[0]["observacion"]);
 
 			$pdocrud->formFieldValue("compra_servicio", $detalle_de_solicitud[0]["compra_servicio"]);
