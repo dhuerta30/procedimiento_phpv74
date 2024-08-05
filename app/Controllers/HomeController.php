@@ -2853,6 +2853,10 @@ class HomeController
 			$fecha_egreso = isset($detalle_de_solicitud[0]["fecha_egreso"]) ? $detalle_de_solicitud[0]["fecha_egreso"] : '';
 			$motivo_egreso = isset($detalle_de_solicitud[0]["motivo_egreso"]) ? $detalle_de_solicitud[0]["motivo_egreso"] : '';
 			$adjuntar = isset($detalle_de_solicitud[0]["adjuntar"]) ? $detalle_de_solicitud[0]["adjuntar"] : '';
+			$adjuntar2 = isset($detalle_de_solicitud[0]["adjuntar2"]) ? $detalle_de_solicitud[0]["adjuntar2"] : '';
+			$adjuntar3 = isset($detalle_de_solicitud[0]["adjuntar3"]) ? $detalle_de_solicitud[0]["adjuntar3"] : '';
+			$adjuntar4 = isset($detalle_de_solicitud[0]["adjuntar4"]) ? $detalle_de_solicitud[0]["adjuntar4"] : '';
+
 			$pdocrud->formFieldValue("fecha_egreso", $fecha_egreso);
 			$pdocrud->formFieldValue("motivo_egreso", $motivo_egreso);
 			$pdocrud->fieldAttributes("fecha_egreso", array("autocomplete"=>"off"));
