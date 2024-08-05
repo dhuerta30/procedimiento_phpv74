@@ -1008,6 +1008,10 @@
 
         $(document).ready(function() {
 
+            $(".diagnostico").closest(".input-group").after(`
+                <p class="bg-info mt-2 text-center">Para los no encontrados Escriba la Palabra Linea</p>
+            `);
+
             $('.profesional').select2();
             obtener_profesionales();
 
