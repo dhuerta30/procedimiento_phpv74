@@ -4012,18 +4012,18 @@ class HomeController
 		}
 	}
 
-	public function ingresar_datos_pacientes(){
+	public function ingresar_datos_pacientes() {
 
 		SessionManager::startSession();
-
 		$request = new Request();
-
+	
 		if ($request->getMethod() === 'POST') {
-
+	
 			date_default_timezone_set('America/Santiago');
 			$fecha_ingreso = date('Y-m-d H:i:s');
 			$usuario = $_SESSION['usuario'][0]["usuario"];
-
+	
+			// Recuperar datos del request
 			$paciente = $request->post('paciente');
 			$sexo = $request->post('sexo');
 			$telefono = $request->post('telefono');
@@ -4035,87 +4035,68 @@ class HomeController
 			$direccion = $request->post('direccion');
 			$apellido_paterno = $request->post('apellido_paterno');
 			$apellido_materno = $request->post('apellido_materno');
-
 			$especialidad = $request->post('especialidad');
 			$profesional = $request->post('profesional');
 			$diagnostico = $request->post('diagnostico');
 			$sintomas_principales = $request->post('sintomas_principales');
 			$diagnostico_libre = $request->post('diagnostico_libre');
-
 			$fecha_solicitud = $request->post('fecha_solicitud');
-
+	
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
-
+	
+			// Validaciones
 			if (empty($rut) && empty($pasaporte_o_codigo_interno)) {
-				$mensaje = 'Debe ingresar al menos el RUT o el pasaporte';
-				echo json_encode(['error' => $mensaje]);
+				echo json_encode(['error' => 'Debe ingresar al menos el RUT o el pasaporte']);
 				return;
 			} else if (!self::validaRut($rut)) {
 				echo json_encode(['error' => 'RUT inválido']);
 				return;
-			} else if(empty($nombres)){
-				$mensaje = 'El campo Nombres es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($nombres)) {
+				echo json_encode(['error' => 'El campo Nombres es Obligatorio']);
 				return;
-			} else if(empty($apellido_paterno)){
-				$mensaje = 'El campo Apellido paterno es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($apellido_paterno)) {
+				echo json_encode(['error' => 'El campo Apellido paterno es Obligatorio']);
 				return;
-			} else if(empty($apellido_materno)){
-				$mensaje = 'El campo Apellido materno es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($apellido_materno)) {
+				echo json_encode(['error' => 'El campo Apellido materno es Obligatorio']);
 				return;
-			} else if(empty($fecha_nacimiento)){
-				$mensaje = 'El campo Fecha nacimiento es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($fecha_nacimiento)) {
+				echo json_encode(['error' => 'El campo Fecha nacimiento es Obligatorio']);
 				return;
-			} else if(empty($edad)){
-				$mensaje = 'El campo Edad es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($edad)) {
+				echo json_encode(['error' => 'El campo Edad es Obligatorio']);
 				return;
-			} else if(empty($direccion)){
-				$mensaje = 'El campo Dirección es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($direccion)) {
+				echo json_encode(['error' => 'El campo Dirección es Obligatorio']);
 				return;
-			} else if(empty($sexo)){
-				$mensaje = 'El campo Sexo es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($sexo)) {
+				echo json_encode(['error' => 'El campo Sexo es Obligatorio']);
 				return;
-			} else if (empty($paciente)){
-				$mensaje = 'Ingrese o Busque un Paciente Para continuar';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($paciente)) {
+				echo json_encode(['error' => 'Ingrese o Busque un Paciente Para continuar']);
 				return;
-			} else if (empty($telefono)){
-				$mensaje = 'El campo Telefono es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($telefono)) {
+				echo json_encode(['error' => 'El campo Telefono es Obligatorio']);
 				return;
-			} else if(empty($especialidad)){
-				$mensaje = 'El campo Especialidad es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($especialidad)) {
+				echo json_encode(['error' => 'El campo Especialidad es Obligatorio']);
 				return;
-			} else if(empty($profesional)){
-				$mensaje = 'El campo Profesional es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($profesional)) {
+				echo json_encode(['error' => 'El campo Profesional es Obligatorio']);
 				return;
-			} else if(empty($diagnostico)){
-				$mensaje = 'El campo Diagnóstico CIE-10 es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (empty($diagnostico)) {
+				echo json_encode(['error' => 'El campo Diagnóstico CIE-10 es Obligatorio']);
 				return;
-			/*} else if(empty($sintomas_principales)){
-				$mensaje = 'El campo Síntomas Principales es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
-				return;*/
-			} else if(strpos($diagnostico, '--------------------') !== false && empty($diagnostico_libre)){
-				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
-				echo json_encode(['error' => $mensaje]);
+			} else if (strpos($diagnostico, '--------------------') !== false && empty($diagnostico_libre)) {
+				echo json_encode(['error' => 'El campo Diagnóstico Libre es Obligatorio']);
 				return;
 			} else if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
-				$mensaje = 'Ingrese al menos 1 Detalle de Solicitud';
-				echo json_encode(['error' => $mensaje]);
+				echo json_encode(['error' => 'Ingrese al menos 1 Detalle de Solicitud']);
 				return;
 			}
-
+	
+			// Verificar si el paciente ya existe en la base de datos
 			$pdomodel->where("rut", $rut, "=", "AND");
 			$pdomodel->where("pasaporte_o_codigo_interno", $pasaporte_o_codigo_interno, "=", "AND");
 			$pdomodel->where("nombres", $nombres, "=", "AND");
@@ -4128,8 +4109,14 @@ class HomeController
 			$pdomodel->where("telefono", $telefono);
 			$datos_paciente_exists = $pdomodel->select("datos_paciente");
 			
+			if (empty($datos_paciente_exists)) {
+				echo json_encode(['error' => 'Paciente no encontrado']);
+				return;
+			}
+			
 			$id = $datos_paciente_exists[0]['id_datos_paciente'];
-
+	
+			// Insertar datos en la tabla de diagnóstico
 			$pdomodel->insert("diagnostico_antecedentes_paciente", array(
 				"id_datos_paciente" => $id,
 				"especialidad" => $especialidad,
@@ -4139,81 +4126,100 @@ class HomeController
 				"diagnostico_libre" => $diagnostico_libre,
 				"fecha_solicitud_paciente" => $fecha_solicitud
 			));
-
-			if(isset($_SESSION['detalle_de_solicitud'])){
-
-				$uploadDir = __DIR__ . '/../libs/script/uploads/';
-				if (!file_exists($uploadDir)) {
-					mkdir($uploadDir, 0777, true);
-				}
-
-				$uploadedFiles = [];
-
+	
+			// Manejar archivos adjuntos de la sesión
+			$uploadDir = __DIR__ . '/../libs/script/uploads/';
+			if (!file_exists($uploadDir)) {
+				mkdir($uploadDir, 0777, true);
+			}
+	
+			$uploadedFiles = [];
+			if (isset($_SESSION['detalle_de_solicitud']) && is_array($_SESSION['detalle_de_solicitud'])) {
 				foreach ($_SESSION['detalle_de_solicitud'] as $key => $sesionVal) {
-					if (isset($sesionVal['adjuntar']) && $sesionVal['adjuntar']['error'] === UPLOAD_ERR_OK) {
-						$uploadFile = $uploadDir . basename($sesionVal['adjuntar']['name']);
-						if (move_uploaded_file($sesionVal['adjuntar']['tmp_name'], $uploadFile)) {
-							$uploadedFiles[$key] = $_ENV['BASE_URL'] . 'app/libs/script/uploads/' . basename($sesionVal['adjuntar']['name']);
+					if (isset($sesionVal['adjuntar']) && !empty($sesionVal['adjuntar'])) {
+						$adjuntar = $sesionVal['adjuntar'];
+						$fileName = basename($adjuntar); // Extrae el nombre del archivo de la URL
+						$uploadFile = $uploadDir . $fileName;
+
+						// Convierte la ruta relativa a una ruta absoluta
+						$absoluteAdjuntar = $_SERVER['DOCUMENT_ROOT'] . $adjuntar;
+
+						// Verifica si la ruta absoluta del archivo original existe
+						if (file_exists($absoluteAdjuntar)) {
+							if (rename($absoluteAdjuntar, $uploadFile)) {
+								$uploadedFiles[$key] = $_ENV['BASE_URL'] . 'app/libs/script/uploads/' . $fileName;
+								$_SESSION['detalle_de_solicitud'][$key]['adjuntar'] = $uploadedFiles[$key];
+							} else {
+								echo json_encode(['error' => 'Error al mover el archivo subido.']);
+								return;
+							}
 						} else {
-							echo json_encode(['error' => 'Error al mover el archivo subido.']);
+							echo json_encode(['error' => 'El archivo no existe en la ruta temporal.']);
 							return;
 						}
-					} else if (isset($sesionVal['adjuntar']) && $sesionVal['adjuntar']['error'] !== UPLOAD_ERR_NO_FILE) {
-						echo json_encode(['error' => 'Error en el archivo subido.']);
+					} else {
+						echo json_encode(['error' => 'Archivo adjunto no válido en la sesión.']);
 						return;
 					}
 				}
-
-				$sql = array();
-				foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
-					$sql['id_datos_paciente'] = $id;
-					$sql['codigo_fonasa'] = $sesionVal['codigo_fonasa'];
-					$sql['tipo_solicitud'] = $sesionVal['tipo_solicitud'];
-					$sql['fecha_solicitud'] = $sesionVal['fecha_solicitud'];
-					$sql['tipo_examen'] = $sesionVal['tipo_examen'];
-					$sql['examen'] = $sesionVal['examen'];
-					$sql['plano'] = $sesionVal['plano'];
-					$sql['extremidad'] = $sesionVal['extremidad'];
-					$sql['procedencia'] = $sesionVal['procedencia'];
-					$sql['observacion'] = $sesionVal['observacion'];
-					$sql['contraste'] = $sesionVal['contraste'];
-					$sql['adjuntar'] = isset($sesionVal['adjuntar']) ? $sesionVal['adjuntar'] : ''; // Manejar archivo adjunto
-					$sql['creatinina'] = $sesionVal['creatinina'];
-					$sql['estado'] = $sesionVal['estado'];
-					$sql['usuario'] = $usuario;
-					$sql['fecha_ingreso'] = $fecha_ingreso;
-					$pdomodel->insertBatch("detalle_de_solicitud", array($sql));
-				}
-				unset($_SESSION['detalle_de_solicitud']);
-
-				$detalle_solicitud = DB::PDOCrud(true);
-				$detalle_solicitud->setSettings("addbtn", false);
-				$detalle_solicitud->setSettings("editbtn", false);
-				$detalle_solicitud->setSettings("viewbtn", false);
-				$detalle_solicitud->setSettings("searchbox", false);
-				$detalle_solicitud->setSettings("sortable", false);
-				$detalle_solicitud->setSettings("showAllSearch", false);
-				$detalle_solicitud->setSettings("recordsPerPageDropdown", false);
-				$detalle_solicitud->setSettings("deleteMultipleBtn", false);
-				$detalle_solicitud->setSettings("checkboxCol", false);
-				$detalle_solicitud->setLangData("actions", "Eliminar");
-				$detalle_solicitud->setSettings("printBtn", false);
-				$detalle_solicitud->setSettings("pdfBtn", false);
-				$detalle_solicitud->setSettings("csvBtn", false);
-				$detalle_solicitud->setSettings("excelBtn", false);
-				$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
-				$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","examen", "contraste", "plano","extremidad", "procedencia"));
-				$detalle_solicitud->where("id_datos_paciente", "null");
-				$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
-
-				echo json_encode(['success' => 'Datos Ingresados con éxito', 'render3' => $render3]);
-				return;
-			} else {
-				echo json_encode(['error' => 'Ingrese al menos 1 Detalle de Solicitud']);
 			}
+	
+			 // Insertar en la tabla detalle_de_solicitud usando insertBatch
+			 $dataToInsert = [];
+			 foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
+				 $dataToInsert[] = [
+					 'id_datos_paciente' => $id,
+					 'codigo_fonasa' => $sesionVal['codigo_fonasa'],
+					 'tipo_solicitud' => $sesionVal['tipo_solicitud'],
+					 'fecha_solicitud' => $sesionVal['fecha_solicitud'],
+					 'tipo_examen' => $sesionVal['tipo_examen'],
+					 'examen' => $sesionVal['examen'],
+					 'plano' => $sesionVal['plano'],
+					 'extremidad' => $sesionVal['extremidad'],
+					 'procedencia' => $sesionVal['procedencia'],
+					 'observacion' => $sesionVal['observacion'],
+					 'contraste' => $sesionVal['contraste'],
+					 'adjuntar' => isset($sesionVal['adjuntar']) ? $sesionVal['adjuntar'] : '', // Manejar archivo adjunto
+					 'creatinina' => $sesionVal['creatinina'],
+					 'estado' => $sesionVal['estado'],
+					 'usuario' => $usuario,
+					 'fecha_ingreso' => $fecha_ingreso
+				 ];
+			 }
+	 
+			 $pdomodel->insertBatch("detalle_de_solicitud", $dataToInsert);
+	 
+			 unset($_SESSION['detalle_de_solicitud']);
 
+			// Renderizar los datos actualizados
+			$detalle_solicitud = DB::PDOCrud(true);
+			$detalle_solicitud->setSettings("addbtn", false);
+			$detalle_solicitud->setSettings("editbtn", false);
+			$detalle_solicitud->setSettings("viewbtn", false);
+			$detalle_solicitud->setSettings("searchbox", false);
+			$detalle_solicitud->setSettings("sortable", false);
+			$detalle_solicitud->setSettings("showAllSearch", false);
+			$detalle_solicitud->setSettings("recordsPerPageDropdown", false);
+			$detalle_solicitud->setSettings("deleteMultipleBtn", false);
+			$detalle_solicitud->setSettings("checkboxCol", false);
+			$detalle_solicitud->setLangData("actions", "Eliminar");
+			$detalle_solicitud->setSettings("printBtn", false);
+			$detalle_solicitud->setSettings("pdfBtn", false);
+			$detalle_solicitud->setSettings("csvBtn", false);
+			$detalle_solicitud->setSettings("excelBtn", false);
+			$detalle_solicitud->enqueueBtnTopActions("Report", "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
+			$detalle_solicitud->crudTableCol(array("codigo_fonasa", "tipo_solicitud", "tipo_examen", "examen", "contraste", "plano", "extremidad", "procedencia"));
+			$detalle_solicitud->where("id_datos_paciente", $id);
+			$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
+	
+			echo json_encode(['success' => 'Datos Ingresados con éxito', 'render3' => $render3]);
+	
+		} else {
+			echo json_encode(['error' => 'Método de solicitud no válido']);
 		}
 	}
+	
+	
 
 	public function ingresar_detalle_solicitud() {
 		SessionManager::startSession();
@@ -4240,13 +4246,23 @@ class HomeController
 
 			if (isset($_FILES['adjuntar'])) {
 				$adjuntar = $_FILES['adjuntar'];
-				/*$uploadDir = __DIR__ . '/../libs/script/uploads/';
+				$uploadDir = __DIR__ . '/../libs/script/uploads/';
 
-				if (!file_exists($uploadDir)) {
+				// Verifica que el archivo sea válido
+				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
+					$uploadDirWeb = 'app/libs/script/uploads/';
+					// Usa la ruta temporal del archivo en lugar de moverlo
+					$archivoAdjunto = $_ENV['BASE_URL'] . $uploadDirWeb . basename($adjuntar['name']); // Ruta temporal del archivo subido
+				} else if ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
+					echo json_encode(['error' => 'Error en el archivo subido.']);
+					return;
+				}
+
+				/*if (!file_exists($uploadDir)) {
 					mkdir($uploadDir, 0777, true); // Crea el directorio si no existe
 				}
 
-				$uploadFile = $uploadDir . basename($adjuntar['name']);
+				//$uploadFile = $uploadDir . basename($adjuntar['name']);
 
 				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
 					if (!move_uploaded_file($adjuntar['tmp_name'], $uploadFile)) {
