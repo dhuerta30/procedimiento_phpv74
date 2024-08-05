@@ -3003,6 +3003,11 @@ Class PDOCrud {
 
     private function dbCRUD($data) {
         $data = $this->handleCallback('before_table_data', $data);
+
+        if(empty($this->tableName)){
+            return $this->dbSQL($data);
+        }
+                
         $pdoModelObj = $this->getPDOModelObj();
         $pdoModelObj = $this->addWhereCondition($pdoModelObj, $data);
         $pdoModelObj = $this->addJoinCondtion($pdoModelObj, false);
@@ -3095,38 +3100,96 @@ Class PDOCrud {
     }
 
     private function dbSQL($data) {
-        $this->setSettings("pagination", false);
-        $this->setSettings("recordsPerPageDropdown", false);
-        $this->setSettings("totalRecordsInfo", false);
+        $this->setSettings("editbtn", false);
+        $this->setSettings("viewbtn", false);
+        $this->setSettings("delbtn", false);
+        // Llamar a la función de callback para manipular la consulta antes de ejecutarla
         $data = $this->handleCallback('before_sql_data', $data);
+    
+        // Obtén la conexión PDO
         $pdoModelObj = $this->getPDOModelObj();
-        $result = $pdoModelObj->executeQuery($this->sql, $data);
-        $totalRecords = count($result);
+
+        $countSql = empty($this->countSql) ? "SELECT COUNT(*) AS totalrecords FROM (". $this->sql .") AS countTable" : $this->countSql;
+
+        // Ejecuta la consulta para contar los registros
+        $countResult = $pdoModelObj->executeQuery($countSql, $data);
+
+        $totalRecords = $countResult[0]["totalrecords"];
+    
+        // Configura la paginación
         $recordPerPage = $this->settings["recordsPerPage"];
-        if (strtolower($recordPerPage) === "all")
-            $recordPerPage = $totalRecords;
-        $pagination = $this->pdocrudhelper->pagination($this->currentpage, $totalRecords, $recordPerPage, $this->settings["adjacents"], $this->langData);
-
-        if (isset($this->columns)) {
-            $cols = $this->getColumnNames($this->columns);
+        if (isset($this->crudCall) && $this->crudCall === false) {
+            $this->settings["addbtn"] = false;
+            $this->btnActions["onepageview"] = $this->btnActions["view"];
+            unset($this->btnActions["view"]);
+            $this->btnActions["onepageedit"] = $this->btnActions["edit"];
+            unset($this->btnActions["edit"]);
+        } 
+        else if (isset($this->invoiceDetails) && count($this->invoiceDetails)){          
+          $this->enqueueBtnTopActions("add_invoice",  "Add Invoice", "javascript:;", array("data-action"=>"add_invoice"), "pdocrud-actions");
+          $this->btnActions["view"][3] = "view_invoice";
+          $this->btnActions["edit"][3] = "edit_invoice";
+          $this->btnActions["delete"][3] = "delete_invoice";
         }
+        else {
+            $this->crudCall = true;
+        }
+        if (strtolower($recordPerPage) === "all" || $recordPerPage > $totalRecords) {
+            $recordPerPage = $totalRecords;
+        }
+    
+        // Calcula el desplazamiento
+        $offset = ($this->currentpage - 1) * $recordPerPage;
+        $limitSql = $this->sql . " LIMIT " . $offset . ", " . $recordPerPage;
+    
+        // Ejecuta la consulta con LIMIT
+        $result = $pdoModelObj->executeQuery($limitSql, $data);
 
-        if ($totalRecords > 0) {
+        // Genera la paginación
+        $pagination = $this->pdocrudhelper->paginationSQL($this->currentpage, $totalRecords, $recordPerPage, $this->settings["adjacents"], $this->langData);
+    
+        // Configura los encabezados y datos de la tabla
+        if ($totalRecords > 0 && !empty($result)) {
             $cols = array_keys($result[0]);
+            $this->searchCols = $cols;
             $cols = $this->getColumnNames($cols);
             $result = $this->formatTableData($result);
+    
             $from = ($this->currentpage - 1) * $recordPerPage + 1;
             $to = $totalRecords > (($this->currentpage - 1) * $recordPerPage + $recordPerPage) ? ($this->currentpage - 1) * $recordPerPage + $recordPerPage : $totalRecords;
             $this->langData["dispaly_records_info"] = $this->langData["showing"] . " " . $from . " " . $this->langData["to"] . " " . $to . " " . $this->langData["of"] . " " . $totalRecords . " " . $this->langData["entries"];
+            $this->settings["row_no"] = ($this->currentpage - 1) * $recordPerPage;
+        } else {
+            $cols = array();
+            $this->searchCols = $cols;
+            $this->langData["dispaly_records_info"] = "";
+            $this->settings["row_no"] = 0;
         }
 
+        $this->settings["back_operation"] = $this->backOperation;
+        $this->backOperation = false;
+        
+        // Maneja las devoluciones de llamada y el renderizado de la tabla
         $result = $this->handleCallback('format_sql_data', $result);
         $cols = $this->handleCallback('format_sql_col', $cols);
         $this->setTableHeadings();
-        $search = $this->getSearchBox($cols, $data);
-        $perPageRecords = $this->perPageRecords($totalRecords, $data);
-        $output = $this->pdocrudView->renderSQL($cols, $result, $this->objKey, $this->langData, $this->settings, $pagination, $perPageRecords);
+        $search = $this->getSearchBoxSQL($cols, $data);
+        $filterbox = $this->generateFilterControls($data);
+        $perPageRecords = $this->perPageRecordsSQL($totalRecords, $data);
+        $extraData = $this->getExtraData();
+
+        if ($this->formPopup){
+            $modal = $this->getMoodelContent($this->objKey . "_modal", "", "", "");
+        } else {
+            $modal = "";
+        }
+        
+        $output = $this->pdocrudView->renderSQL($cols, $search, $result, $this->objKey, $this->langData, $modal, $this->settings, $pagination, $perPageRecords, $this->btnActions, $extraData);
         $output = $this->handleCallback('after_sql_data', $output);
+
+        if (is_array($filterbox) && count($filterbox) && !isset($data["action"])){
+            $output = $this->pdocrudView->renderCrudFilter($filterbox, $output, $this->langData, $this->objKey, $this->settings);
+        }
         return $output;
     }
 
