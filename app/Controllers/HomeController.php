@@ -3986,15 +3986,24 @@ class HomeController
 				return;
 			}
 
-			$pdomodel->where("rut", $rut, "=", "AND");
-			$pdomodel->where("pasaporte_o_codigo_interno", $pasaporte_o_codigo_interno, "=", "AND");
-			$pdomodel->where("nombres", $nombres, "=", "AND");
-			$pdomodel->where("apellido_paterno", $apellido_paterno, "=", "AND");
-			$pdomodel->where("apellido_materno", $apellido_materno, "=", "AND");
-			$pdomodel->where("fecha_nacimiento", $fecha_nacimiento, "=", "AND");
-			$pdomodel->where("edad", $edad, "=", "AND");
-			$pdomodel->where("direccion", $direccion, "=", "AND");
-			$pdomodel->where("sexo", $sexo, "=", "AND");
+			$pdomodel->where("rut", $rut);
+			$pdomodel->andOrOperator = "OR";
+			$pdomodel->where("pasaporte_o_codigo_interno", $pasaporte_o_codigo_interno);
+			$pdomodel->andOrOperator = "OR";
+			$pdomodel->where("nombres", $nombres);
+			$pdomodel->andOrOperator = "OR";
+			$pdomodel->where("apellido_paterno", $apellido_paterno);
+			$pdomodel->andOrOperator = "OR";
+			$pdomodel->where("apellido_materno", $apellido_materno);
+			$pdomodel->andOrOperator = "OR";
+			$pdomodel->where("fecha_nacimiento", $fecha_nacimiento);
+			$pdomodel->andOrOperator = "OR";
+			$pdomodel->where("edad", $edad);
+			$pdomodel->andOrOperator = "OR";
+			$pdomodel->where("direccion", $direccion);
+			$pdomodel->andOrOperator = "OR";
+			$pdomodel->where("sexo", $sexo);
+			$pdomodel->andOrOperator = "OR";
 			$pdomodel->where("telefono", $telefono);
 			$datos_paciente_exists = $pdomodel->select("datos_paciente");
 
