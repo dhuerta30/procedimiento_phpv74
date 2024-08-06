@@ -25,7 +25,7 @@ $config["password"] = "";
 //Set the database type to be used. Available values are "mysql", "pgsql", "sqlite" and "sqlserver".
 $config["dbtype"] = "mysql";
 //Please enter purchase code. Please check how to find purchase code details here https://help.market.envato.com/hc/en-us/articles/202822600-Where-Is-My-Purchase-Code-
-$config["purchase_code"] = "12eb39e2-a55b-4ca6-9c7d-f6db5438ffaf";
+//$config["purchase_code"] = "12eb39e2-a55b-4ca6-9c7d-f6db5438ffaf";
 //Set the character set to be used
 $config["characterset"] = "utf8";
 //Encryption and Decryption salt

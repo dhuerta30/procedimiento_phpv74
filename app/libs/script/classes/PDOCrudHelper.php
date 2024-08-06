@@ -345,7 +345,7 @@ Class PDOCrudHelper {
         return $pagination;
     }
 
-    public function verifyPurchaseCode($settings) {
+    /*public function verifyPurchaseCode($settings) {
          $purchaseKey = "";
         if (isset($settings["purchase_code"])) {
             $purchaseKey = $settings["purchase_code"];
@@ -430,6 +430,6 @@ Class PDOCrudHelper {
                 return false;
             }
         }
-    }
+    }*/
 
 }
