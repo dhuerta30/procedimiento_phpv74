@@ -1,0 +1,29 @@
+sistema endoscopico cambios
+
+1.- Fecha de solicitud fija que no se pueda cambiar fecha solicitud (ok)
+
+2.- Fecha de recepción de Solicitud eliminarla tanto del ingreso como del pdf (ok)
+
+3.- pdf eliminar la hoja final (ok)
+
+4.- dar mejor formato al excel (ok)
+
+5.- no dejar que se ingresen pacientes con el mismo rut en el mismo dia (ok)
+
+
+rut: 13341098-8  ingresado hoy revisar en lista de espera id 94435
+
+
+
+36497278-4
+
+
+1775120525    in17fo17
+
+
+id_paciente osvaldo 94435
+
+
+agregar_paciente
+
+guardar

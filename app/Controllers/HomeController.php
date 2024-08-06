@@ -4137,46 +4137,46 @@ class HomeController
 				"fecha_solicitud_paciente" => $fecha_solicitud
 			));
 	
-			// Manejar archivos adjuntos de la sesión
-			$uploadDir = __DIR__ . '/../libs/script/uploads/';
+			$uploadDir = realpath(__DIR__ . '/../libs/script/uploads/');
+			if ($uploadDir === false) {
+				echo json_encode(['error' => 'Directorio de carga no existe.']);
+				return;
+			}
+
 			if (!file_exists($uploadDir)) {
 				mkdir($uploadDir, 0777, true);
 			}
+
+			foreach ($_SESSION['detalle_de_solicitud'] as $key => $sesionVal) {
+				if (isset($sesionVal['adjuntar']) && !empty($sesionVal['adjuntar'])) {
+					$fileName = basename($sesionVal['adjuntar']);
+					$uploadFile = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
 	
-			$uploadedFiles = [];
-			if (isset($_SESSION['detalle_de_solicitud']) && is_array($_SESSION['detalle_de_solicitud'])) {
-				foreach ($_SESSION['detalle_de_solicitud'] as $key => $sesionVal) {
-					if (isset($sesionVal['adjuntar']) && !empty($sesionVal['adjuntar'])) {
-						$adjuntar = $sesionVal['adjuntar'];
-						$fileName = basename($adjuntar); // Extrae el nombre del archivo de la URL
-						$uploadFile = $uploadDir . $fileName;
-
-						// Convierte la ruta relativa a una ruta absoluta
-						$absoluteAdjuntar = $_SERVER['DOCUMENT_ROOT'] . $adjuntar;
-
-						// Verifica si la ruta absoluta del archivo original existe
-						if (file_exists($absoluteAdjuntar)) {
-							if (rename($absoluteAdjuntar, $uploadFile)) {
-								$uploadedFiles[$key] = $_ENV['BASE_URL'] . 'app/libs/script/uploads/' . $fileName;
-								$_SESSION['detalle_de_solicitud'][$key]['adjuntar'] = $uploadedFiles[$key];
-							} else {
-								echo json_encode(['error' => 'Error al mover el archivo subido.']);
-								return;
-							}
+					// Construir la ruta temporal del archivo
+					$fileTmpPath = $_SERVER['DOCUMENT_ROOT'] . '/' . str_replace($_ENV['BASE_URL'], '', $sesionVal['adjuntar']);
+	
+					if (file_exists($fileTmpPath)) {
+						// Mueve el archivo desde la ruta temporal a la ubicación de destino
+						if (rename($fileTmpPath, $uploadFile)) {
+							$uploadDirWeb = 'app/libs/script/uploads/';
+							$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . $fileName;
+							$_SESSION['detalle_de_solicitud'][$key]['adjuntar'] = $archivoAdjuntoURL;
 						} else {
-							echo json_encode(['error' => 'El archivo no existe en la ruta temporal.']);
+							// Maneja el error si el archivo no se mueve
+							echo json_encode(['error' => 'Error al mover el archivo subido.']);
 							return;
 						}
-					} else {
-						echo json_encode(['error' => 'Archivo adjunto no válido en la sesión.']);
-						return;
 					}
 				}
 			}
+
 	
 			 // Insertar en la tabla detalle_de_solicitud usando insertBatch
 			 $dataToInsert = [];
 			 foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
+
+				$nombre_adjuntar = basename( $sesionVal['adjuntar']);
+
 				 $dataToInsert[] = [
 					 'id_datos_paciente' => $id,
 					 'codigo_fonasa' => $sesionVal['codigo_fonasa'],
@@ -4189,7 +4189,7 @@ class HomeController
 					 'procedencia' => $sesionVal['procedencia'],
 					 'observacion' => $sesionVal['observacion'],
 					 'contraste' => $sesionVal['contraste'],
-					 'adjuntar' => isset($sesionVal['adjuntar']) ? $sesionVal['adjuntar'] : '', // Manejar archivo adjunto
+					 'adjuntar' => isset($nombre_adjuntar) ? $nombre_adjuntar : '', // Manejar archivo adjunto
 					 'creatinina' => $sesionVal['creatinina'],
 					 'estado' => $sesionVal['estado'],
 					 'usuario' => $usuario,
@@ -4262,7 +4262,7 @@ class HomeController
 				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
 					$uploadDirWeb = 'app/libs/script/uploads/';
 					// Usa la ruta temporal del archivo en lugar de moverlo
-					$archivoAdjunto = $_ENV['BASE_URL'] . $uploadDirWeb . basename($adjuntar['name']); // Ruta temporal del archivo subido
+					$archivoAdjunto = $uploadDirWeb . basename($adjuntar['name']); // Ruta temporal del archivo subido
 				} else if ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
 					echo json_encode(['error' => 'Error en el archivo subido.']);
 					return;
