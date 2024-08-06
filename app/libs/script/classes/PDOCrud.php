@@ -1804,6 +1804,42 @@ Class PDOCrud {
             return false;
     }
 
+
+    public function setSessionExpiration($expirationTimeInMinutes) {
+        if (isset($_SESSION["pdocrud_user"])) {
+            $_SESSION["pdocrud_user"]["expiration_time"] = $expirationTimeInMinutes;
+        }
+    }
+
+    // Método para verificar y controlar la expiración de la sesión
+    public function checkSessionExpiration() {
+        if (isset($_SESSION["pdocrud_user"])) {
+            $currentTime = time();
+            if (isset($_SESSION["pdocrud_user"]["session_start_time"]) && isset($_SESSION["pdocrud_user"]["expiration_time"])) {
+                $sessionStartTime = $_SESSION["pdocrud_user"]["session_start_time"];
+                $expirationTimeInMinutes = $_SESSION["pdocrud_user"]["expiration_time"];
+                $expirationTimeInSeconds = $expirationTimeInMinutes * 60;
+
+                if (($currentTime - $sessionStartTime) > $expirationTimeInSeconds) {
+                    // La sesión ha expirado, cerrar sesión
+                    $this->unsetUserSession();
+                    return false; // Indicar que la sesión ha expirado
+                } else {
+                    // La sesión está activa, actualizar la hora de inicio
+                    $_SESSION["pdocrud_user"]["session_start_time"] = $currentTime;
+                    return true; // Indicar que la sesión es válida
+                }
+            } else {
+                // Si no se ha establecido el tiempo de expiración o la hora de inicio, configurarlo
+                $_SESSION["pdocrud_user"]["session_start_time"] = $currentTime;
+                $_SESSION["pdocrud_user"]["expiration_time"] = 30; // Establecer un valor predeterminado si no está configurado
+                return true; // Indicar que la sesión es válida
+            }
+        } else {
+            return false; // No hay sesión activa
+        }
+    }
+
     /**
      * Check whether session is set or not by user for user management functionality using setSession function
      * @param   string   $sessionKey                          session key that needs to be checked (optional)

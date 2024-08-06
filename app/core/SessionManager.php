@@ -7,12 +7,12 @@ class SessionManager {
     // Método estático para iniciar una sesión
     public static function startSession() {
         if (session_status() === PHP_SESSION_NONE) {
-            define('DURACION_SESION','43200');
+            define('DURACION_SESION','1800'); // 30 minutos en segundos
             // Configurar parámetros de sesión antes de iniciar
-            ini_set('session.gc_maxlifetime', DURACION_SESION);  // 1 año en segundos
-            ini_set('session.cookie_lifetime', DURACION_SESION); // 1 año en segundos
+            ini_set('session.gc_maxlifetime', DURACION_SESION);  // Tiempo máximo de vida de la sesión
+            ini_set('session.cookie_lifetime', DURACION_SESION); // Tiempo de vida de la cookie de sesión
             ini_set("session.save_path", "/tmp");
-            session_cache_expire(DURACION_SESION);
+            session_cache_expire(30); // Duración de la caché de sesiones en minutos
             session_start();
             session_regenerate_id(true);
         }
