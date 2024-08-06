@@ -4157,7 +4157,10 @@ class HomeController
 	
 					if (file_exists($fileTmpPath)) {
 						// Mueve el archivo desde la ruta temporal a la ubicación de destino
-						if (rename($fileTmpPath, $uploadFile)) {
+						if (copy($fileTmpPath, $uploadFile)) {
+
+							unlink($fileTmpPath);
+
 							$uploadDirWeb = 'app/libs/script/uploads/';
 							$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . $fileName;
 							$_SESSION['detalle_de_solicitud'][$key]['adjuntar'] = $archivoAdjuntoURL;
@@ -4219,7 +4222,8 @@ class HomeController
 			$detalle_solicitud->setSettings("excelBtn", false);
 			$detalle_solicitud->enqueueBtnTopActions("Report", "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
 			$detalle_solicitud->crudTableCol(array("codigo_fonasa", "tipo_solicitud", "tipo_examen", "examen", "contraste", "plano", "extremidad", "procedencia"));
-			$detalle_solicitud->where("id_datos_paciente", $id);
+			//$detalle_solicitud->where("id_datos_paciente", $id);
+			$detalle_solicitud->where("id_datos_paciente", "null");
 			$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
 	
 			echo json_encode(['success' => 'Datos Ingresados con éxito', 'render3' => $render3]);
