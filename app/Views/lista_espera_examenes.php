@@ -13,6 +13,10 @@
         cursor: pointer;
         margin: 3px;
     }
+
+    .col-form-label {
+        font-size: 13px!important;
+    }
 </style>
 <div class="content-wrapper">
 	<section class="content">
