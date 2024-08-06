@@ -4161,6 +4161,7 @@ class HomeController
 			foreach ($_SESSION['detalle_de_solicitud'] as $key => $sesionVal) {
 				if (isset($sesionVal['adjuntar']) && !empty($sesionVal['adjuntar'])) {
 					$fileName = basename($sesionVal['adjuntar']);
+					
 					$uploadFile = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
 	
 					// Construir la ruta temporal del archivo
@@ -4268,19 +4269,33 @@ class HomeController
 
 			$archivoAdjunto = null; // Inicializa la variable
 
-			if (isset($_FILES['adjuntar'])) {
+			if (isset($_FILES['adjuntar']) && $_FILES['adjuntar']['error'] === UPLOAD_ERR_OK) {
 				$adjuntar = $_FILES['adjuntar'];
-				$uploadDir = __DIR__ . '/../libs/script/uploads/';
+				$fileName = basename($adjuntar['name']);
+				$fileTmpPath = $adjuntar['tmp_name'];
+
+				// Guardar el archivo en el directorio temporal
+				$uploadDirTemp = sys_get_temp_dir();
+				$tempFilePath = $uploadDirTemp . DIRECTORY_SEPARATOR . $fileName;
+
+				if (move_uploaded_file($fileTmpPath, $tempFilePath)) {
+					$_SESSION['detalle_de_solicitud'][] = [
+						'name' => $fileName,
+						'path' => $tempFilePath
+					];
+				}
+
+				//$uploadDir = __DIR__ . '/../libs/script/uploads/';
 
 				// Verifica que el archivo sea válido
-				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
+				/*if ($adjuntar['error'] === UPLOAD_ERR_OK) {
 					$uploadDirWeb = 'app/libs/script/uploads/';
 					// Usa la ruta temporal del archivo en lugar de moverlo
 					$archivoAdjunto = $uploadDirWeb . basename($adjuntar['name']); // Ruta temporal del archivo subido
 				} else if ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
 					echo json_encode(['error' => 'Error en el archivo subido.']);
 					return;
-				}
+				}*/
 
 				/*if (!file_exists($uploadDir)) {
 					mkdir($uploadDir, 0777, true); // Crea el directorio si no existe
