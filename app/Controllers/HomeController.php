@@ -4000,11 +4000,13 @@ class HomeController
 			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("edad", $edad);
 			$pdomodel->andOrOperator = "AND";
-			$pdomodel->where("direccion", $direccion);
-			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("sexo", $sexo);
-			$pdomodel->andOrOperator = "AND";
+			$pdomodel->openBrackets = "(";
+			$pdomodel->andOrOperator = "OR";
+			$pdomodel->where("direccion", $direccion);
+			$pdomodel->andOrOperator = "OR";
 			$pdomodel->where("telefono", $telefono);
+			$pdomodel->closedBrackets = ")";
 			$datos_paciente_exists = $pdomodel->select("datos_paciente");
 
 			if (!empty($datos_paciente_exists)) {
