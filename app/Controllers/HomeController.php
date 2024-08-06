@@ -3828,7 +3828,7 @@ class HomeController
 			datos_paciente AS dp
 		INNER JOIN
 			detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-		INNER JOIN 
+		INNER JOIN
 			diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
 		INNER JOIN 
 			profesional AS pro ON pro.id_profesional = dg_p.profesional
