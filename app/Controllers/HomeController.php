@@ -3987,23 +3987,23 @@ class HomeController
 			}
 
 			$pdomodel->where("rut", $rut);
-			$pdomodel->andOrOperator = "OR";
+			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("pasaporte_o_codigo_interno", $pasaporte_o_codigo_interno);
-			$pdomodel->andOrOperator = "OR";
+			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("nombres", $nombres);
-			$pdomodel->andOrOperator = "OR";
+			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("apellido_paterno", $apellido_paterno);
-			$pdomodel->andOrOperator = "OR";
+			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("apellido_materno", $apellido_materno);
-			$pdomodel->andOrOperator = "OR";
+			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("fecha_nacimiento", $fecha_nacimiento);
-			$pdomodel->andOrOperator = "OR";
+			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("edad", $edad);
-			$pdomodel->andOrOperator = "OR";
+			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("direccion", $direccion);
-			$pdomodel->andOrOperator = "OR";
+			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("sexo", $sexo);
-			$pdomodel->andOrOperator = "OR";
+			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("telefono", $telefono);
 			$datos_paciente_exists = $pdomodel->select("datos_paciente");
 
@@ -4230,7 +4230,7 @@ class HomeController
 			$detalle_solicitud->setSettings("csvBtn", false);
 			$detalle_solicitud->setSettings("excelBtn", false);
 			$detalle_solicitud->enqueueBtnTopActions("Report", "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
-			$detalle_solicitud->crudTableCol(array("codigo_fonasa", "tipo_solicitud", "tipo_examen", "examen", "contraste", "plano", "extremidad", "procedencia"));
+			$detalle_solicitud->crudTableCol(array("codigo_fonasa", "tipo_solicitud", "tipo_examen", "examen", "contraste", "adjunto", "plano", "extremidad", "procedencia"));
 			$detalle_solicitud->where("id_datos_paciente", "null");
 			$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
 	
