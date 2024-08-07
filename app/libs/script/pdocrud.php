@@ -549,6 +549,43 @@ function editar_egresar_solicitud($data, $obj) {
 }
 
 
+function formatTableDetalleSolicitud($data, $obj){
+    if($data){
+        for ($i = 0; $i < count($data); $i++) {
+            if(!empty($data[$i]["adjuntar"])){
+                $data[$i]["adjuntar"] = "<a href=".$data[$i]["adjuntar"]." target='_blank'><i class='fa fa-file fa-lg'></i></a>";
+            } else {
+                $data[$i]["adjuntar"] = "<div class='badge badge-danger'>Sin Adjunto</div>";
+            }
+
+            if(!empty($data[$i]["plano"])){
+                $data[$i]["plano"] = $data[$i]["plano"];
+            } else {
+                $data[$i]["plano"] = "<div class='badge badge-danger'>Sin Plano</div>";
+            }
+
+            if(!empty($data[$i]["extremidad"])){
+                $data[$i]["extremidad"] = $data[$i]["extremidad"];
+            } else {
+                $data[$i]["extremidad"] = "<div class='badge badge-danger'>Sin Extremidad</div>";
+            }
+
+            if(!empty($data[$i]["procedencia"])){
+                $data[$i]["procedencia"] = $data[$i]["procedencia"];
+            } else {
+                $data[$i]["procedencia"] = "<div class='badge badge-danger'>Sin Procedencia</div>";
+            }
+
+            if(!empty($data[$i]["contraste"])){
+                $data[$i]["contraste"] = $data[$i]["contraste"];
+            } else {
+                $data[$i]["contraste"] = "<div class='badge badge-danger'>Sin Contraste</div>";
+            }
+        }
+    }
+    return $data;
+}
+
 function formatTable_datos_paciente($data, $obj){
     if($data){
         for ($i = 0; $i < count($data); $i++) {
