@@ -4148,49 +4148,29 @@ class HomeController
 				"fecha_solicitud_paciente" => $fecha_solicitud
 			));
 	
-			$uploadDir = realpath(__DIR__ . '/../libs/script/uploads/');
-			if ($uploadDir === false) {
-				echo json_encode(['error' => 'Directorio de carga no existe.']);
-				return;
-			}
 
+			$uploadDir = __DIR__ . '/../libs/script/uploads/';
 			if (!file_exists($uploadDir)) {
 				mkdir($uploadDir, 0777, true);
 			}
 
-			foreach ($_SESSION['detalle_de_solicitud'] as $key => $sesionVal) {
-				if (isset($sesionVal['adjuntar']) && !empty($sesionVal['adjuntar'])) {
-					$fileName = basename($sesionVal['adjuntar']);
-					
-					$uploadFile = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
-	
-					// Construir la ruta temporal del archivo
-					$fileTmpPath = $_SERVER['DOCUMENT_ROOT'] . '/' . str_replace($_ENV['BASE_URL'], '', $sesionVal['adjuntar']);
-	
-					if (file_exists($fileTmpPath)) {
-						// Mueve el archivo desde la ruta temporal a la ubicación de destino
-						if (copy($fileTmpPath, $uploadFile)) {
-
-							unlink($fileTmpPath);
-
-							$uploadDirWeb = 'app/libs/script/uploads/';
-							$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . $fileName;
-							$_SESSION['detalle_de_solicitud'][$key]['adjuntar'] = $archivoAdjuntoURL;
-						} else {
-							// Maneja el error si el archivo no se mueve
-							echo json_encode(['error' => 'Error al mover el archivo subido.']);
-							return;
-						}
-					}
-				}
-			}
-
-	
 			 // Insertar en la tabla detalle_de_solicitud usando insertBatch
 			 $dataToInsert = [];
 			 foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
-
-				$nombre_adjuntar = basename( $sesionVal['adjuntar']);
+				$archivoAdjunto = '';
+				if (isset($sesionVal['adjuntar']) && !empty($sesionVal['adjuntar'])) {
+					$tempfile = $sesionVal['adjuntar']['tmp_name'];
+					$uploadFile = basename($sesionVal['adjuntar']['name']);
+					$destination = $uploadDir . $uploadFile;
+					
+					if (!move_uploaded_file($tempfile, $destination)) {
+						echo json_encode(['error' => 'Error al mover el archivo subido.']);
+						return;
+					}
+					$uploadDirWeb = 'app/libs/script/uploads/';
+					$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . $uploadFile;
+					$archivoAdjunto = $archivoAdjuntoURL;
+				}
 
 				 $dataToInsert[] = [
 					 'id_datos_paciente' => $id,
@@ -4204,7 +4184,7 @@ class HomeController
 					 'procedencia' => $sesionVal['procedencia'],
 					 'observacion' => $sesionVal['observacion'],
 					 'contraste' => $sesionVal['contraste'],
-					 'adjuntar' => isset($nombre_adjuntar) ? $nombre_adjuntar : '', // Manejar archivo adjunto
+					 'adjuntar' => $archivoAdjunto, // Manejar archivo adjunto
 					 'creatinina' => $sesionVal['creatinina'],
 					 'estado' => $sesionVal['estado'],
 					 'usuario' => $usuario,
@@ -4271,21 +4251,13 @@ class HomeController
 
 			if (isset($_FILES['adjuntar']) && $_FILES['adjuntar']['error'] === UPLOAD_ERR_OK) {
 				$adjuntar = $_FILES['adjuntar'];
-				$fileName = basename($adjuntar['name']);
-				$fileTmpPath = $adjuntar['tmp_name'];
+				//$fileName = basename($adjuntar['name']);
 
 				// Guardar el archivo en el directorio temporal
-				$uploadDirTemp = sys_get_temp_dir();
-				$tempFilePath = $uploadDirTemp . DIRECTORY_SEPARATOR . $fileName;
+				//$uploadDirTemp = sys_get_temp_dir();
+				//$tempFilePath = $uploadDirTemp . DIRECTORY_SEPARATOR . $fileName;
 
-				if (move_uploaded_file($fileTmpPath, $tempFilePath)) {
-					$_SESSION['detalle_de_solicitud'][] = [
-						'name' => $fileName,
-						'path' => $tempFilePath
-					];
-				}
-
-				//$uploadDir = __DIR__ . '/../libs/script/uploads/';
+				$uploadDir = __DIR__ . '/../libs/script/uploads/';
 
 				// Verifica que el archivo sea válido
 				/*if ($adjuntar['error'] === UPLOAD_ERR_OK) {
@@ -4297,14 +4269,15 @@ class HomeController
 					return;
 				}*/
 
-				/*if (!file_exists($uploadDir)) {
+				if (!file_exists($uploadDir)) {
 					mkdir($uploadDir, 0777, true); // Crea el directorio si no existe
 				}
 
-				//$uploadFile = $uploadDir . basename($adjuntar['name']);
+				$uploadFile = $uploadDir . basename($adjuntar['name']);
+				$fileTmpPath = $adjuntar['tmp_name'];
 
-				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
-					if (!move_uploaded_file($adjuntar['tmp_name'], $uploadFile)) {
+				/*if ($adjuntar['error'] === UPLOAD_ERR_OK) {
+					if (!move_uploaded_file($fileTmpPath, $uploadFile)) {
 						echo json_encode(['error' => 'Error al mover el archivo subido.']);
 						return;
 					}
@@ -4352,7 +4325,7 @@ class HomeController
 			if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
 				$_SESSION['detalle_de_solicitud'] = [];
 			}
-	
+
 			// Validación de paciente para tipo de solicitud y examen específico
 			$duplicateSolicitud = false;
 			foreach ($_SESSION['detalle_de_solicitud'] as $detalle) {
@@ -4382,14 +4355,17 @@ class HomeController
 					"procedencia" => $procedencia,
 					"observacion" => $observacion,
 					"contraste" => implode(", ", $contrasteValue),
-					"adjuntar" => $archivoAdjunto,
+					"adjuntar" => [
+						'name' => $uploadFile,
+						'tmp_name' => $fileTmpPath
+					],
 					"creatinina" => $creatinina,
 					"estado" => "Ingresado"
 				];
 		
 				// Agregar la solicitud a la sesión
 				$_SESSION['detalle_de_solicitud'][] = $detalle_de_solicitud;
-		
+				
 				$response = [
 					'success' => 'Datos Guardados con éxito Temporalmente',
 					'data' => $_SESSION['detalle_de_solicitud']
