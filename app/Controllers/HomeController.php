@@ -3925,6 +3925,8 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
+			$session_data_detalle_de_solicitud = $pdomodel->select("session_data_detalle_de_solicitud");
+
 			if (empty($rut) && empty($pasaporte_o_codigo_interno)) {
 				$mensaje = 'Debe ingresar al menos el RUT o el pasaporte';
 				echo json_encode(['error' => $mensaje]);
@@ -3984,7 +3986,8 @@ class HomeController
 				$mensaje = 'El campo Diagnóstico Libre es Obligatorio';
 				echo json_encode(['error' => $mensaje]);
 				return;
-			} else if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
+
+			} else if (!isset($session_data_detalle_de_solicitud) || !is_array($session_data_detalle_de_solicitud)) {
 				$mensaje = 'Ingrese al menos 1 Detalle de Solicitud';
 				echo json_encode(['error' => $mensaje]);
 				return;
@@ -4069,6 +4072,8 @@ class HomeController
 	
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
+
+			$session_data_detalle_de_solicitud = $pdomodel->select("session_data_detalle_de_solicitud");
 	
 			// Validaciones
 			if (empty($rut) && empty($pasaporte_o_codigo_interno)) {
@@ -4116,7 +4121,7 @@ class HomeController
 			} else if (strpos($diagnostico, '--------------------') !== false && empty($diagnostico_libre)) {
 				echo json_encode(['error' => 'El campo Diagnóstico Libre es Obligatorio']);
 				return;
-			} else if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
+			} else if (!isset($session_data_detalle_de_solicitud) || !is_array($session_data_detalle_de_solicitud)) {
 				echo json_encode(['error' => 'Ingrese al menos 1 Detalle de Solicitud']);
 				return;
 			}
@@ -4151,8 +4156,6 @@ class HomeController
 				"diagnostico_libre" => $diagnostico_libre,
 				"fecha_solicitud_paciente" => $fecha_solicitud
 			));
-	
-			 $session_data_detalle_de_solicitud = $pdomodel->select("session_data_detalle_de_solicitud");
 
 			 $dataToInsert = [];
 			 foreach ($session_data_detalle_de_solicitud as $sesionVal) {
