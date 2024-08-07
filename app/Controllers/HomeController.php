@@ -2879,10 +2879,10 @@ class HomeController
 			$pdocrud->formFieldValue("motivo_egreso", $motivo_egreso);
 			$pdocrud->fieldAttributes("fecha_egreso", array("autocomplete"=>"off"));
 
-			$pdocrud->formFieldValue("adjuntar", $detalle_de_solicitud[0]["adjuntar"]);
-			$pdocrud->formFieldValue("adjuntar2", $detalle_de_solicitud[0]["adjuntar2"]);
-			$pdocrud->formFieldValue("adjuntar3", $detalle_de_solicitud[0]["adjuntar3"]);
-			$pdocrud->formFieldValue("adjuntar4", $detalle_de_solicitud[0]["adjuntar4"]);
+			$pdocrud->formFieldValue("adjuntar", $adjuntar);
+			$pdocrud->formFieldValue("adjuntar2", $adjuntar2);
+			$pdocrud->formFieldValue("adjuntar3", $adjuntar3);
+			$pdocrud->formFieldValue("adjuntar4", $adjuntar4);
 
 			$pdocrud->fieldDesc("adjuntar", "Tamaño máximo de subida 15mb");
 			$pdocrud->fieldDesc("adjuntar2", "Tamaño máximo de subida 15mb");
