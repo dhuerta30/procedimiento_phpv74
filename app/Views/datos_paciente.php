@@ -1024,6 +1024,10 @@
                 <p class="bg-info mt-2 text-center">Para los no encontrados, escriba la palabra "Línea", luego selecciónela en el listado y el campo "Diagnóstico Libre" será obligatorio.</p>
             `);
 
+            $(".adjuntar").closest(".pdocrud_remove_file").after(`
+                <p class="bg-info mt-2 text-center">Tamaño máximo de subida 15mb</p>
+            `);
+
             $('.profesional').select2();
             obtener_profesionales();
 
