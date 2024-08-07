@@ -2183,6 +2183,7 @@ class HomeController
 		$chosen3 = $crud->loadPluginJsCode("chosen",".tipo_examen, .plano, .extremidad");
 		
 		$detalle_solicitud = DB::PDOCrud(true);
+		$detalle_solicitud->tableHeading("Detalle de Solicitud");
 		$detalle_solicitud->addPlugin("chosen");
 		$detalle_solicitud->formDisplayInPopup();
 		//$detalle_solicitud->where("id_datos_paciente", "null");
@@ -4202,6 +4203,7 @@ class HomeController
 
 			// Renderizar los datos actualizados
 			$detalle_solicitud = DB::PDOCrud(true);
+			$detalle_solicitud->tableHeading("Detalle de Solicitud");
 			$detalle_solicitud->setSettings("addbtn", false);
 			$detalle_solicitud->setSettings("editbtn", false);
 			$detalle_solicitud->setSettings("viewbtn", false);
@@ -4373,6 +4375,7 @@ class HomeController
 				$pdomodel->insert("session_data_detalle_de_solicitud", $detalle_de_solicitud);
 
 				$detalle_solicitud = DB::PDOCrud(true);
+				$detalle_solicitud->tableHeading("Detalle de Solicitud");
 				$detalle_solicitud->setSettings("addbtn", false);
 				$detalle_solicitud->setSettings("editbtn", false);
 				$detalle_solicitud->setSettings("viewbtn", false);
