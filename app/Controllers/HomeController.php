@@ -4263,7 +4263,14 @@ class HomeController
 			if (isset($_FILES['adjuntar']) && $_FILES['adjuntar']['error'] === UPLOAD_ERR_OK) {
 				$adjuntar = $_FILES['adjuntar'];
 				$fileName = basename($adjuntar['name']);
+				$fileSize = $adjuntar['size']; // Obtén el tamaño del archivo
+            	$maxFileSize = 15 * 1024 * 1024;
 
+				if ($fileSize > $maxFileSize) {
+					echo json_encode(['error' => 'El archivo excede el tamaño máximo permitido de 15 MB.']);
+					return;
+				}
+				
 				// Guardar el archivo en el directorio temporal
 				//$uploadDirTemp = sys_get_temp_dir();
 				//$tempFilePath = $uploadDirTemp . DIRECTORY_SEPARATOR . $fileName;
