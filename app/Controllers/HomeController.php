@@ -4204,6 +4204,7 @@ class HomeController
 
 			// Renderizar los datos actualizados
 			$detalle_solicitud = DB::PDOCrud(true);
+			$detalle_solicitud->where("usuario_sesion", $_SESSION['usuario'][0]["usuario"]);
 			$detalle_solicitud->addCallback("format_table_data", "formatTableDetalleSolicitud");  
 			$detalle_solicitud->tableHeading("Detalle de Solicitud");
 			$detalle_solicitud->setSettings("addbtn", false);
