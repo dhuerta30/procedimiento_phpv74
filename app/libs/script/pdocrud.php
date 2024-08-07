@@ -511,20 +511,6 @@ function editar_egresar_solicitud($data, $obj) {
     $adjuntar3 = $data["detalle_de_solicitud"]["adjuntar3"];
     $adjuntar4 = $data["detalle_de_solicitud"]["adjuntar4"];
 
-    // Define el tamaño máximo permitido en bytes (15 MB)
-    $max_file_size = 15 * 1024 * 1024;
-
-    // Verifica el tamaño del archivo adjunto
-    foreach ([$adjuntar, $adjuntar2, $adjuntar3, $adjuntar4] as $file) {
-        if (!empty($file) && is_uploaded_file($file)) {
-            $file_size = filesize($file);
-            if ($file_size > $max_file_size) {
-                $error_msg = array("message" => "", "error" => "El Archivo Adjunto no debe exceder los 15 MB", "redirectionurl" => "");
-                die(json_encode($error_msg));
-            }
-        }
-    }
-
     if(empty($fecha_egreso)){
         $error_msg = array("message" => "", "error" => "Ingrese una Fecha de egreso", "redirectionurl" => "");
         die(json_encode($error_msg));
@@ -535,13 +521,13 @@ function editar_egresar_solicitud($data, $obj) {
         die(json_encode($error_msg));
     }
 
-    /*if (!empty($adjuntar)) {
+    if (!empty($adjuntar)) {
         $extension = pathinfo($adjuntar, PATHINFO_EXTENSION);
-        if($extension != "pdf"){
-            $error_msg = array("message" => "", "error" => "El Archivo Adjunto debe ser un Archivo PDF Válido", "redirectionurl" => "");
+        if($extension == "zip" || $extension == "rar"){
+            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR", "redirectionurl" => "");
             die(json_encode($error_msg));
         }
-    }*/
+    }
 
     $fecha_solicitud = $data['detalle_de_solicitud']['fecha_solicitud'];
 

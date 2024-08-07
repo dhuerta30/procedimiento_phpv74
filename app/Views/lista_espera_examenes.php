@@ -855,11 +855,11 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
             icon: 'success',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: false
-        }).then((result) => {
+        });/*.then((result) => {
             if(result.isConfirmed) {
                 $('.buscar').click();
             }
-        });
+        });*/
     }
 });
 
