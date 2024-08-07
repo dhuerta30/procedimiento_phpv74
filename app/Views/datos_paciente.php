@@ -42,6 +42,10 @@
     .select2-container {
         width: 90%!important;
     }
+
+    .row.pdocrud-search {
+        display: none!important;
+    }
 </style>
 <div class="content-wrapper">
     <section class="content">
@@ -739,8 +743,11 @@
                             confirmButtonText: "Aceptar"
                         });
 
-                        $('.pdocrud-data-row').remove();
+                        $("#pdocrud_search_btn").click();
+
+                        /*$('.pdocrud-data-row').remove();
                         $.each(data["data"], function(index, dato) {
+                            console.log(dato);
                             $('.table.pdocrud-table tbody').prepend(`
                                 <tr class="pdocrud-data-row">
                                     <td>${dato.codigo_fonasa}</td>
@@ -748,7 +755,7 @@
                                     <td>${dato.tipo_examen}</td>
                                     <td>${dato.examen}</td>
                                     <td>${(dato.contraste != "") ? dato.contraste : '<div class="badge badge-danger">Sin Contraste</div>'}</td>
-                                    <td>${(dato.adjuntar.name == null) ? '<div class="badge badge-danger">Sin Adjunto</div>' : dato.adjuntar.name }</td>
+                                    <td>${(dato.adjuntar == null) ? '<div class="badge badge-danger">Sin Adjunto</div>' : dato.adjuntar }</td>
                                     <td>${(dato.plano != "") ? dato.plano : '<div class="badge badge-danger">Sin Plano</div>'}</td>
                                     <td>${(dato.extremidad) ? dato.extremidad : '<div class="badge badge-danger">Sin Extremidad</div>'}</td>
                                     <td>${(dato.procedencia) ? dato.procedencia : '<div class="badge badge-danger">Sin Procedencia</div>'}</td>
@@ -757,7 +764,7 @@
                                     </td>
                                 </tr>
                             `);
-                        });
+                        });*/
 
                         $('.codigo_fonasa').val("");
                         //$('.paciente').val("");

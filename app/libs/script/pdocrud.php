@@ -402,15 +402,27 @@ function delete_file_data($data, $obj)
 }
 
 function eliminar_detalle_solicitud($data, $obj){
-    /*$id = $data["id"];
+    $id = $data["id"];
     
     $pdomodel = $obj->getPDOModelObj();
-    $pdomodel->where("id_detalle_de_solicitud", $id);
-    $result = $pdomodel->select("detalle_de_solicitud");
+    $pdomodel->where("id_session_data_detalle_de_solicitud", $id);
+    $session_data_detalle_de_solicitud = $pdomodel->select("session_data_detalle_de_solicitud");
+
+    $file_sql = $session_data_detalle_de_solicitud[0]["adjuntar"];
     
-    $id_datos_paciente = $result[0]["id_datos_paciente"];
-    $pdomodel->where("id_datos_paciente", $id_datos_paciente);
-    $pdomodel->delete("diagnostico_antecedentes_paciente");*/
+    $file_crop = "uploads/". basename($file_sql);
+
+    if (file_exists($file_crop)) {
+        unlink($file_crop);
+        echo "<script>
+        Swal.fire({
+            title: 'Genial!',
+            text: 'Dato Eliminado con éxito',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+        });
+        </script>";
+    }
     return $data;
 }
 

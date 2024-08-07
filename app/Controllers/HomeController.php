@@ -1951,9 +1951,13 @@ class HomeController
 		echo '<div class="pagination">' . $output . '</div>';*/
 		
 
-		unset($_SESSION['detalle_de_solicitud']);
+		//unset($_SESSION['detalle_de_solicitud']);
 
 		$pdocrud = DB::PDOCrud();
+
+		//$pdomodel = $pdocrud->getPDOModelObj();
+		//$pdomodel->delete("session_data_detalle_de_solicitud");
+
 		$pdocrud->addPlugin("select2");
 		$pdocrud->formFieldValue("estado", "Ingresado");
 		$pdocrud->fieldHideLable("estado");
@@ -2181,9 +2185,9 @@ class HomeController
 		$detalle_solicitud = DB::PDOCrud(true);
 		$detalle_solicitud->addPlugin("chosen");
 		$detalle_solicitud->formDisplayInPopup();
-		$detalle_solicitud->where("id_datos_paciente", "null");
+		//$detalle_solicitud->where("id_datos_paciente", "null");
 		$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
-		$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","examen", "contraste", "adjunto", "plano","extremidad", "procedencia"));
+		$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","examen", "contraste", "adjuntar", "plano","extremidad", "procedencia"));
 		$detalle_solicitud->setLangData("add", "");
 		$detalle_solicitud->setLangData("actions", "Eliminar");
 		$detalle_solicitud->setLangData("save_and_back", "Guardar");
@@ -2192,11 +2196,11 @@ class HomeController
 		$detalle_solicitud->fieldGroups("Name",array("tipo_solicitud","tipo_examen", "examen"));
 		$detalle_solicitud->fieldGroups("Name2",array("plano","extremidad"));
 		$detalle_solicitud->fieldGroups("Name3",array("observacion","contraste"));
-		$detalle_solicitud->setSettings("searchbox", false);
+		//$detalle_solicitud->setSettings("searchbox", false);
 		$detalle_solicitud->setSettings("sortable", false);
 		$detalle_solicitud->setSettings("recordsPerPageDropdown", false);
 		$detalle_solicitud->buttonHide("submitBtn");
-		$detalle_solicitud->setSearchCols(array("id_datos_paciente", "tipo_solicitud", "codigo_fonasa", "tipo_examen", "observacion", "contraste", "plano", "extremidad"));
+		//$detalle_solicitud->setSearchCols(array("id_datos_paciente", "tipo_solicitud", "codigo_fonasa", "tipo_examen", "observacion", "contraste", "plano", "extremidad"));
 		$detalle_solicitud->fieldAttributes("observacion", array("placeholder"=>"Observación"));
 		$detalle_solicitud->setSettings("deleteMultipleBtn", false);
 		$detalle_solicitud->setSettings("checkboxCol", false);
@@ -2208,7 +2212,7 @@ class HomeController
 		$detalle_solicitud->setSettings("excelBtn", false);
 		$detalle_solicitud->setSettings("editbtn", false);
 		$detalle_solicitud->setSettings("viewbtn", false);
-		$detalle_solicitud->relatedData('id_datos_paciente','datos_paciente','id_datos_paciente', "CONCAT(nombres, ' ' ,apellido_paterno, ' ', apellido_materno)");
+		//$detalle_solicitud->relatedData('id_datos_paciente','datos_paciente','id_datos_paciente', "CONCAT(nombres, ' ' ,apellido_paterno, ' ', apellido_materno)");
 		$detalle_solicitud->colRename("codigo_fonasa", "Código");
 		$detalle_solicitud->colRename("examen", "Exámen");
 		$detalle_solicitud->colRename("tipo_solicitud", "Tipo");
@@ -2285,7 +2289,7 @@ class HomeController
 		$detalle_solicitud->fieldCssClass("plano", array("plano"));
 		$detalle_solicitud->fieldCssClass("extremidad", array("extremidad"));
 		$detalle_solicitud->fieldAttributes("observacion", array("style"=>"min-height: 150px"));
-		$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
+		$render3 = $detalle_solicitud->dbTable("session_data_detalle_de_solicitud")->render();
 		$chosen2 = $detalle_solicitud->loadPluginJsCode("chosen",".tipo_examen, .plano, .extremidad");
 
 		View::render(
@@ -4148,28 +4152,22 @@ class HomeController
 				"fecha_solicitud_paciente" => $fecha_solicitud
 			));
 	
+			 $session_data_detalle_de_solicitud = $pdomodel->select("session_data_detalle_de_solicitud");
 
-			$uploadDir = __DIR__ . '/../libs/script/uploads/';
-			if (!file_exists($uploadDir)) {
-				mkdir($uploadDir, 0777, true);
-			}
-
-			 // Insertar en la tabla detalle_de_solicitud usando insertBatch
 			 $dataToInsert = [];
-			 foreach ($_SESSION['detalle_de_solicitud'] as $sesionVal) {
+			 foreach ($session_data_detalle_de_solicitud as $sesionVal) {
 				$archivoAdjunto = '';
 				if (isset($sesionVal['adjuntar']) && !empty($sesionVal['adjuntar'])) {
-					$tempfile = $sesionVal['adjuntar']['tmp_name'];
-					$uploadFile = basename($sesionVal['adjuntar']['name']);
-					$destination = $uploadDir . $uploadFile;
+					$archivoAdjunto = basename($sesionVal['adjuntar']);
+					//$destination = $uploadDir . $uploadFile;
 					
-					if (!move_uploaded_file($tempfile, $destination)) {
+					/*if (!move_uploaded_file($tempfile, $destination)) {
 						echo json_encode(['error' => 'Error al mover el archivo subido.']);
 						return;
 					}
 					$uploadDirWeb = 'app/libs/script/uploads/';
 					$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . $uploadFile;
-					$archivoAdjunto = $archivoAdjuntoURL;
+					$archivoAdjunto = $archivoAdjuntoURL;*/
 				}
 
 				 $dataToInsert[] = [
@@ -4194,7 +4192,8 @@ class HomeController
 	 
 			 $pdomodel->insertBatch("detalle_de_solicitud", $dataToInsert);
 	 
-			 unset($_SESSION['detalle_de_solicitud']);
+			 //unset($_SESSION['detalle_de_solicitud']);
+			 $pdomodel->delete("session_data_detalle_de_solicitud");
 
 			// Renderizar los datos actualizados
 			$detalle_solicitud = DB::PDOCrud(true);
@@ -4213,9 +4212,9 @@ class HomeController
 			$detalle_solicitud->setSettings("csvBtn", false);
 			$detalle_solicitud->setSettings("excelBtn", false);
 			$detalle_solicitud->enqueueBtnTopActions("Report", "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
-			$detalle_solicitud->crudTableCol(array("codigo_fonasa", "tipo_solicitud", "tipo_examen", "examen", "contraste", "adjunto", "plano", "extremidad", "procedencia"));
+			$detalle_solicitud->crudTableCol(array("codigo_fonasa", "tipo_solicitud", "tipo_examen", "examen", "contraste", "adjuntar", "plano", "extremidad", "procedencia"));
 			$detalle_solicitud->where("id_datos_paciente", "null");
-			$render3 = $detalle_solicitud->dbTable("detalle_de_solicitud")->render();
+			$render3 = $detalle_solicitud->dbTable("session_data_detalle_de_solicitud")->render();
 	
 			echo json_encode(['success' => 'Datos Ingresados con éxito', 'render3' => $render3]);
 	
@@ -4251,7 +4250,7 @@ class HomeController
 
 			if (isset($_FILES['adjuntar']) && $_FILES['adjuntar']['error'] === UPLOAD_ERR_OK) {
 				$adjuntar = $_FILES['adjuntar'];
-				//$fileName = basename($adjuntar['name']);
+				$fileName = basename($adjuntar['name']);
 
 				// Guardar el archivo en el directorio temporal
 				//$uploadDirTemp = sys_get_temp_dir();
@@ -4260,14 +4259,14 @@ class HomeController
 				$uploadDir = __DIR__ . '/../libs/script/uploads/';
 
 				// Verifica que el archivo sea válido
-				/*if ($adjuntar['error'] === UPLOAD_ERR_OK) {
+				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
 					$uploadDirWeb = 'app/libs/script/uploads/';
 					// Usa la ruta temporal del archivo en lugar de moverlo
 					$archivoAdjunto = $uploadDirWeb . basename($adjuntar['name']); // Ruta temporal del archivo subido
 				} else if ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
 					echo json_encode(['error' => 'Error en el archivo subido.']);
 					return;
-				}*/
+				}
 
 				if (!file_exists($uploadDir)) {
 					mkdir($uploadDir, 0777, true); // Crea el directorio si no existe
@@ -4276,7 +4275,7 @@ class HomeController
 				$uploadFile = $uploadDir . basename($adjuntar['name']);
 				$fileTmpPath = $adjuntar['tmp_name'];
 
-				/*if ($adjuntar['error'] === UPLOAD_ERR_OK) {
+				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
 					if (!move_uploaded_file($fileTmpPath, $uploadFile)) {
 						echo json_encode(['error' => 'Error al mover el archivo subido.']);
 						return;
@@ -4288,7 +4287,7 @@ class HomeController
 				} else if ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
 					echo json_encode(['error' => 'Error en el archivo subido.']);
 					return;
-				}*/
+				}
 			}
 
 			// Validar que los campos no estén vacíos
@@ -4322,17 +4321,24 @@ class HomeController
 				return;
 			}
 
-			if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
+			$session_data_detalle_de_solicitud = $pdomodel->DBQuery("SELECT * FROM session_data_detalle_de_solicitud WHERE id_datos_paciente = ? AND examen = ? AND fecha_solicitud = ?", [$paciente, $examen, $fecha_formateada]);
+
+			/*if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
 				$_SESSION['detalle_de_solicitud'] = [];
-			}
+			}*/
 
 			// Validación de paciente para tipo de solicitud y examen específico
-			$duplicateSolicitud = false;
+			/*$duplicateSolicitud = false;
 			foreach ($_SESSION['detalle_de_solicitud'] as $detalle) {
 				if ($detalle['id_datos_paciente'] == $paciente && $detalle['examen'] == $examen && $detalle['fecha_solicitud'] == $fecha_formateada) {
 					$duplicateSolicitud = true;
 					break;
 				}
+			}*/
+
+			$duplicateSolicitud = false;
+			if (!empty($session_data_detalle_de_solicitud)) {
+				$duplicateSolicitud = true;
 			}
 	
 			if ($duplicateSolicitud) {
@@ -4351,20 +4357,19 @@ class HomeController
 					"procedencia" => $procedencia,
 					"observacion" => $observacion,
 					"contraste" => implode(", ", $contrasteValue),
-					"adjuntar" => [
-						'name' => $uploadFile,
-						'tmp_name' => $fileTmpPath
-					],
+					"adjuntar" => $archivoAdjunto,  // Ajustado a adjuntar_name
 					"creatinina" => $creatinina,
 					"estado" => "Ingresado"
 				];
-		
+
+				$pdomodel->insert("session_data_detalle_de_solicitud", $detalle_de_solicitud);
+
 				// Agregar la solicitud a la sesión
-				$_SESSION['detalle_de_solicitud'][] = $detalle_de_solicitud;
+				//$_SESSION['detalle_de_solicitud'][] = $detalle_de_solicitud;
 				
 				$response = [
 					'success' => 'Datos Guardados con éxito Temporalmente',
-					'data' => $_SESSION['detalle_de_solicitud']
+					'data' => $detalle_de_solicitud //$_SESSION['detalle_de_solicitud']
 				];
 		
 				echo json_encode($response);
