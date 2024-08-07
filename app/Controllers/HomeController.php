@@ -4329,11 +4329,7 @@ class HomeController
 			// Validación de paciente para tipo de solicitud y examen específico
 			$duplicateSolicitud = false;
 			foreach ($_SESSION['detalle_de_solicitud'] as $detalle) {
-				if (
-					$detalle['id_datos_paciente'] == $paciente &&
-					$detalle['examen'] == $examen &&
-					$detalle['fecha_solicitud'] == $fecha_formateada
-				) {
+				if ($detalle['id_datos_paciente'] == $paciente && $detalle['examen'] == $examen && $detalle['fecha_solicitud'] == $fecha_formateada) {
 					$duplicateSolicitud = true;
 					break;
 				}
