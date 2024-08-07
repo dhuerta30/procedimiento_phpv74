@@ -529,6 +529,30 @@ function editar_egresar_solicitud($data, $obj) {
         }
     }
 
+    if (!empty($adjuntar2)) {
+        $extension = pathinfo($adjuntar2, PATHINFO_EXTENSION);
+        if($extension == "zip" || $extension == "rar"){
+            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        }
+    }
+
+    if (!empty($adjuntar3)) {
+        $extension = pathinfo($adjuntar3, PATHINFO_EXTENSION);
+        if($extension == "zip" || $extension == "rar"){
+            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        }
+    }
+
+    if (!empty($adjuntar4)) {
+        $extension = pathinfo($adjuntar4, PATHINFO_EXTENSION);
+        if($extension == "zip" || $extension == "rar"){
+            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        }
+    }
+
     $fecha_solicitud = $data['detalle_de_solicitud']['fecha_solicitud'];
 
     $pdomodel = $obj->getPDOModelObj();
