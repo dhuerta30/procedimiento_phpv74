@@ -2188,6 +2188,7 @@ class HomeController
 		$detalle_solicitud->addPlugin("chosen");
 		$detalle_solicitud->formDisplayInPopup();
 		//$detalle_solicitud->where("id_datos_paciente", "null");
+		$detalle_solicitud->where("usuario_sesion", $_SESSION['usuario'][0]["usuario"]);
 		$detalle_solicitud->enqueueBtnTopActions("Report",  "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
 		$detalle_solicitud->crudTableCol(array("codigo_fonasa","tipo_solicitud","tipo_examen","examen", "contraste", "adjuntar", "plano","extremidad", "procedencia"));
 		$detalle_solicitud->setLangData("add", "");
@@ -4356,6 +4357,7 @@ class HomeController
 				return;
 			} else {
 				$detalle_de_solicitud = [
+					"usuario_sesion" => $_SESSION['usuario'][0]["usuario"],
 					"codigo_fonasa" => $codigo_fonasa,
 					"id_datos_paciente" => $paciente,
 					"tipo_solicitud" => $tipo_solicitud,
@@ -4391,6 +4393,7 @@ class HomeController
 				$detalle_solicitud->setSettings("pdfBtn", false);
 				$detalle_solicitud->setSettings("csvBtn", false);
 				$detalle_solicitud->setSettings("excelBtn", false);
+				$detalle_solicitud->where("usuario_sesion", $_SESSION['usuario'][0]["usuario"]);
 				$detalle_solicitud->enqueueBtnTopActions("Report", "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
 				$detalle_solicitud->crudTableCol(array("codigo_fonasa", "tipo_solicitud", "tipo_examen", "examen", "contraste", "adjuntar", "plano", "extremidad", "procedencia"));
 				$render3 = $detalle_solicitud->dbTable("session_data_detalle_de_solicitud")->render();
