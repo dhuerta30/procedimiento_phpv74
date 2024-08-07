@@ -2884,6 +2884,11 @@ class HomeController
 			$pdocrud->formFieldValue("adjuntar3", $detalle_de_solicitud[0]["adjuntar3"]);
 			$pdocrud->formFieldValue("adjuntar4", $detalle_de_solicitud[0]["adjuntar4"]);
 
+			$pdocrud->fieldDesc("adjuntar", "Tamaño máximo de subida 15mb");
+			$pdocrud->fieldDesc("adjuntar2", "Tamaño máximo de subida 15mb");
+			$pdocrud->fieldDesc("adjuntar3", "Tamaño máximo de subida 15mb");
+			$pdocrud->fieldDesc("adjuntar4", "Tamaño máximo de subida 15mb");
+
 			$pdocrud->formFieldValue("observacion", $detalle_de_solicitud[0]["observacion"]);
 
 			$pdocrud->formFieldValue("compra_servicio", $detalle_de_solicitud[0]["compra_servicio"]);
