@@ -684,6 +684,7 @@
         $(document).on("click", ".agregar_detalle_solicitud", function(){
             let codigo_fonasa = $('.codigo_fonasa').val();
             
+            let rut = $('.rut').val();
             let paciente = $('.paciente').val();
             let tipo_solicitud = $('.tipo_solicitud').val();
             let fecha_solicitud = $('.fecha_solicitud').val();
@@ -706,6 +707,7 @@
             }
 
             let formData = new FormData();
+            formData.append('rut', rut);
             formData.append('codigo_fonasa', codigo_fonasa);
             formData.append('paciente', paciente);
             formData.append('tipo_solicitud', tipo_solicitud);
@@ -744,6 +746,7 @@
                         });
 
                         $("#pdocrud_search_btn").click();
+                        $(".rut").val(data[0].rut);
 
                         /*$('.pdocrud-data-row').remove();
                         $.each(data["data"], function(index, dato) {

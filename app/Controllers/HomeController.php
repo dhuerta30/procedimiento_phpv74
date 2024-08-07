@@ -2205,6 +2205,7 @@ class HomeController
 		$detalle_solicitud->setSettings("deleteMultipleBtn", false);
 		$detalle_solicitud->setSettings("checkboxCol", false);
 		$detalle_solicitud->setSettings("addbtn", false);
+		$detalle_solicitud->setSettings("refresh", false);
 		$detalle_solicitud->setSettings("showAllSearch", false);
 		$detalle_solicitud->setSettings("printBtn", false);
 		$detalle_solicitud->setSettings("pdfBtn", false);
@@ -4234,6 +4235,8 @@ class HomeController
 	
 		if ($request->getMethod() === 'POST') {
 			$codigo_fonasa = $request->post('codigo_fonasa');
+
+			$rut = $request->post('rut');
 			
 			$paciente = $request->post('paciente');
 
@@ -4372,6 +4375,7 @@ class HomeController
 				
 				$response = [
 					'success' => 'Datos Guardados con éxito Temporalmente',
+					'rut' => $rut,
 					'data' => $detalle_de_solicitud //$_SESSION['detalle_de_solicitud']
 				];
 		
