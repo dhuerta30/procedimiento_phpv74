@@ -2286,6 +2286,7 @@ class HomeController
 			"Procedimientos" => "Procedimientos"
 		), "", "","array");
 
+		$detalle_solicitud->tableColFormatting("adjuntar", "html",array("type" =>"html","str"=>"<a href=\"{col-name}\"><i class='fa fa-file fa-lg'></i></a>"));
 		$detalle_solicitud->fieldCssClass("tipo_examen", array("tipo_examen"));
 		$detalle_solicitud->fieldCssClass("plano", array("plano"));
 		$detalle_solicitud->fieldCssClass("extremidad", array("extremidad"));
@@ -4215,6 +4216,7 @@ class HomeController
 			$detalle_solicitud->setSettings("pdfBtn", false);
 			$detalle_solicitud->setSettings("csvBtn", false);
 			$detalle_solicitud->setSettings("excelBtn", false);
+			$detalle_solicitud->tableColFormatting("adjuntar", "html",array("type" =>"html","str"=>"<a href=\"{col-name}\"><i class='fa fa-file fa-lg'></i></a>"));
 			$detalle_solicitud->enqueueBtnTopActions("Report", "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
 			$detalle_solicitud->crudTableCol(array("codigo_fonasa", "tipo_solicitud", "tipo_examen", "examen", "contraste", "adjuntar", "plano", "extremidad", "procedencia"));
 			$detalle_solicitud->where("id_datos_paciente", "null");

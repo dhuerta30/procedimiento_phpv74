@@ -393,9 +393,9 @@
                         $(".agregar_paciente").addClass("d-none");
                         $(".guardar").removeClass("d-none");
 
-                        if(data["data"][0]["rut"]){
+                        /*if(data["data"][0]["rut"]){
                             $(".rut").attr("readonly", true);
-                        }
+                        }*/
                         if(data["data"][0]["pasaporte_o_codigo_interno"]){
                             $(".pasaporte_o_codigo_interno").attr("readonly", true);
                         }
@@ -522,7 +522,7 @@
                             confirmButtonText: "Aceptar"
                         });
 
-                        $(".rut").removeAttr("readonly", true);
+                        //$(".rut").removeAttr("readonly", true);
                         $(".pasaporte_o_codigo_interno").removeAttr("readonly", true);
                         $(".nombres").removeAttr("readonly", true);
                         $(".telefono").removeAttr("readonly", true);
@@ -746,7 +746,9 @@
                         });
 
                         $("#pdocrud_search_btn").click();
-                        $(".rut").val(data[0].rut);
+                        
+                        $(".rut").val("");
+                        $(".rut").val(data["rut"]);
 
                         /*$('.pdocrud-data-row').remove();
                         $.each(data["data"], function(index, dato) {
@@ -863,7 +865,7 @@
 
             fecha_nacimiento();
 
-            $(".rut").removeAttr("readonly", true);
+            //$(".rut").removeAttr("readonly", true);
             $(".pasaporte_o_codigo_interno").removeAttr("readonly", true);
             $(".nombres").removeAttr("readonly", true);
             $(".telefono").removeAttr("readonly", true);
