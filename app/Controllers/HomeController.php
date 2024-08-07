@@ -4372,13 +4372,34 @@ class HomeController
 
 				$pdomodel->insert("session_data_detalle_de_solicitud", $detalle_de_solicitud);
 
+				$detalle_solicitud = DB::PDOCrud(true);
+				$detalle_solicitud->setSettings("addbtn", false);
+				$detalle_solicitud->setSettings("editbtn", false);
+				$detalle_solicitud->setSettings("viewbtn", false);
+				$detalle_solicitud->setSettings("searchbox", false);
+				$detalle_solicitud->setSettings("sortable", false);
+				$detalle_solicitud->setSettings("showAllSearch", false);
+				$detalle_solicitud->setSettings("recordsPerPageDropdown", false);
+				$detalle_solicitud->setSettings("deleteMultipleBtn", false);
+				$detalle_solicitud->setSettings("checkboxCol", false);
+				$detalle_solicitud->setLangData("actions", "Eliminar");
+				$detalle_solicitud->setSettings("printBtn", false);
+				$detalle_solicitud->setSettings("pdfBtn", false);
+				$detalle_solicitud->setSettings("csvBtn", false);
+				$detalle_solicitud->setSettings("excelBtn", false);
+				$detalle_solicitud->tableColFormatting("adjuntar", "html",array("type" =>"html","str"=>"<a href=\"{col-name}\"><i class='fa fa-file fa-lg'></i></a>"));
+				$detalle_solicitud->enqueueBtnTopActions("Report", "<i class='fas fa-plus-circle'></i> Agregar Detalle de Solicitud", "javascript:;", array(), "btn-report btn btn-primary agregar_detalle_solicitud");
+				$detalle_solicitud->crudTableCol(array("codigo_fonasa", "tipo_solicitud", "tipo_examen", "examen", "contraste", "adjuntar", "plano", "extremidad", "procedencia"));
+				$render3 = $detalle_solicitud->dbTable("session_data_detalle_de_solicitud")->render();
+
 				// Agregar la solicitud a la sesión
 				//$_SESSION['detalle_de_solicitud'][] = $detalle_de_solicitud;
 				
 				$response = [
 					'success' => 'Datos Guardados con éxito Temporalmente',
 					'rut' => $rut,
-					'data' => $detalle_de_solicitud //$_SESSION['detalle_de_solicitud']
+					'data' => $detalle_de_solicitud,
+					'render3' => $render3
 				];
 		
 				echo json_encode($response);
