@@ -1020,6 +1020,10 @@
 
         $(document).ready(function() {
 
+            $(".rut").closest(".rut").after(`
+                <p class="bg-info mt-2 text-center">No lo copie ni lo pegue, escríbalo</p>
+            `);
+
             $(".diagnostico").closest(".input-group").after(`
                 <p class="bg-info mt-2 text-center">Para los no encontrados, escriba la palabra "Línea", luego selecciónela en el listado y el campo "Diagnóstico Libre" será obligatorio.</p>
             `);

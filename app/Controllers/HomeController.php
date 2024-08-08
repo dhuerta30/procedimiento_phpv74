@@ -2001,7 +2001,7 @@ class HomeController
 			</div>               
 		");
 		$render = $pdocrud->dbTable("datos_paciente")->render("insertform");
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-(K|k|9)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "true"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{2,3}-(9|A)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "true"));
 		
 		$diagnostico = DB::PDOCrud(true);
 		$diagnostico->addPlugin("chosen");
