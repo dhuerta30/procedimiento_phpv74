@@ -4273,24 +4273,22 @@ class HomeController
 				$adjuntar = $_FILES['adjuntar'];
 				$fileName = basename($adjuntar['name']);
 				$fileSize = $adjuntar['size']; // Obtén el tamaño del archivo
-            	$maxFileSize = 15 * 1024 * 1024;
+				$maxFileSize = 15 * 1024 * 1024;
 
 				if ($fileSize > $maxFileSize) {
 					echo json_encode(['error' => 'El archivo excede el tamaño máximo permitido de 15 MB.']);
 					return;
 				}
-				
-				// Guardar el archivo en el directorio temporal
-				//$uploadDirTemp = sys_get_temp_dir();
-				//$tempFilePath = $uploadDirTemp . DIRECTORY_SEPARATOR . $fileName;
 
 				$uploadDir = __DIR__ . '/../libs/script/uploads/';
 
+				// Define un nuevo nombre para el archivo
+				$newFileName = time() . '_' . $fileName;
+				$tempFilePath = $adjuntar['tmp_name']; // Ruta temporal del archivo subido
+
 				// Verifica que el archivo sea válido
 				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
-					$uploadDirWeb = 'app/libs/script/uploads/';
-					// Usa la ruta temporal del archivo en lugar de moverlo
-					$archivoAdjunto = $uploadDirWeb . basename($adjuntar['name']); // Ruta temporal del archivo subido
+					$archivoAdjunto = 'app/libs/script/uploads/' . $newFileName; // Ruta temporal del archivo subido
 				} else if ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
 					echo json_encode(['error' => 'Error en el archivo subido.']);
 					return;
@@ -4300,17 +4298,16 @@ class HomeController
 					mkdir($uploadDir, 0777, true); // Crea el directorio si no existe
 				}
 
-				$uploadFile = $uploadDir . basename($adjuntar['name']);
-				$fileTmpPath = $adjuntar['tmp_name'];
+				$uploadFile = $uploadDir . $newFileName; // Nueva ruta con el nuevo nombre del archivo
 
 				if ($adjuntar['error'] === UPLOAD_ERR_OK) {
-					if (!move_uploaded_file($fileTmpPath, $uploadFile)) {
+					if (!move_uploaded_file($tempFilePath, $uploadFile)) {
 						echo json_encode(['error' => 'Error al mover el archivo subido.']);
 						return;
 					}
 
 					$uploadDirWeb = 'app/libs/script/uploads/';
-					$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . basename($adjuntar['name']);
+					$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . $newFileName; // URL con el nuevo nombre
 					$archivoAdjunto = $archivoAdjuntoURL;
 				} else if ($adjuntar['error'] !== UPLOAD_ERR_NO_FILE) {
 					echo json_encode(['error' => 'Error en el archivo subido.']);
