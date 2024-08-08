@@ -197,13 +197,17 @@ $(document).ready(function(){
              },
              { data: 'tiene_adjunto',
                 render: function(data, type, row, meta){
-                    if(data == "Si"){
-                        return "<div class='badge badge-success'>"+ data +"</div>";
-                    } else {
-                        return "<div class='badge badge-danger'>"+ data +"</div>";
+                    if (type === 'display') {
+                        if (data === "Si") {
+                            return "<div class='badge badge-success'>" + data + "</div>";
+                        } else {
+                            return "<div class='badge badge-danger'>" + data + "</div>";
+                        }
                     }
-                }
-              }, 
+                    return data;
+                },
+                escape: false // Asegura que el HTML no se escape
+            }, 
             { data: 'profesional' },
             {
                 render: function(data, type, row) {
@@ -400,13 +404,17 @@ $(document).on("click", ".limpiar_filtro", function(){
              },
              { data: 'tiene_adjunto',
                 render: function(data, type, row, meta){
-                    if(data == "Si"){
-                        return "<div class='badge badge-success'>"+ data +"</div>";
-                    } else {
-                        return "<div class='badge badge-danger'>"+ data +"</div>";
+                    if (type === 'display') {
+                        if (data === "Si") {
+                            return "<div class='badge badge-success'>" + data + "</div>";
+                        } else {
+                            return "<div class='badge badge-danger'>" + data + "</div>";
+                        }
                     }
-                }
-              }, 
+                    return data;
+                },
+                escape: false // Asegura que el HTML no se escape
+            }, 
             { data: 'profesional' },
             {
                 render: function(data, type, row) {
@@ -571,12 +579,16 @@ $(document).on("click", ".buscar", function(){
                     },
                     { data: 'tiene_adjunto',
                         render: function(data, type, row, meta){
-                            if(data == "Si"){
-                                return "<div class='badge badge-success'>"+ data +"</div>";
-                            } else {
-                                return "<div class='badge badge-danger'>"+ data +"</div>";
+                            if (type === 'display') {
+                                if (data === "Si") {
+                                    return "<div class='badge badge-success'>" + data + "</div>";
+                                } else {
+                                    return "<div class='badge badge-danger'>" + data + "</div>";
+                                }
                             }
-                        }
+                            return data;
+                        },
+                        escape: false // Asegura que el HTML no se escape
                     }, 
                     { data: 'profesional' },
                     {
