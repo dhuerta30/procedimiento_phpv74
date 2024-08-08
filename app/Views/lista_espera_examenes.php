@@ -464,6 +464,7 @@ $(document).on("click", ".buscar", function(){
                     confirmButtonText: 'Aceptar',
                     allowOutsideClick: false
                 });
+                $(".rut").val("");
             }
             // Reconstruir la tabla DataTable con los nuevos datos
             table = $('.tabla_reportes').DataTable({
