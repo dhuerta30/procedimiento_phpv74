@@ -164,7 +164,7 @@ Class PDOCrud {
     public $replaceOlderFile = false; // If true then it will replace the older file if present at same location
     public $uploadedFileName = ""; // Name of new uploaded file 
     public $fileUploadPath; // Path of the uploaded file
-    public $maxSize = 100000; // Max size of file allowed for file upload
+    public $maxSize = 15 * 1024 * 1024; // Max size of file allowed for file upload
     public $fileSavePath; // Default path for saving generated file 
     public $pdfFontName = "helvetica"; // font name for pdf
     public $pdfFontSize = "8"; // font size for pdf
@@ -6329,7 +6329,8 @@ Class PDOCrud {
      *
      * @return   boolean                         return true if file uploaded successfully else false
      */
-    function fileUpload($fileName, $fileUploadPath = "", $maxSize = 10000000, $allowedFileTypes = array()) {
+
+    function fileUpload($fileName, $fileUploadPath = "", $maxSize = 15728640, $allowedFileTypes = array()) {
         if ($this->checkValidFileUpload($fileName, $fileUploadPath, $maxSize, $allowedFileTypes)) {
             if (!is_dir($fileUploadPath) && $fileUploadPath) {
                 mkdir($fileUploadPath);

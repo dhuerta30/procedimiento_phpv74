@@ -523,32 +523,32 @@ function editar_egresar_solicitud($data, $obj) {
 
     if (!empty($adjuntar)) {
         $extension = pathinfo($adjuntar, PATHINFO_EXTENSION);
-        if($extension == "zip" || $extension == "rar"){
-            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR", "redirectionurl" => "");
+        if($extension == "zip" || $extension == "rar" || $extension == "exe"){
+            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR ni exe", "redirectionurl" => "");
             die(json_encode($error_msg));
         }
     }
 
     if (!empty($adjuntar2)) {
         $extension = pathinfo($adjuntar2, PATHINFO_EXTENSION);
-        if($extension == "zip" || $extension == "rar"){
-            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR", "redirectionurl" => "");
+        if($extension == "zip" || $extension == "rar" || $extension == "exe"){
+            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR ni exe", "redirectionurl" => "");
             die(json_encode($error_msg));
         }
     }
 
     if (!empty($adjuntar3)) {
         $extension = pathinfo($adjuntar3, PATHINFO_EXTENSION);
-        if($extension == "zip" || $extension == "rar"){
-            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR", "redirectionurl" => "");
+        if($extension == "zip" || $extension == "rar" || $extension == "exe"){
+            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR ni exe", "redirectionurl" => "");
             die(json_encode($error_msg));
         }
     }
 
     if (!empty($adjuntar4)) {
         $extension = pathinfo($adjuntar4, PATHINFO_EXTENSION);
-        if($extension == "zip" || $extension == "rar"){
-            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR", "redirectionurl" => "");
+        if($extension == "zip" || $extension == "rar" || $extension == "exe"){
+            $error_msg = array("message" => "", "error" => "El Archivo Adjunto no puede ser ni Zip ni RAR ni exe", "redirectionurl" => "");
             die(json_encode($error_msg));
         }
     }
