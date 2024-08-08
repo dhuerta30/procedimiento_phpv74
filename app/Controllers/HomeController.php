@@ -3935,7 +3935,7 @@ class HomeController
 			$pdomodel = $pdocrud->getPDOModelObj();
 
 			if (empty($rut) && empty($pasaporte_o_codigo_interno)) {
-				$mensaje = 'Debe ingresar al menos el RUT o el pasaporte';
+				$mensaje = 'Debe ingresar al menos el RUT o el Pasaporte';
 				echo json_encode(['error' => $mensaje]);
 				return;
 			} else if (!self::validaRut($rut)) {
@@ -4090,7 +4090,7 @@ class HomeController
 	
 			// Validaciones
 			if (empty($rut) && empty($pasaporte_o_codigo_interno)) {
-				echo json_encode(['error' => 'Debe ingresar al menos el RUT o el pasaporte']);
+				echo json_encode(['error' => 'Debe ingresar al menos el RUT o el Pasaporte']);
 				return;
 			} else if (!self::validaRut($rut)) {
 				echo json_encode(['error' => 'RUT inválido']);
