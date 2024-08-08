@@ -4214,7 +4214,8 @@ class HomeController
 			// Renderizar los datos actualizados
 			$detalle_solicitud = DB::PDOCrud(true);
 			$detalle_solicitud->where("usuario_sesion", $_SESSION['usuario'][0]["usuario"]);
-			$detalle_solicitud->addCallback("format_table_data", "formatTableDetalleSolicitud");  
+			$detalle_solicitud->addCallback("format_table_data", "formatTableDetalleSolicitud");
+			$detalle_solicitud->addCallback("before_delete", "eliminar_detalle_solicitud");
 			$detalle_solicitud->tableHeading("Detalle de Solicitud");
 			$detalle_solicitud->setSettings("addbtn", false);
 			$detalle_solicitud->setSettings("editbtn", false);
@@ -4394,6 +4395,7 @@ class HomeController
 				$pdomodel->insert("session_data_detalle_de_solicitud", $detalle_de_solicitud);
 
 				$detalle_solicitud = DB::PDOCrud(true);
+				$detalle_solicitud->addCallback("before_delete", "eliminar_detalle_solicitud");
 				$detalle_solicitud->addCallback("format_table_data", "formatTableDetalleSolicitud");  
 				$detalle_solicitud->tableHeading("Detalle de Solicitud");
 				$detalle_solicitud->setSettings("addbtn", false);
