@@ -3934,8 +3934,6 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
-			$session_data_detalle_de_solicitud = $pdomodel->select("session_data_detalle_de_solicitud");
-
 			if (empty($rut) && empty($pasaporte_o_codigo_interno)) {
 				$mensaje = 'Debe ingresar al menos el RUT o el pasaporte';
 				echo json_encode(['error' => $mensaje]);
@@ -3996,9 +3994,17 @@ class HomeController
 				echo json_encode(['error' => $mensaje]);
 				return;
 
-			} else if (!isset($session_data_detalle_de_solicitud) || !is_array($session_data_detalle_de_solicitud)) {
-				$mensaje = 'Ingrese al menos 1 Detalle de Solicitud';
-				echo json_encode(['error' => $mensaje]);
+			} 
+
+			$session_data_detalle_de_solicitud = $pdomodel->DBQuery(
+				"SELECT * FROM session_data_detalle_de_solicitud 
+				WHERE usuario_sesion = '".$_SESSION["usuario"][0]["usuario"]."' "
+			);
+
+			$contar_sesion_data = count($session_data_detalle_de_solicitud);
+
+			if ($contar_sesion_data <= 0) {
+				echo json_encode(['error' => 'Ingrese al menos 1 Detalle de Solicitud']);
 				return;
 			}
 
@@ -4081,8 +4087,6 @@ class HomeController
 	
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
-
-			$session_data_detalle_de_solicitud = $pdomodel->select("session_data_detalle_de_solicitud");
 	
 			// Validaciones
 			if (empty($rut) && empty($pasaporte_o_codigo_interno)) {
@@ -4130,7 +4134,16 @@ class HomeController
 			} else if (strpos($diagnostico, '--------------------') !== false && empty($diagnostico_libre)) {
 				echo json_encode(['error' => 'El campo Diagnóstico Libre es Obligatorio']);
 				return;
-			} else if (!isset($session_data_detalle_de_solicitud) || !is_array($session_data_detalle_de_solicitud)) {
+			}
+			
+			$session_data_detalle_de_solicitud = $pdomodel->DBQuery(
+				"SELECT * FROM session_data_detalle_de_solicitud 
+				WHERE usuario_sesion = '".$_SESSION["usuario"][0]["usuario"]."' "
+			);
+
+			$contar_sesion_data = count($session_data_detalle_de_solicitud);
+
+			if ($contar_sesion_data <= 0) {
 				echo json_encode(['error' => 'Ingrese al menos 1 Detalle de Solicitud']);
 				return;
 			}
@@ -4171,15 +4184,6 @@ class HomeController
 				$archivoAdjunto = '';
 				if (isset($sesionVal['adjuntar']) && !empty($sesionVal['adjuntar'])) {
 					$archivoAdjunto = basename($sesionVal['adjuntar']);
-					//$destination = $uploadDir . $uploadFile;
-					
-					/*if (!move_uploaded_file($tempfile, $destination)) {
-						echo json_encode(['error' => 'Error al mover el archivo subido.']);
-						return;
-					}
-					$uploadDirWeb = 'app/libs/script/uploads/';
-					$archivoAdjuntoURL = $_ENV['BASE_URL'] . $uploadDirWeb . $uploadFile;
-					$archivoAdjunto = $archivoAdjuntoURL;*/
 				}
 
 				 $dataToInsert[] = [
@@ -4345,7 +4349,10 @@ class HomeController
 				return;
 			}
 
-			$session_data_detalle_de_solicitud = $pdomodel->DBQuery("SELECT * FROM session_data_detalle_de_solicitud WHERE id_datos_paciente = ? AND examen = ? AND fecha_solicitud = ?", [$paciente, $examen, $fecha_formateada]);
+			$session_data_detalle_de_solicitud = $pdomodel->DBQuery(
+				"SELECT * FROM session_data_detalle_de_solicitud 
+				WHERE id_datos_paciente = ? AND examen = ? AND fecha_solicitud = ?", [$paciente, $examen, $fecha_formateada]
+			);
 
 			/*if (!isset($_SESSION['detalle_de_solicitud']) || !is_array($_SESSION['detalle_de_solicitud'])) {
 				$_SESSION['detalle_de_solicitud'] = [];
