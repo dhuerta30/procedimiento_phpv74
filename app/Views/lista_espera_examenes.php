@@ -31,7 +31,7 @@
 					<div class="row justify-content-center">
                         <div class="col-md-12 pl-0 pr-0">
                             <?=$render?>
-                            <?=$mask;?>
+                           
                         </div>
                     </div>
 				</div>
@@ -855,11 +855,11 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
             icon: 'success',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: false
-        });/*.then((result) => {
+        }).then((result) => {
             if(result.isConfirmed) {
                 $('.buscar').click();
             }
-        });*/
+        });
     }
 });
 
