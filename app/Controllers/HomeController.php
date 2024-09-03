@@ -2040,8 +2040,10 @@ class HomeController
 		$diagnostico->fieldDataBinding("especialidad", array(
 			"Imagenologia" => "Imagenologia",
 			"Neurologia" => "Neurologia",
+			"Reumatologia" => "Reumatologia",
+			"Diabetología" => "Diabetología",
 			"Oftalmología" => "Oftalmología", 
-			"Otorrinolaringología" => "Otorrinolaringología", 
+			"Otorrinolaringología" => "Otorrinolaringología",
 			"Dermatologia y tegumentos" => "Dermatologia y tegumentos",
 			"Cardiología" => "Cardiología",
 			"Aparato Respiratorio" => "Aparato Respiratorio",
