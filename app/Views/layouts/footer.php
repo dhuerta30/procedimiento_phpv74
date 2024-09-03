@@ -46,7 +46,7 @@ function verificarSesion() {
         .catch(error => console.error('Error al verificar la sesión:', error));
 }
 // Ejecutar la verificación cada 30 minutos (1800000 ms)
-setInterval(verificarSesion, 1800000); // 30 minutos en milisegundos
+setInterval(verificarSesion, 86400000); // 30 minutos en milisegundos
 </script>
 </body>
 
