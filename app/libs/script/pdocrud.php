@@ -208,14 +208,14 @@ function carga_masiva_pacientes_insertar($data, $obj) {
                     'fecha_ingreso' => $fecha_actual
                 );
 
-                if (!empty($Excelval['Fecha Solicitud'])) {
-                    $sql_detalle['fecha_solicitud'] = date("Y-m-d", strtotime($Excelval['Fecha Solicitud']));
+                if (!empty(trim($Excelval['Fecha Solicitud']))) {
+                    $sql_detalle['fecha_solicitud'] = date("Y-m-d", strtotime(trim($Excelval['Fecha Solicitud'])));
                 }
-                if (!empty($Excelval['Fecha Agendada']) || !empty($Excelval['Hora'])) {
-                    $sql_detalle['fecha'] = date("Y-m-d H:i:s", strtotime($Excelval['Fecha Agendada'] . " " . $Excelval['Hora']));
+                if (!empty(trim($Excelval['Fecha Agendada'])) || !empty(trim($Excelval['Hora']))) {
+                    $sql_detalle['fecha'] = date("Y-m-d H:i:s", strtotime(trim($Excelval['Fecha Agendada']) . " " . trim($Excelval['Hora'])));
                 }
-                if (!empty($Excelval['Fecha Egreso'])) {
-                    $sql_detalle['fecha_egreso'] = date("Y-m-d", strtotime($Excelval['Fecha Egreso']));
+                if (!empty(trim($Excelval['Fecha Egreso']))) {
+                    $sql_detalle['fecha_egreso'] = date("Y-m-d", strtotime(trim($Excelval['Fecha Egreso'])));
                 }
 
                 $pdomodel->insertBatch("detalle_de_solicitud", array($sql_detalle));
