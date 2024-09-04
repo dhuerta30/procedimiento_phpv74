@@ -151,7 +151,7 @@ function carga_masiva_pacientes_insertar($data, $obj) {
                 }
 
                 // Verificación de existencia del paciente
-                $existingPacient = $pdomodel->DBQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => $Excelval['Rut']]);
+                $existingPacient = $pdomodel->DBQuery("SELECT * FROM datos_paciente WHERE rut = :rut", ['rut' => trim($Excelval['Rut'])]);
 
                 if (!$existingPacient) {
                     try {
@@ -193,17 +193,17 @@ function carga_masiva_pacientes_insertar($data, $obj) {
 
                 $sql_detalle = array(
                     'id_datos_paciente' => $id_datos_paciente,
-                    'codigo_fonasa' => $Excelval["Codigo Fonasa"],
-                    'tipo_solicitud' => $Excelval["Tipo Solicitud"],
-                    'tipo_examen' => $Excelval["Tipo Exámen"],
-                    'examen' => $Excelval['Exámen'],
-                    'plano' => $Excelval['Plano'],
-                    'extremidad' => $Excelval['Extremidad'],
-                    'observacion' => $Excelval['Observación'],
-                    'contraste' => $Excelval['Contraste'],
-                    'creatinina' => $Excelval['Cratinina'],
-                    'estado' => $Excelval['Estado'],
-                    'motivo_egreso' => $Excelval['Motivo Egreso'],
+                    'codigo_fonasa' => trim($Excelval["Codigo Fonasa"]),
+                    'tipo_solicitud' => trim($Excelval["Tipo Solicitud"]),
+                    'tipo_examen' => trim($Excelval["Tipo Exámen"]),
+                    'examen' => trim($Excelval['Exámen']),
+                    'plano' => trim($Excelval['Plano']),
+                    'extremidad' => trim($Excelval['Extremidad']),
+                    'observacion' => trim($Excelval['Observación']),
+                    'contraste' => trim($Excelval['Contraste']),
+                    'creatinina' => trim($Excelval['Cratinina']),
+                    'estado' => trim($Excelval['Estado']),
+                    'motivo_egreso' => trim($Excelval['Motivo Egreso']),
                     'usuario' => $usuario,
                     'fecha_ingreso' => $fecha_actual
                 );
