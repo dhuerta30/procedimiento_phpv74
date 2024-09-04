@@ -177,7 +177,7 @@ function carga_masiva_pacientes_insertar($data, $obj) {
                         'sexo' => trim($Excelval['Sexo']),
                     );
 
-                    if (!empty($Excelval['Fecha y hora Ingreso'])) {
+                    if (!empty(trim($Excelval['Fecha y hora Ingreso']))) {
                         $sql['fecha_y_hora_ingreso'] = date("Y-m-d", strtotime(trim($Excelval['Fecha y hora Ingreso'])));
                     }
 
