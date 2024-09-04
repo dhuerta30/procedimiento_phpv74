@@ -166,19 +166,19 @@ function carga_masiva_pacientes_insertar($data, $obj) {
                     $edad = $diferencia->y;
 
                     $sql = array(
-                        'rut' => $Excelval['Rut'],
-                        'nombres' => $Excelval['Nombre'],
-                        'telefono' => $Excelval['Teléfono'],
-                        'apellido_paterno' => $Excelval['Apellido Paterno'],
-                        'apellido_materno' => $Excelval['Apellido Materno'],
+                        'rut' => trim($Excelval['Rut']),
+                        'nombres' => trim($Excelval['Nombre']),
+                        'telefono' => trim($Excelval['Teléfono']),
+                        'apellido_paterno' => trim($Excelval['Apellido Paterno']),
+                        'apellido_materno' => trim($Excelval['Apellido Materno']),
                         'edad' => $edad,
-                        'fecha_nacimiento' => $Excelval['Fecha Nacimiento'],
-                        'direccion' => $Excelval['Dirección'],
-                        'sexo' => $Excelval['Sexo'],
+                        'fecha_nacimiento' => trim($Excelval['Fecha Nacimiento']),
+                        'direccion' => trim($Excelval['Dirección']),
+                        'sexo' => trim($Excelval['Sexo']),
                     );
 
                     if (!empty($Excelval['Fecha y hora Ingreso'])) {
-                        $sql['fecha_y_hora_ingreso'] = date("Y-m-d", strtotime($Excelval['Fecha y hora Ingreso']));
+                        $sql['fecha_y_hora_ingreso'] = date("Y-m-d", strtotime(trim($Excelval['Fecha y hora Ingreso'])));
                     }
 
                     $pdomodel->insertBatch("datos_paciente", array($sql));
@@ -256,6 +256,9 @@ function carga_masiva_pacientes_insertar($data, $obj) {
             $data["carga_masiva_pacientes"]["archivo"] = basename($data["carga_masiva_pacientes"]["archivo"]);
         }
     }
+
+    print_r($data);
+    die();
     return $data;
 }
 
