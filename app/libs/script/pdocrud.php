@@ -222,9 +222,9 @@ function carga_masiva_pacientes_insertar($data, $obj) {
 
                 $sql_diag = array(
                     'id_datos_paciente' => $id_datos_paciente,
-                    'profesional' => $Excelval['Profesional'],
-                    'especialidad' => $Excelval['Especialidad'],
-                    'diagnostico_libre' => $Excelval['Diagnóstico Libre']
+                    'profesional' => trim($Excelval['Profesional']),
+                    'especialidad' => trim($Excelval['Especialidad']),
+                    'diagnostico_libre' => trim($Excelval['Diagnóstico Libre'])
                 );
 
                 if (!empty($Excelval['Fecha Solicitud'])) {
