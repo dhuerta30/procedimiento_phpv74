@@ -212,6 +212,7 @@ $(document).ready(function(){
             {
                 render: function(data, type, row) {
                     return '<td>' +
+                                '<a href="javascript:;" title="Modificar" class="btn btn-warning btn-sm modificar" data-id="'+ row.id_datos_paciente +'"><i class="fa fa-edit"></i></a>'+
                                 '<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'+ row.id_datos_paciente +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-file-o"></i></a>' +
                                 '<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-arrow-right"></i></a>' +
                                 '<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-o"></i></a>' +
@@ -278,6 +279,7 @@ $(document).ready(function(){
 $(document).on("click", ".limpiar_filtro", function(){
 
     $('.rut').val("");
+    $('.pasaporte').val("");
     $('.nombre_paciente').val("");
     $('.estado').val("");
     $('.procedencia').val("");
@@ -419,6 +421,7 @@ $(document).on("click", ".limpiar_filtro", function(){
             {
                 render: function(data, type, row) {
                     return '<td>' +
+                                '<a href="javascript:;" title="Modificar" class="btn btn-warning btn-sm modificar" data-id="'+ row.id_datos_paciente +'"><i class="fa fa-edit"></i></a>'+
                                 '<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'+ row.id_datos_paciente +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-file-o"></i></a>' +
                                 '<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-arrow-right"></i></a>' +
                                 '<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-o"></i></a>' +
@@ -435,6 +438,7 @@ $(document).on("click", ".limpiar_filtro", function(){
 $(document).on("click", ".buscar", function(){
     // Obtener los valores de los filtros
     let run = $('.rut').val();
+    let pasaporte = $('.pasaporte').val();
     let nombre_paciente = $('.nombre_paciente').val();
     let estado = $('.estado').val();
     let procedencia = $('.procedencia').val();
@@ -449,6 +453,7 @@ $(document).on("click", ".buscar", function(){
         dataType: "json",
         data: {
             run: run,
+            pasaporte: pasaporte,
             nombre_paciente: nombre_paciente,
             estado: estado,
             procedencia: procedencia,
@@ -594,6 +599,7 @@ $(document).on("click", ".buscar", function(){
                     {
                         render: function(data, type, row) {
                             return '<td>' +
+                                        '<a href="javascript:;" title="Modificar" class="btn btn-warning btn-sm modificar" data-id="'+ row.id_datos_paciente +'"><i class="fa fa-edit"></i></a>'+
                                         '<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'+ row.id_datos_paciente +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-file-o"></i></a>' +
                                         '<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-arrow-right"></i></a>' +
                                         '<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-o"></i></a>' +
@@ -750,6 +756,27 @@ $(document).on("click", ".procedimientos", function(){
                 }
             });
             
+        }
+    });
+});
+
+$(document).on("click", ".modificar", function(){
+    let id = $(this).data('id');
+
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV["BASE_URL"]?>home/cargar_modal_modificar",
+        dataType: "html",
+        data: {
+            id: id
+        },
+        beforeSend: function() {
+            $("#pdocrud-ajax-loader").show();
+        },
+        success: function(data){
+            $("#pdocrud-ajax-loader").hide();
+            $('.cargar_modal').html(data);
+            $('#modificar').modal('show');
         }
     });
 });

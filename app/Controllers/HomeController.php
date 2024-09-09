@@ -2040,6 +2040,11 @@ class HomeController
 		$diagnostico->fieldDataBinding("especialidad", array(
 			"Imagenologia" => "Imagenologia",
 			"Neurologia" => "Neurologia",
+			"Geriatría" => "Geriatría",
+			"Broncopulmonar Adulto" => "Broncopulmonar Adulto",
+			"Medicina" => "Medicina",
+			"Maternidad" => "Maternidad",
+			"Cirujia" => "Cirujia",
 			"Reumatologia" => "Reumatologia",
 			"Diabetología" => "Diabetología",
 			"Oftalmología" => "Oftalmología", 
@@ -2425,6 +2430,10 @@ class HomeController
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text rut'>
 					</div>
 					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
+						<label class='control-label col-form-label'>Pasaporte o Código Interno</label>
+						<input type='text' class='form-control pdocrud-form-control pdocrud-text pasaporte'>
+					</div>
+					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>Nombre Paciente</label>
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text nombre_paciente'>
 					</div>
@@ -2638,6 +2647,56 @@ class HomeController
 			HomeController::modal("procedimientos", "<i class='fa fa-folder'></i> Modificar Procedimientos", $render);
 		}
 	}
+
+	public function cargar_modal_modificar(){
+		$request = new Request();
+
+		if ($request->getMethod() === 'POST') {
+			$pdocrud = DB::PDOCrud(true);
+
+			$id = $request->post('id');
+
+			$pdomodel = $pdocrud->getPDOModelObj();
+			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "observacion");
+			$pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+
+			$pdomodel->where("datos_paciente.id_datos_paciente", $id, "=", "AND");
+			$id_datos_paciente = $pdomodel->select("datos_paciente");
+
+			$paciente = new DatosPacienteModel();
+			$data = $paciente->PacientePorId($id);
+		
+			$pdocrud->formFieldValue("fecha_solicitud", $id_datos_paciente[0]["fecha_solicitud"]);
+
+			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+			$pdocrud->setPK("id_datos_paciente");
+			$pdocrud->fieldHideLable("id_datos_paciente");
+			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
+
+			$pdocrud->addCallback("before_select", "editar_lista_examenes_modificar");
+			$pdocrud->setSettings("hideAutoIncrement", false);
+			$pdocrud->buttonHide("submitBtn");
+			$pdocrud->buttonHide("cancel");
+
+			$pdocrud->formStaticFields("buttons", "html", "
+				<div class='row justify-content-center'>
+					<input type='submit' class='btn btn-info pdocrud-form-control pdocrud-submit' id='pdocrud_submit_jkFdX8o5Z9' data-action='selectform' value='Guardar'>
+					<button type='button' class='btn btn-info' data-dismiss='modal'> Cerrar</button>
+				</div>
+				
+			");
+			$pdocrud->fieldDisplayOrder(array("fecha_solicitud", "buttons"));      
+
+			$pdocrud->setSettings("template", "datos_usuario_busqueda");
+			$pdocrud->fieldRenameLable("observacion", "Observación");
+			$pdocrud->formFields(array("id_datos_paciente", "fecha_solicitud"));
+			$pdocrud->setLangData("login", "Guardar"); 
+
+			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
+			HomeController::modal("modificar", "<i class='fa fa-edit'></i> Modificar", $render);
+		}
+	}
+
 
 	public function cargar_modal_agregar_nota(){
 		$request = new Request();
@@ -3559,6 +3618,7 @@ class HomeController
 
 			$where = "";
 			$run = $request->post('run');
+			$pasaporte = $request->post('pasaporte');
 			$nombre_paciente = $request->post('nombre_paciente');
 			$estado = $request->post('estado');
 			$procedencia = $request->post('procedencia');
@@ -3567,7 +3627,7 @@ class HomeController
 			$fecha_solicitud = $request->post('fecha_solicitud');
 			$adjuntar = $request->post('adjuntar');
 
-			if (empty($run) && empty($nombre_paciente) && empty($estado) && empty($procedencia) && empty($prestacion) && empty($profesional) && empty($fecha_solicitud) && empty($adjuntar)) {
+			if (empty($run) && empty($pasaporte) && empty($nombre_paciente) && empty($estado) && empty($procedencia) && empty($prestacion) && empty($profesional) && empty($fecha_solicitud) && empty($adjuntar)) {
 				echo json_encode(["error" => "Debe ingresar al menos un campo para realizar la búsqueda"]);
 				return;
 			}
@@ -3581,6 +3641,10 @@ class HomeController
 
 				$where .= " AND dp.rut = '$run' ";
 			} 
+
+			if (!empty($pasaporte)) {
+				$where .= " AND dp.pasaporte_o_codigo_interno = '$pasaporte' ";
+			}
 
 			if (!empty($nombre_paciente)) {
 				$where .= " AND (dp.nombres = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_materno) = '$nombre_paciente')";
@@ -3623,6 +3687,7 @@ class HomeController
 					dp.id_datos_paciente,
 					ds.id_detalle_de_solicitud,
 					dp.rut,
+					dp.pasaporte_o_codigo_interno,
 					CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) AS paciente,
 					dp.telefono,
 					dp.edad,
@@ -4339,7 +4404,7 @@ class HomeController
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
 			
-			$pdomodel->where("id_datos_paciente", $paciente, "=", "AND");
+			/*$pdomodel->where("id_datos_paciente", $paciente, "=", "AND");
 			$pdomodel->where("examen", $examen, "=", "AND");
 			$pdomodel->where("fecha_solicitud", $fecha_formateada);
 			$result = $pdomodel->select("detalle_de_solicitud");
@@ -4347,7 +4412,7 @@ class HomeController
 			if ($result) {
 				echo json_encode(['error' => 'El paciente no puede poseer más de una solicitud activa con esta prestación']);
 				return;
-			}
+			}*/
 
 			$session_data_detalle_de_solicitud = $pdomodel->DBQuery(
 				"SELECT * FROM session_data_detalle_de_solicitud 
@@ -4367,7 +4432,7 @@ class HomeController
 				}
 			}*/
 
-			$duplicateSolicitud = false;
+			/*$duplicateSolicitud = false;
 			if (!empty($session_data_detalle_de_solicitud)) {
 				$duplicateSolicitud = true;
 			}
@@ -4375,7 +4440,7 @@ class HomeController
 			if ($duplicateSolicitud) {
 				echo json_encode(['error' => 'El paciente no puede poseer más de una solicitud activa con esta prestación']);
 				return;
-			} else {
+			} else {*/
 				$detalle_de_solicitud = [
 					"usuario_sesion" => $_SESSION['usuario'][0]["usuario"],
 					"codigo_fonasa" => $codigo_fonasa,
@@ -4430,7 +4495,7 @@ class HomeController
 				];
 		
 				echo json_encode($response);
-			}
+			//}
 		}
 	}	
 	
