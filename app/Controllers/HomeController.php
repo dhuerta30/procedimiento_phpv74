@@ -3643,7 +3643,7 @@ class HomeController
 			} 
 
 			if (!empty($pasaporte)) {
-				$where .= " AND dp.pasaporte_o_codigo_interno = '$pasaporte' ";
+				$where .= " AND dp.pasaporte_o_codigo_interno LIKE '%$pasaporte%' ";
 			}
 
 			if (!empty($nombre_paciente)) {
