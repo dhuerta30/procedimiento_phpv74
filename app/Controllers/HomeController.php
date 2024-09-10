@@ -2044,7 +2044,7 @@ class HomeController
 			"Broncopulmonar Adulto" => "Broncopulmonar Adulto",
 			"Medicina" => "Medicina",
 			"Maternidad" => "Maternidad",
-			"Cirujia" => "Cirujia",
+			"Cirugía" => "Cirugía",
 			"Reumatologia" => "Reumatologia",
 			"Diabetología" => "Diabetología",
 			"Oftalmología" => "Oftalmología", 
