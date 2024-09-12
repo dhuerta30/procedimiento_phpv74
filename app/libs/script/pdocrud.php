@@ -102,6 +102,7 @@ function eliminar_submenu($data, $obj){
     return $data;
 }
 
+
 function carga_masiva_pacientes_insertar($data, $obj) {
     $archivo = basename($data["carga_masiva_pacientes"]["archivo"]);
     $extension = pathinfo($archivo, PATHINFO_EXTENSION);
@@ -686,6 +687,19 @@ function editar_lista_examenes_notas($data, $obj){
    
     return $data;
 }
+
+function editar_lista_examenes_modificar($data, $obj){
+    $id_datos_paciente = $data["datos_paciente"]["id_datos_paciente"];
+    $fecha_solicitud = $data["detalle_de_solicitud"]["fecha_solicitud"];
+
+    $pdomodel = $obj->getPDOModelObj();
+    $pdomodel->where("id_datos_paciente", $id_datos_paciente);
+    $pdomodel->update("detalle_de_solicitud", array(
+        "fecha_solicitud" => $fecha_solicitud
+    ));
+   return $data;
+}
+
 
 function formatTable_buscar_examenes($data, $obj){
     if($data){
