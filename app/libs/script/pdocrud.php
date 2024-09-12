@@ -700,7 +700,6 @@ function editar_lista_examenes_modificar($data, $obj){
    return $data;
 }
 
-
 function formatTable_buscar_examenes($data, $obj){
     if($data){
         for ($i = 0; $i < count($data); $i++) {
