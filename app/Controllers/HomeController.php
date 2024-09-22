@@ -2441,6 +2441,8 @@ class HomeController
 						<label class='control-label col-form-label'>Prestación</label>
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text prestacion'>
 					</div>
+				</div>
+				<div class='row d-flex'>
 					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>Estado</label>
 						<select class='form-control pdocrud-form-control pdocrud-select estado'>
