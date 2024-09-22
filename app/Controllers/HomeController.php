@@ -3687,6 +3687,7 @@ class HomeController
 			}
 
 			$query = "SELECT 
+					DISTINCT
 					dp.id_datos_paciente,
 					ds.id_detalle_de_solicitud,
 					dp.rut,
@@ -3715,7 +3716,7 @@ class HomeController
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
 				GROUP BY 
-					dp.id_datos_paciente, ds.id_detalle_de_solicitud, dp.rut, dp.edad, ds.fecha_egreso, ds.fecha_solicitud, ds.examen
+					dp.id_datos_paciente, ds.fecha_solicitud
 			";
 
 			$data = $pdomodel->DBQuery($query);
@@ -3733,6 +3734,7 @@ class HomeController
 
 		$data = $pdomodel->DBQuery(
 			"SELECT 
+				DISTINCT
 				dp.id_datos_paciente,
 				ds.id_detalle_de_solicitud,
 				dp.rut,
@@ -3760,7 +3762,7 @@ class HomeController
 				profesional AS pro ON pro.id_profesional = dg_p.profesional
 			WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
 			GROUP BY 
-			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
+			dp.id_datos_paciente, ds.fecha_solicitud"
 		);
 
 		$dataValues = array_map(function($row) {
