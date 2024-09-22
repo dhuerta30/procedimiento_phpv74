@@ -2668,6 +2668,7 @@ class HomeController
 			$paciente = new DatosPacienteModel();
 			$data = $paciente->PacientePorId($id);
 		
+			$pdocrud->formFieldValue("id_datos_paciente", $id_datos_paciente[0]["id_datos_paciente"]);
 			$pdocrud->formFieldValue("fecha_solicitud", $id_datos_paciente[0]["fecha_solicitud"]);
 
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");

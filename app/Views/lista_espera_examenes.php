@@ -888,6 +888,7 @@ $(document).on("pdocrud_after_submission", function(event, obj, data){
         $('#procedimientos').modal('hide');
         $('#egresar_solicitud').modal('hide');
         $('#agregar_nota').modal('hide');
+        $('#modificar').modal('hide');
     
         Swal.fire({
             title: 'Genial!',
