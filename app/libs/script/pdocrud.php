@@ -102,7 +102,6 @@ function eliminar_submenu($data, $obj){
     return $data;
 }
 
-
 function carga_masiva_pacientes_insertar($data, $obj) {
     $archivo = basename($data["carga_masiva_pacientes"]["archivo"]);
     $extension = pathinfo($archivo, PATHINFO_EXTENSION);
@@ -133,7 +132,7 @@ function carga_masiva_pacientes_insertar($data, $obj) {
                 }
 
                 // Verificación de nombre vacío o inválido
-                if (empty($nombre) || !preg_match('/^[a-zA-Z\s]+$/', $nombre)) {
+                if (empty($nombre) || !preg_match('/^[\p{L}\s\'-]+$/u', $nombre)) {
                     $nombresInvalidos[] = $rut; // Guardamos el RUT asociado al nombre inválido
                 }
 
@@ -167,19 +166,19 @@ function carga_masiva_pacientes_insertar($data, $obj) {
                     $edad = $diferencia->y;
 
                     $sql = array(
-                        'rut' => trim($Excelval['Rut']),
-                        'nombres' => trim($Excelval['Nombre']),
-                        'telefono' => trim($Excelval['Teléfono']),
-                        'apellido_paterno' => trim($Excelval['Apellido Paterno']),
-                        'apellido_materno' => trim($Excelval['Apellido Materno']),
+                        'rut' => $Excelval['Rut'],
+                        'nombres' => $Excelval['Nombre'],
+                        'telefono' => $Excelval['Teléfono'],
+                        'apellido_paterno' => $Excelval['Apellido Paterno'],
+                        'apellido_materno' => $Excelval['Apellido Materno'],
                         'edad' => $edad,
-                        'fecha_nacimiento' => trim($Excelval['Fecha Nacimiento']),
-                        'direccion' => trim($Excelval['Dirección']),
-                        'sexo' => trim($Excelval['Sexo']),
+                        'fecha_nacimiento' => $Excelval['Fecha Nacimiento'],
+                        'direccion' => $Excelval['Dirección'],
+                        'sexo' => $Excelval['Sexo'],
                     );
 
-                    if (!empty(trim($Excelval['Fecha y hora Ingreso']))) {
-                        $sql['fecha_y_hora_ingreso'] = date("Y-m-d", strtotime(trim($Excelval['Fecha y hora Ingreso'])));
+                    if (!empty($Excelval['Fecha y hora Ingreso'])) {
+                        $sql['fecha_y_hora_ingreso'] = date("Y-m-d", strtotime($Excelval['Fecha y hora Ingreso']));
                     }
 
                     $pdomodel->insertBatch("datos_paciente", array($sql));
@@ -258,8 +257,6 @@ function carga_masiva_pacientes_insertar($data, $obj) {
         }
     }
 
-    print_r($data);
-    die();
     return $data;
 }
 
