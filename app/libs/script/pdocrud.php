@@ -160,11 +160,11 @@ function carga_masiva_usuarios_insertar($data, $obj){
 
 function generarContrasenaAleatoria($longitud) {
     $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $contraseña = '';
+    $password = '';
     for ($i = 0; $i < $longitud; $i++) {
-        $contraseña .= $caracteres[rand(0, strlen($caracteres) - 1)];
+        $password .= $caracteres[rand(0, strlen($caracteres) - 1)];
     }
-    return $contraseña;
+    return $password;
 }
 
 function carga_masiva_pacientes_insertar($data, $obj) {
