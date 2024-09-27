@@ -137,7 +137,7 @@ function carga_masiva_usuarios_insertar($data, $obj){
                             'apaterno' => $Excelval['Apellido Paterno'],
                             'amaterno' => $Excelval['Apellido Materno'],
                             'rut' => $rut_completo,
-                            'passowrd' => password_hash($pass, PASSWORD_BCRYPT)
+                            'passowrd' => password_hash($pass, PASSWORD_DEFAULT)
                         );
 
                         $pdomodel->insertBatch("usuario", array($sql));
