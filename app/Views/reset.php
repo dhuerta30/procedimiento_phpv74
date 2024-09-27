@@ -17,6 +17,13 @@
         font-size: 20;
         font-weight: 500;
     }
+
+    ul.list-unstyled {
+        background: red;
+        color: #fff;
+        padding: 3px;
+        border-radius: 4px;
+    }
 </style>
 <div class="container">
     <div class="row mt-5">
