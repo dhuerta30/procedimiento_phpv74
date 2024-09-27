@@ -137,6 +137,9 @@ function carga_masiva_usuarios_insertar($data, $obj){
                             'apaterno' => $Excelval['Apellido Paterno'],
                             'amaterno' => $Excelval['Apellido Materno'],
                             'rut' => $rut_completo,
+                            'unidad' => $Excelval['Descripción Unidad'],
+                            'planta' => $Excelval['Descripción Planta'],
+                            'calidad_juridica' => $Excelval['Descripción Calidad Jurídica'],
                             'passowrd' => password_hash($pass, PASSWORD_DEFAULT)
                         );
 
