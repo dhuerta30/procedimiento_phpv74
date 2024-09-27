@@ -117,7 +117,7 @@ function carga_masiva_usuarios_insertar($data, $obj){
             die(json_encode($error_msg));
         } else {
 
-            $records = $queryfy->excelToArray("uploads/".$archivo); 
+            $records = $pdomodel->excelToArray("uploads/".$archivo);
 
             $sql = array();
             foreach ($records as $Excelval) {
@@ -126,16 +126,21 @@ function carga_masiva_usuarios_insertar($data, $obj){
                 if (!App\Controllers\HomeController::validaRut($rut_completo)) {
                     $rutInvalidos[] = $rut_completo;
                 } else {
-                    $existingUsuario = $queryfy->DBQuery("SELECT * FROM usuario WHERE rut = :rut", ['rut' => $rut_completo]);
+                    $existingUsuario = $pdomodel->DBQuery("SELECT * FROM usuario WHERE rut = :rut", ['rut' => $rut_completo]);
 
                     if (!$existingUsuario) {
+
+                        $pass = generarContrasenaAleatoria(10);
+
                         $sql = array(
-                            'nmedico' => $Excelval['Nombre'],
-                            'especialidad' => $Excelval['Especialidad'],
-                            'rut' => $rut_completo
+                            'nombres' => $Excelval['Nombre'],
+                            'apaterno' => $Excelval['Apellido Paterno'],
+                            'amaterno' => $Excelval['Apellido Materno'],
+                            'rut' => $rut_completo,
+                            'passowrd' => password_hash($pass, PASSWORD_BCRYPT)
                         );
 
-                        $queryfy->insertBatch("usuario", array($sql));
+                        $pdomodel->insertBatch("usuario", array($sql));
                     } else {
                         $error_msg = array("message" => "", "error" => "Lo Siguientes Usuarios ingresados ya existen: ". implode(", ", $Excelval["Nombre"]), "redirectionurl" => "");
                         die(json_encode($error_msg));
@@ -151,6 +156,15 @@ function carga_masiva_usuarios_insertar($data, $obj){
         }
     }
     return $data;
+}
+
+function generarContrasenaAleatoria($longitud) {
+    $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $contraseña = '';
+    for ($i = 0; $i < $longitud; $i++) {
+        $contraseña .= $caracteres[rand(0, strlen($caracteres) - 1)];
+    }
+    return $contraseña;
 }
 
 function carga_masiva_pacientes_insertar($data, $obj) {
