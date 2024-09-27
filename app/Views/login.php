@@ -32,6 +32,7 @@
             </div>
             <li class="list-group-item bg-white">
             <?= $login; ?>
+            <?= $mask; ?>
             </li>
             <li class="list-group-item bg-primary"><a href="<?=$_ENV["BASE_URL"]?>login/reset" class="text-white">¿Olvidaste tu clave?</a></li>
         </ul>

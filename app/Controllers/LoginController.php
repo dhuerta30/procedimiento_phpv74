@@ -15,10 +15,10 @@ class LoginController {
 	{
 		SessionManager::startSession();
 
-		if (isset($_SESSION["data"]["usuario"]["usuario"])) {
+		if (isset($_SESSION["data"]["usuario"]["rut"])) {
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->where("usuario", $_SESSION["data"]["usuario"]["usuario"]);
+			$pdomodel->where("rut", $_SESSION["data"]["usuario"]["rut"]);
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
 		}
@@ -31,17 +31,20 @@ class LoginController {
 
     public function index(){
         $pdocrud = DB::PDOCrud();
-		$pdocrud->fieldDisplayOrder(array("usuario", "password"));
+		$pdocrud->addPlugin("bootstrap-inputmask");
+		$pdocrud->fieldCssClass("rut", array("rut"));
+		$pdocrud->fieldDisplayOrder(array("rut", "password"));
 		$pdocrud->fieldRenameLable("email", "Correo");
 		$pdocrud->fieldRenameLable("password", "Contraseña");
-        $pdocrud->fieldAddOnInfo("usuario", "before", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span></div>');
+        $pdocrud->fieldAddOnInfo("rut", "before", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span></div>');
         $pdocrud->fieldAddOnInfo("password", "before", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-key"></i></span></div>');
 		$pdocrud->addCallback("before_select", "beforeloginCallback");
-		$pdocrud->formFields(array("usuario", "password"));
+		$pdocrud->formFields(array("rut", "password"));
 		$pdocrud->setLangData("login", "Ingresar");
 		$login = $pdocrud->dbTable("usuario")->render("selectform");
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{3}-(9|k|K)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "'none'"));
 
-        View::render('login', ['login' => $login]);
+        View::render('login', ['login' => $login, 'mask' => $mask]);
     }
 
 	public function users()

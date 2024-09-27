@@ -1057,10 +1057,10 @@ function editar_usuario($data, $obj){
 function beforeloginCallback($data, $obj) {  
 
     $pass = $data['usuario']['password'];
-    $user = $data['usuario']['usuario'];
+    $rut = $data['usuario']['rut'];
 
     $pdomodel = $obj->getPDOModelObj();
-    $pdomodel->where("usuario", $user);
+    $pdomodel->where("rut", $rut);
     $hash = $pdomodel->select("usuario");
 
     if($hash){
