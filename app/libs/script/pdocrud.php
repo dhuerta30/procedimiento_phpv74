@@ -102,6 +102,57 @@ function eliminar_submenu($data, $obj){
     return $data;
 }
 
+function carga_masiva_usuarios_insertar($data, $obj){   
+    $archivo = basename($data["carga_masiva_usuarios"]["archivo"]);
+    $extension = pathinfo($archivo, PATHINFO_EXTENSION);
+
+    $pdomodel = $obj->getPDOModelObj();
+
+    if (empty($archivo)) {
+        $error_msg = array("message" => "", "error" => "No se ha subido ningún Archivo", "redirectionurl" => "");
+        die(json_encode($error_msg));
+    } else {
+        if ($extension != "xlsx") {
+            $error_msg = array("message" => "", "error" => "El Archivo Subido no es un Archivo Excel Válido", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        } else {
+
+            $records = $queryfy->excelToArray("uploads/".$archivo); 
+
+            $sql = array();
+            foreach ($records as $Excelval) {
+                $rut_completo = $Excelval['Rut'] . '-' . $Excelval['Dv'];
+
+                if (!App\Controllers\HomeController::validaRut($rut_completo)) {
+                    $rutInvalidos[] = $rut_completo;
+                } else {
+                    $existingUsuario = $queryfy->DBQuery("SELECT * FROM usuario WHERE rut = :rut", ['rut' => $rut_completo]);
+
+                    if (!$existingUsuario) {
+                        $sql = array(
+                            'nmedico' => $Excelval['Nombre'],
+                            'especialidad' => $Excelval['Especialidad'],
+                            'rut' => $rut_completo
+                        );
+
+                        $queryfy->insertBatch("usuario", array($sql));
+                    } else {
+                        $error_msg = array("message" => "", "error" => "Lo Siguientes Usuarios ingresados ya existen: ". implode(", ", $Excelval["Nombre"]), "redirectionurl" => "");
+                        die(json_encode($error_msg));
+                    }
+                }
+            }
+
+            if (!empty($rutInvalidos)) {
+                $error_msg = array("message" => "", "error" => "Los siguientes Rut inválidos no han sido cargados: " . implode(", ", $rutInvalidos), "redirectionurl" => "");
+                die(json_encode($error_msg));
+            }
+            $data["carga_masiva_usuarios"]["archivo"] = basename($data["carga_masiva_usuarios"]["archivo"]);
+        }
+    }
+    return $data;
+}
+
 function carga_masiva_pacientes_insertar($data, $obj) {
     $archivo = basename($data["carga_masiva_pacientes"]["archivo"]);
     $extension = pathinfo($archivo, PATHINFO_EXTENSION);

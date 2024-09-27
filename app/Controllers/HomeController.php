@@ -1834,10 +1834,16 @@ class HomeController
 			$pdocrud->relatedData('idrol','rol','idrol','nombre_rol');
 			$render = $pdocrud->dbTable("usuario")->render();
 
-			View::render(
-				'home',
-				['render' => $render]
-			);
+			$carga_masiva_usuarios = DB::PDOCrud(true);
+			$carga_masiva_usuarios->fieldRenameLable("archivo", "Archivo Excel");
+			$carga_masiva_usuarios->setLangData("save", "Subir");
+			$carga_masiva_usuarios->setSettings("required", false);
+			$carga_masiva_usuarios->fieldTypes("archivo", "FILE_NEW");
+			$carga_masiva_usuarios->addCallback("before_insert", "carga_masiva_usuarios_insertar");
+			$upload = $carga_masiva_usuarios->dbTable("carga_masiva_usuarios")->render("insertform");
+
+			View::render('home',
+				['render' => $render, 'upload' => $upload]);
 		} else {
 			Redirect::to("home/datos_paciente");
 		}

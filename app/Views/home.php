@@ -8,6 +8,11 @@
 				<div class="row mb-3">
 				</div>
 				<?=$render?>
+
+        <br>
+        <br>
+        <?=$upload?>
+
 			</div>
 		</div>
 	</section>
