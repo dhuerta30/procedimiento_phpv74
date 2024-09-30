@@ -136,7 +136,7 @@ function carga_masiva_usuarios_insertar($data, $obj){
 
                         $image = PDOCrudABSPATH . 'uploads/1710162578_user.png';
                         $avatar = basename($image);
-                        
+
                         $sql = array(
                             'nombre' => $Excelval['Nombre Funcionario'],
                             'rut' => $rut_completo,
