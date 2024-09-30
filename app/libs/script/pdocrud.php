@@ -134,6 +134,9 @@ function carga_masiva_usuarios_insertar($data, $obj){
 
                         $pass = $rut_digits;
 
+                        $image = PDOCrudABSPATH . 'uploads/1710162578_user.png';
+                        $avatar = basename($image);
+                        
                         $sql = array(
                             'nombre' => $Excelval['Nombre Funcionario'],
                             'rut' => $rut_completo,
@@ -141,7 +144,9 @@ function carga_masiva_usuarios_insertar($data, $obj){
                             'planta' => $Excelval['Descripción Planta'],
                             'calidad_juridica' => $Excelval['Descripción Calidad Jurídica'],
                             'cargo' => $Excelval['Descripción Cargo'],
-                            'password' => password_hash($pass, PASSWORD_DEFAULT)
+                            'password' => password_hash($pass, PASSWORD_DEFAULT),
+                            'estatus' => 1,
+                            'avatar' => $avatar
                         );
 
                         $pdomodel->insertBatch("usuario", array($sql));
