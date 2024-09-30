@@ -58,7 +58,7 @@ class LoginController {
 					<div class="form-group">
 						<label class="form-label">Rut:</label>
 						<div class="input-group-append">
-							<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>	
+							<span class="input-group-text" id="basic-addon1"><i class="fa fa-credit-card"></i></span>	
 							{rut}
 						</div>
 						<p class="pdocrud_help_block help-block form-text with-errors"></p>
