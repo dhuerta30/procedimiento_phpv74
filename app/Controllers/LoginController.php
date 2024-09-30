@@ -23,6 +23,14 @@ class LoginController {
 			$_SESSION["usuario"] = $sesion_users;
 		}
 
+		if (isset($_SESSION["data"]["usuario"]["usuario"])) {
+			$pdocrud = DB::PDOCrud();
+			$pdomodel = $pdocrud->getPDOModelObj();
+			$pdomodel->where("usuario", $_SESSION["data"]["usuario"]["usuario"]);
+			$sesion_users = $pdomodel->select("usuario");
+			$_SESSION["usuario"] = $sesion_users;
+		}
+
 		$Sesusuario = SessionManager::get('usuario');
 		if (isset($Sesusuario)) {
 			Redirect::to("home/datos_paciente");

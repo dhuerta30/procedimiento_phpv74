@@ -1118,29 +1118,32 @@ function editar_usuario($data, $obj){
     }
 }
 
-//example of how to add action function
 function beforeloginCallback($data, $obj) {
-
     $pass = $data['usuario']['password'];
-    $user = $data['usuario']['usuario'];
-    $rut = $data['usuario']['rut'];
+    $user_or_rut = $data['usuario']['usuario'] ?? $data['usuario']['rut'] ?? null;
 
-    $pdomodel = $obj->getPDOModelObj();
-    $pdomodel->where("rut", $rut);
-    $hash = $pdomodel->select("usuario");
+    if ($user_or_rut) {
+        $pdomodel = $obj->getPDOModelObj();
+        $field = isset($data['usuario']['rut']) ? "rut" : "usuario";
+        $pdomodel->where($field, $user_or_rut);
+        $hash = $pdomodel->select("usuario");
 
-    if($hash){
-        if (password_verify($pass, $hash[0]['password'])) {
-            @session_start();
-            $_SESSION["data"] = $data;
-            $obj->setLangData("no_data", "Bienvenido");
-            $obj->formRedirection($_ENV['URL_PDOCRUD']."home/datos_paciente");
+        if ($hash) {
+            if (password_verify($pass, $hash[0]['password'])) {
+                @session_start();
+                $_SESSION["data"] = $data;
+                $obj->setLangData("no_data", "Bienvenido");
+                $obj->formRedirection($_ENV['URL_PDOCRUD'] . "home/datos_paciente");
+            } else {
+                echo "El usuario o la contraseña ingresada no coinciden";
+                die();
+            }
         } else {
-            echo "El usuario o la contraseña ingresada no coinciden";
+            echo "Datos erróneos";
             die();
         }
     } else {
-        echo "Datos erroneos";
+        echo "Datos erróneos";
         die();
     }
 

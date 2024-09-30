@@ -3921,9 +3921,9 @@ Class PDOCrud {
                 $this->settings["formtype"] = "step";
                 $this->submitbtnClass = "finish";
             } else if ($this->inlineEdit) {
-                return $this->ArtifyView->renderInlineField($data, $this->settings, $submitData);
+                return $this->pdocrudView->renderInlineField($data, $this->settings, $submitData);
             } else {
-                $output = $this->ArtifyView->renderField($data, $this->settings);
+                $output = $this->pdocrudView->renderField($data, $this->settings);
                 $this->settings["formtype"] = "normal";
                 $this->submitbtnClass = "";
             }
@@ -3966,7 +3966,7 @@ Class PDOCrud {
                  $this->settings["formtype"] = "step";
                  $this->submitbtnClass = "finish";
              } else {
-                 $output = $this->ArtifyView->renderViewFields($result, $columns, $this->langData, $this->settings, $this->objKey, $leftJoinData, $data["id"]);
+                 $output = $this->pdocrudView->renderViewFields($result, $columns, $this->langData, $this->settings, $this->objKey, $leftJoinData, $data["id"]);
                  $this->settings["formtype"] = "normal";
                  $this->submitbtnClass = "";
              }
