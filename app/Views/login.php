@@ -7,6 +7,7 @@
 	<title>Hospital | Login</title>
 	<!-- Google Font: Source Sans Pro -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link href="<?=$_ENV["BASE_URL"]?>css/sweetalert2.min.css" rel="stylesheet">
 </head>
 <body>
 <style>
@@ -51,6 +52,7 @@
 <div id="pdocrud-ajax-loader">
     <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
+<script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script>
     $(document).on("change", ".seleccion_de_acceso", function(){
         let val = $(this).val();
@@ -98,6 +100,54 @@
         $(".usuario").attr("required", "required");
         $(".rut").attr("required", "required");
         $(".botones").addClass("d-none");
+    });
+
+    $(document).on("pdocrud_after_submission", function(event, obj, data) {
+      $('.pdocrud_error').hide();
+      $('.pdocrud_message').hide();
+
+      if(data == "Datos erróneos"){
+        Swal.fire({
+            title: "Error!",
+            text: "El usuario o la contraseña ingresada no coinciden",
+            icon: "error",
+            confirmButtonText: "Aceptar",
+            allowOutsideClick: false
+        });
+        $(".rut").val("");
+        $(".pdocrud-password").val("");
+      } else if(data == "El usuario o la contraseña ingresada no coinciden"){
+        Swal.fire({
+            title: "Error!",
+            text: "El usuario o la contraseña ingresada no coinciden",
+            icon: "error",
+            confirmButtonText: "Aceptar",
+            allowOutsideClick: false
+        });
+        $(".rut").val("");
+        $(".pdocrud-password").val("");
+      } else if(data == "El RUT ingresado no coincide"){
+        Swal.fire({
+            title: "Error!",
+            text: "El RUT ingresado no coincide o la contraseña ingresada no coinciden",
+            icon: "error",
+            confirmButtonText: "Aceptar",
+            allowOutsideClick: false
+        });
+        $(".rut").val("");
+        $(".pdocrud-password").val("");
+      } else {
+        Swal.fire({
+            title: "Genial!",
+            text: "Bienvenido",
+            icon: "success",
+            confirmButtonText: "Aceptar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href="<?=$_ENV["BASE_URL"]?>home/index";
+            }
+        });
+      }
     });
 </script>
 </body>
