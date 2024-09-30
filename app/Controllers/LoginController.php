@@ -33,6 +33,7 @@ class LoginController {
         $pdocrud = DB::PDOCrud();
 		$pdocrud->addPlugin("bootstrap-inputmask");
 		$pdocrud->fieldCssClass("rut", array("rut"));
+		$pdocrud->fieldCssClass("password", array("password"));
 		$pdocrud->fieldDisplayOrder(array("rut", "password"));
 		$pdocrud->fieldRenameLable("email", "Correo");
 		$pdocrud->fieldRenameLable("password", "Contraseña");

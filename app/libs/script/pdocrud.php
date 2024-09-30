@@ -130,8 +130,10 @@ function carga_masiva_usuarios_insertar($data, $obj){
 
                     if (!$existingUsuario) {
 
-                        $pass = generarContrasenaAleatoria(10);
+                        $rut_digits = substr($Excelval['Rut'], 0, 4);
 
+                        $pass = $rut_digits;
+                        
                         $sql = array(
                             'nombres' => $Excelval['Nombre'],
                             'apaterno' => $Excelval['Apellido Paterno'],
@@ -159,15 +161,6 @@ function carga_masiva_usuarios_insertar($data, $obj){
         }
     }
     return $data;
-}
-
-function generarContrasenaAleatoria($longitud) {
-    $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $password = '';
-    for ($i = 0; $i < $longitud; $i++) {
-        $password .= $caracteres[rand(0, strlen($caracteres) - 1)];
-    }
-    return $password;
 }
 
 function carga_masiva_pacientes_insertar($data, $obj) {
