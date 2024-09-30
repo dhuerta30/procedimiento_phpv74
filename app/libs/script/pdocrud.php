@@ -102,7 +102,7 @@ function eliminar_submenu($data, $obj){
     return $data;
 }
 
-function carga_masiva_usuarios_insertar($data, $obj){   
+function carga_masiva_usuarios_insertar($data, $obj) {
     $archivo = basename($data["carga_masiva_usuarios"]["archivo"]);
     $extension = pathinfo($archivo, PATHINFO_EXTENSION);
 
@@ -116,10 +116,9 @@ function carga_masiva_usuarios_insertar($data, $obj){
             $error_msg = array("message" => "", "error" => "El Archivo Subido no es un Archivo Excel Válido", "redirectionurl" => "");
             die(json_encode($error_msg));
         } else {
+            $records = $pdomodel->excelToArray("uploads/" . $archivo);
 
-            $records = $pdomodel->excelToArray("uploads/".$archivo);
-
-            $sql = array();
+            $rutInvalidos = [];
             foreach ($records as $Excelval) {
                 $rut_completo = $Excelval['Rut'] . '-' . $Excelval['Dv'];
 
@@ -129,15 +128,23 @@ function carga_masiva_usuarios_insertar($data, $obj){
                     $existingUsuario = $pdomodel->DBQuery("SELECT * FROM usuario WHERE rut = :rut", ['rut' => $rut_completo]);
 
                     if (!$existingUsuario) {
+                        // Dividir el nombre completo en nombres y apellidos
+                        $nombreFuncionario = $Excelval['Nombre Funcionario'];
+                        $nombresArray = explode(' ', $nombreFuncionario);
 
+                        // Asumiendo que el formato es "Nombre1 Nombre2 ApellidoPaterno ApellidoMaterno"
+                        $apaterno = array_pop($nombresArray);
+                        $amaterno = array_pop($nombresArray);
+                        $nombres = implode(' ', $nombresArray);
+
+                        // Generar la contraseña usando los primeros 4 dígitos del rut
                         $rut_digits = substr($Excelval['Rut'], 0, 4);
-
                         $pass = $rut_digits;
 
                         $sql = array(
-                            'nombres' => $Excelval['Nombre'],
-                            'apaterno' => $Excelval['Apellido Paterno'],
-                            'amaterno' => $Excelval['Apellido Materno'],
+                            'nombres' => $nombres,
+                            'apaterno' => $apaterno,
+                            'amaterno' => $amaterno,
                             'rut' => $rut_completo,
                             'unidad' => $Excelval['Descripción Unidad'],
                             'planta' => $Excelval['Descripción Planta'],
@@ -148,7 +155,7 @@ function carga_masiva_usuarios_insertar($data, $obj){
 
                         $pdomodel->insertBatch("usuario", array($sql));
                     } else {
-                        $error_msg = array("message" => "", "error" => "Lo Siguientes Usuarios ingresados ya existen: ". implode(", ", $Excelval["Nombre"]), "redirectionurl" => "");
+                        $error_msg = array("message" => "", "error" => "Los siguientes usuarios ya existen: " . implode(", ", $Excelval["Nombre Funcionario"]), "redirectionurl" => "");
                         die(json_encode($error_msg));
                     }
                 }
@@ -163,6 +170,7 @@ function carga_masiva_usuarios_insertar($data, $obj){
     }
     return $data;
 }
+
 
 function carga_masiva_pacientes_insertar($data, $obj) {
     $archivo = basename($data["carga_masiva_pacientes"]["archivo"]);
