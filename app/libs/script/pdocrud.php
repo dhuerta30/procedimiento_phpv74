@@ -133,7 +133,7 @@ function carga_masiva_usuarios_insertar($data, $obj){
                         $rut_digits = substr($Excelval['Rut'], 0, 4);
 
                         $pass = $rut_digits;
-                        
+
                         $sql = array(
                             'nombres' => $Excelval['Nombre'],
                             'apaterno' => $Excelval['Apellido Paterno'],
@@ -142,6 +142,7 @@ function carga_masiva_usuarios_insertar($data, $obj){
                             'unidad' => $Excelval['Descripción Unidad'],
                             'planta' => $Excelval['Descripción Planta'],
                             'calidad_juridica' => $Excelval['Descripción Calidad Jurídica'],
+                            'cargo' => $Excelval['Descripción Cargo'],
                             'passowrd' => password_hash($pass, PASSWORD_DEFAULT)
                         );
 
