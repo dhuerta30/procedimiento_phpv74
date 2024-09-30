@@ -1119,9 +1119,10 @@ function editar_usuario($data, $obj){
 }
 
 //example of how to add action function
-function beforeloginCallback($data, $obj) {  
+function beforeloginCallback($data, $obj) {
 
     $pass = $data['usuario']['password'];
+    $user = $data['usuario']['usuario'];
     $rut = $data['usuario']['rut'];
 
     $pdomodel = $obj->getPDOModelObj();

@@ -29,6 +29,7 @@ Class PDOCrud {
 
     private $tableName;
     private $multi;
+    private $set_template = "";
     private $form;
     private $formSteps;
     private $formExport;
@@ -275,6 +276,12 @@ Class PDOCrud {
             return $this->settings[$setting];
         else
             return $this->getLangData("no_settings_found");
+    }
+
+    public function set_template($template)
+    {
+        $this->set_template = $template;
+        return $this;
     }
 
     /**
@@ -3888,40 +3895,98 @@ Class PDOCrud {
 
 
     private function renderFormData($data, $submitData = array(), $type = "insert") {
-        $this->submitbtnClass = "";
-        if (isset($this->formSteps)) {
-            $output = $this->getStepwiseFormData($data);
-            $this->settings["formtype"] = "step";
-            $this->submitbtnClass = "finish";
-        } else if ($this->inlineEdit) {
-            return $this->pdocrudView->renderInlineField($data, $this->settings, $submitData);
+
+        $output = '';
+
+        $html_template = $this->set_template;
+
+        if ($html_template != "") {
+            
+            $html_template = $html_template;
+
+            foreach ($data as $key => $item) {
+                $arr = explode(".", $item['fieldName']);
+                $n = $arr[0];
+
+                $html_template = str_replace("{" . $n . "}", $item['element'], $html_template);
+            }
+
+            $output .= $html_template;
+
         } else {
-            $output = $this->pdocrudView->renderField($data, $this->settings);
-            $this->settings["formtype"] = "normal";
+
             $this->submitbtnClass = "";
+            if (isset($this->formSteps)) {
+                $output = $this->getStepwiseFormData($data);
+                $this->settings["formtype"] = "step";
+                $this->submitbtnClass = "finish";
+            } else if ($this->inlineEdit) {
+                return $this->ArtifyView->renderInlineField($data, $this->settings, $submitData);
+            } else {
+                $output = $this->ArtifyView->renderField($data, $this->settings);
+                $this->settings["formtype"] = "normal";
+                $this->submitbtnClass = "";
+            }
+
+            if (isset($this->leftJoin))
+                $output .= $this->leftJoin;
+
+            return $output;
         }
 
         if (isset($this->leftJoin))
-            $output .= "<div class='form-group'>".$this->leftJoin."</div>";
+            $output .= $this->leftJoin;
 
         return $output;
     }
 
     private function renderViewFormData($result, $columns, $leftJoinData, $data) {
-        $this->submitbtnClass = "";
-        if (isset($this->formSteps) && isset($this->settings["viewFormTabs"]) && $this->settings["viewFormTabs"] === true) {
-            $viewData = array("columns" => $columns, "leftJoinData" => $leftJoinData, "data" => $data);
-            $output = $this->getStepwiseFormData($result, $viewData);
-            $this->settings["formtype"] = "step";
-            $this->submitbtnClass = "finish";
-        } else {
-            $output = $this->pdocrudView->renderViewFields($result, $columns, $this->langData, $this->settings, $this->objKey, $leftJoinData, $data["id"]);
-            $this->settings["formtype"] = "normal";
-            $this->submitbtnClass = "";
-        }
-
-        return $output;
-    }
+        $output = '';
+ 
+         $html_template = $this->set_template;
+ 
+         if ($html_template != "") {
+             
+             $html_template = $html_template;
+ 
+             foreach ($result as $key => $item) {
+                 $arr = explode(".", $item['fieldName']);
+                 $n = $arr[0];
+ 
+                 $html_template = str_replace("{" . $n . "}", $item['element'], $html_template);
+             }
+ 
+             $output .= $html_template;
+ 
+         } else {
+             $this->submitbtnClass = "";
+             if (isset($this->formSteps) && isset($this->settings["viewFormTabs"]) && $this->settings["viewFormTabs"] === true) {
+                 $viewData = array("columns" => $columns, "leftJoinData" => $leftJoinData, "data" => $data);
+                 $output = $this->getStepwiseFormData($result, $viewData);
+                 $this->settings["formtype"] = "step";
+                 $this->submitbtnClass = "finish";
+             } else {
+                 $output = $this->ArtifyView->renderViewFields($result, $columns, $this->langData, $this->settings, $this->objKey, $leftJoinData, $data["id"]);
+                 $this->settings["formtype"] = "normal";
+                 $this->submitbtnClass = "";
+             }
+ 
+             return $output;
+         }
+ 
+         $output .= "<div class='row'>";
+         $output .= "<div class='col-md-12 text-center'>";
+         if (isset($this->settings["viewBackButton"]) && $this->settings["viewBackButton"] === true) {
+                 $output .= '<button data-action="back" data-dismiss="modal" class="btn btn-info pdocrud-form-control pdocrud-button pdocrud-back" type="button">' . $this->langData["back"] . '</button>';
+         }
+         if (isset($this->settings["closeButton"]) && $this->settings["closeButton"] === true) {
+                 $output .= '<button data-action="close" data-dismiss="modal" class="btn btn-info pdocrud-form-control pdocrud-button pdocrud-close" type="button">' . $this->langData["close"] . '</button>';
+         }
+         $output .= "</div>";
+         $output .= "</div>";
+ 
+         return $output;
+     }
 
     private function getLeftJoinData() {
         $data = array();

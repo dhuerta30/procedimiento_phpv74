@@ -51,5 +51,39 @@
 <div id="pdocrud-ajax-loader">
     <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
+<script>
+    $(document).on("change", ".seleccion_de_acceso", function(){
+        let val = $(this).val();
+
+        if(val == "rut_clave"){
+            $(".rut_col").removeClass("d-none");
+            $(".usuario_col").addClass("d-none");
+            $(".usuario").attr("disabled", "disabled");
+            $(".usuario").removeAttr("required", "required");
+            $(".rut").removeAttr("disabled", "disabled");
+            $(".rut").attr("required", "required");
+        }
+        
+        if(val == "usuario_clave"){
+            $(".rut_col").addClass("d-none");
+            $(".usuario_col").removeClass("d-none");
+            $(".rut").attr("disabled", "disabled");
+            $(".rut").removeAttr("required", "required");
+            $(".usuario").removeAttr("disabled", "disabled");
+            $(".usuario").attr("required", "required");
+        } 
+
+        if(val == ""){
+            $(".usuario_col").addClass("d-none");
+            $(".rut_col").addClass("d-none");
+
+            $(".rut").attr("disabled", "disabled");
+            $(".usuario").attr("disabled", "disabled");
+
+            $(".usuario").attr("required", "required");
+            $(".rut").attr("required", "required");
+        }
+    });
+</script>
 </body>
 </html>

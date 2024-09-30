@@ -31,18 +31,57 @@ class LoginController {
 
     public function index(){
         $pdocrud = DB::PDOCrud();
+
+		$html_template = '
+			<div class="row">
+				<div class="col-md-12">
+					<label>¿Cómo desea ingresar?</label>
+					<select class="form-control seleccion_de_acceso">
+						<option value="">Seleccione una Opción de Ingreso</option>
+						<option value="rut_clave">Con Rut y Contraseña</option>
+						<option value="usuario_clave">Con Usuario y Contraseña</option>
+					</select>
+				</div>
+			</div>
+			<div class="row mt-2">
+				<div class="col-md-12 usuario_col d-none">
+					<div class="form-group">
+						<label class="form-label">Usuario:</label>
+						<div class="input-group-append">
+							<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>	
+							{usuario}
+						</div>
+						<p class="pdocrud_help_block help-block form-text with-errors"></p>
+					</div>
+				</div>
+				<div class="col-md-12 rut_col d-none">
+					<div class="form-group">
+						<label class="form-label">Rut:</label>
+						<div class="input-group-append">
+							<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>	
+							{rut}
+						</div>
+						<p class="pdocrud_help_block help-block form-text with-errors"></p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="form-label">Contraseña:</label>
+						<div class="input-group-append">
+							<span class="input-group-text" id="basic-addon1"><i class="fa fa-key"></i></span>	
+							{password}
+						</div>
+						<p class="pdocrud_help_block help-block form-text with-errors"></p>
+					</div>
+				</div>
+			</div>';
+		
+		$pdocrud->set_template($html_template);
 		$pdocrud->addPlugin("bootstrap-inputmask");
-		$pdocrud->fieldCssClass("usuario", array("usuario"));
 		$pdocrud->fieldCssClass("rut", array("rut"));
-		$pdocrud->fieldCssClass("password", array("password"));
-		$pdocrud->fieldDisplayOrder(array("usuario", "rut", "password"));
-		$pdocrud->fieldGroups("Name",array("usuario","rut"));
-		$pdocrud->fieldNotMandatory("usuario");
-		$pdocrud->fieldNotMandatory("rut");
-		$pdocrud->fieldRenameLable("password", "Contraseña");
-        $pdocrud->fieldAddOnInfo("usuario", "before", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span></div>');
-		$pdocrud->fieldAddOnInfo("rut", "before", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span></div>');
-        $pdocrud->fieldAddOnInfo("password", "before", '<div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa fa-key"></i></span></div>');
+		$pdocrud->fieldCssClass("usuario", array("usuario"));
 		$pdocrud->addCallback("before_select", "beforeloginCallback");
 		$pdocrud->formFields(array("usuario", "rut", "password"));
 		$pdocrud->setLangData("login", "Ingresar");
