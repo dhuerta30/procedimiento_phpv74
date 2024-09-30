@@ -2371,7 +2371,6 @@ class HomeController
 
 		$data = $pdomodel->DBQuery(
 			"SELECT 
-			DISTINCT
 			dp.id_datos_paciente,
 			ds.id_detalle_de_solicitud,
 			dp.rut,
@@ -2388,10 +2387,7 @@ class HomeController
 			ds.fecha as fecha,
 			especialidad,
 			CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
-			CASE 
-				WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' 
-				ELSE 'No' 
-			END AS tiene_adjunto
+			CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
 		FROM 
 			datos_paciente AS dp
 		INNER JOIN
@@ -2405,10 +2401,7 @@ class HomeController
 			AND ds.fecha_solicitud >= '$firstDayOfMonth'
             AND ds.fecha_solicitud <= '$lastDayOfMonth'
 		GROUP BY 
-			dp.id_datos_paciente, 
-			ds.fecha_solicitud, 
-			pro.id_profesional, 
-			ds.examen"
+			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen"
 		);
 
 		//echo $pdomodel->getLastQuery();
@@ -3729,7 +3722,7 @@ class HomeController
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
 				GROUP BY 
-					dp.id_datos_paciente, ds.fecha_solicitud
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen
 			";
 
 			$data = $pdomodel->DBQuery($query);
@@ -3764,10 +3757,7 @@ class HomeController
 				ds.fecha as fecha,
 				especialidad AS especialidad,
 				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
-				CASE 
-					WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' 
-					ELSE 'No' 
-				END AS tiene_adjunto
+				CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
 			FROM 
 				datos_paciente AS dp
 			INNER JOIN 
@@ -3776,13 +3766,9 @@ class HomeController
 				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
 			INNER JOIN 
 				profesional AS pro ON pro.id_profesional = dg_p.profesional
-			WHERE 
-				dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+			WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
 			GROUP BY 
-				dp.id_datos_paciente, 
-				ds.fecha_solicitud, 
-				pro.id_profesional,
-				ds.examen"
+				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen"
 		);
 
 		$dataValues = array_map(function($row) {
@@ -3896,7 +3882,7 @@ class HomeController
 				profesional AS pro ON pro.id_profesional = dg_p.profesional
 			WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
 			GROUP BY 
-			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, examen"
+				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen"
 		);
 
 		$dataValues = array_map(function($row) {
