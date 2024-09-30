@@ -158,9 +158,9 @@
                             success: function (response) {
                                 $("#pdocrud-ajax-loader").hide();
                                 if(response['success']){
-                                    $('.pdocrud-select-all').prop('checked', false);
-                                    $('.menu-checkbox').prop('checked', false);
-                                    $('.submenu-checkbox').prop('checked', false);
+                                    //$('.pdocrud-select-all').prop('checked', false);
+                                    //$('.menu-checkbox').prop('checked', false);
+                                    //$('.submenu-checkbox').prop('checked', false);
                                     $('#menus').modal('hide');
                                     refrechMenu();
                                     Swal.fire({
