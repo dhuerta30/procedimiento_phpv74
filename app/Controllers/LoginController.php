@@ -45,7 +45,7 @@ class LoginController {
 				<div class="col-md-12">
 					<label>¿Cómo desea ingresar al sistema?</label>
 					<select class="form-control seleccion_de_acceso">
-						<option value="">Seleccione una Opción de Ingreso</option>
+						<option value="">Seleccione una Opción</option>
 						<option value="rut_clave">Con Rut y Contraseña</option>
 						<option value="usuario_clave">Con Usuario y Contraseña</option>
 					</select>
