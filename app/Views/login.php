@@ -62,6 +62,7 @@
             $(".usuario").removeAttr("required", "required");
             $(".rut").removeAttr("disabled", "disabled");
             $(".rut").attr("required", "required");
+            $(".botones").removeClass("d-none");
         }
         
         if(val == "usuario_clave"){
@@ -71,6 +72,7 @@
             $(".rut").removeAttr("required", "required");
             $(".usuario").removeAttr("disabled", "disabled");
             $(".usuario").attr("required", "required");
+            $(".botones").removeClass("d-none");
         } 
 
         if(val == ""){
@@ -82,6 +84,7 @@
 
             $(".usuario").attr("required", "required");
             $(".rut").attr("required", "required");
+            $(".botones").addClass("d-none");
         }
     });
 </script>

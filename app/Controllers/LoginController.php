@@ -76,9 +76,17 @@ class LoginController {
 						<p class="pdocrud_help_block help-block form-text with-errors"></p>
 					</div>
 				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 text-center botones d-none">
+					<input type="submit" class="btn btn-primary pdocrud-form-control pdocrud-submit mb-3" data-action="selectform" value="Ingresar">
+					<button type="reset" class="btn btn-danger pdocrud-form-control pdocrud-button mb-3 pdocrud-cancel-btn">Cancelar</button>
+				</div>
 			</div>';
 		
 		$pdocrud->set_template($html_template);
+		$pdocrud->buttonHide("submitBtn");
+		$pdocrud->buttonHide("cancel");
 		$pdocrud->addPlugin("bootstrap-inputmask");
 		$pdocrud->fieldCssClass("rut", array("rut"));
 		$pdocrud->fieldCssClass("usuario", array("usuario"));
