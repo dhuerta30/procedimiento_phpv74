@@ -88,7 +88,7 @@ class LoginController {
 			<div class="row">
 				<div class="col-md-12 text-center botones d-none">
 					<input type="submit" class="btn btn-primary pdocrud-form-control pdocrud-submit mb-3" data-action="selectform" value="Ingresar">
-					<button type="reset" class="btn btn-danger pdocrud-form-control pdocrud-button mb-3 pdocrud-cancel-btn">Cancelar</button>
+					<button type="reset" class="btn btn-danger pdocrud-form-control pdocrud-button mb-3 pdocrud-cancel-btn">Limpiar</button>
 				</div>
 			</div>';
 		

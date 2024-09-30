@@ -87,6 +87,18 @@
             $(".botones").addClass("d-none");
         }
     });
+
+    $(".pdocrud-cancel-btn").click(function(){
+        $(".usuario_col").addClass("d-none");
+        $(".rut_col").addClass("d-none");
+
+        $(".rut").attr("disabled", "disabled");
+        $(".usuario").attr("disabled", "disabled");
+
+        $(".usuario").attr("required", "required");
+        $(".rut").attr("required", "required");
+        $(".botones").addClass("d-none");
+    });
 </script>
 </body>
 </html>
