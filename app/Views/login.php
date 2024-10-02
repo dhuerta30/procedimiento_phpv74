@@ -126,10 +126,20 @@
         });
         $(".rut").val("");
         $(".pdocrud-password").val("");
+      } else if(data == "El usuario ingresado no existe"){
+        Swal.fire({
+            title: "Error!",
+            text: "El usuario ingresado no existe",
+            icon: "error",
+            confirmButtonText: "Aceptar",
+            allowOutsideClick: false
+        });
+        $(".usuario").val("");
+        $(".pdocrud-password").val("");
       } else if(data == "El RUT ingresado no coincide"){
         Swal.fire({
             title: "Error!",
-            text: "El RUT ingresado no coincide o la contraseña ingresada no coinciden",
+            text: "El RUT ingresado o la contraseña ingresada no coinciden",
             icon: "error",
             confirmButtonText: "Aceptar",
             allowOutsideClick: false
