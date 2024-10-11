@@ -10,7 +10,6 @@
                             <div class="col-md-12">
                                 <h5>titulo</h5>
                                 <hr>
-                                <?=$render?>
                             </div>
                         </div>
 

@@ -12,22 +12,106 @@ use Xinvoice;
         
 class BusquedaController
 {
+    public function generarToken()
+    {
+        // Obteniendo rut y password desde las variables de entorno
+        $rut = $_ENV["rut_api"];
+        $password = $_ENV["clave_api"];
+
+        // Configurar la solicitud CURL para obtener el token
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://10.5.131.63/sistema_apa/api/usuario/?op=jwtauth',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode(array(
+                'data' => array(
+                    'rut' => $rut,  // Usar el rut del entorno
+                    'password' => $password  // Usar el password del entorno
+                )
+            )),
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json'
+            ),
+        ));
+
+        // Ejecutar la solicitud
+        $response = curl_exec($curl);
+
+        // Comprobar si ocurrió un error en la solicitud CURL
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+            curl_close($curl);
+            echo "Error en CURL: " . $error_msg;
+            return null;
+        }
+
+        curl_close($curl);
+        
+        // Mostrar la respuesta completa para depurar (puedes eliminar este echo si ya no lo necesitas)
+        //echo "Respuesta de la API: " . $response . "\n";
+
+        // Decodificar la respuesta JSON
+        $responseData = json_decode($response, true);
+
+        // Revisar si el campo 'data' está presente
+        if (isset($responseData['data'])) {
+            return $responseData['data'];  // Retornar el token almacenado en 'data'
+        } else {
+            echo "Error: El campo 'data' no está presente en la respuesta.";
+            return null;
+        }
+    }
+    
+    public function obtener_servicios($token)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://10.5.131.63/sistema_apa/api/servicio',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer ' . $token
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        
+        // Decodificar el JSON de respuesta
+        $responseData = json_decode($response, true);
+        
+        // Verificar si el campo 'data' existe
+        if (isset($responseData['data'])) {
+            return $responseData['data']; 
+        } else {
+            echo "Error: No se encontraron Datos.";
+            return null;
+        }
+    }
 
     public function rango_fechas()
     {
-        $dbSettings = array(
-            'hostname' => 'localhost',
-            'database' => 'sistema_apa',
-            'username' => 'root',
-            'password' => '',
-            'dbtype'   => 'mysql',
-        );
+        $token = $this->generarToken();
+        $servicios = $this->obtener_servicios($token);
+        
+        if ($servicios) {
+            
+            print_r($servicios);
 
-        $pdocrud = DB::PDOCrud(false, "","", $dbSettings);
-        $render = $pdocrud->dbTable("servicio")->render();
-
-        View::render('busqueda_rango_fechas', [
-            'render' => $render
-        ]);
+            View::render('busqueda_rango_fechas');
+        } else {
+            echo "No se pudieron obtener los datos de la tabla 'servicios'.";
+        }
     }
 }

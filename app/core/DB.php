@@ -6,10 +6,10 @@ use PDOCrud;
 class DB {
     public static function PDOCrud($multi = false, $template = "", $skin = "", $dbSettings = array(), $settings = array())
     {
-        $settings["script_url"] = $_ENV['URL_PDOCRUD'];
         $settings["uploadURL"] = $_ENV['UPLOAD_URL'];
         $settings["downloadURL"] = $_ENV['DOWNLOAD_URL'];
         if (!empty($dbSettings)) {
+            $settings["script_url"] = $dbSettings['script_url'];
             $settings["hostname"] = $dbSettings['hostname'];
             $settings["database"] = $dbSettings['database'];
             $settings["username"] = $dbSettings['username'];
@@ -18,6 +18,7 @@ class DB {
             $settings["characterset"] = isset($dbSettings['characterset']) ? $dbSettings['characterset'] : $_ENV["CHARACTER_SET"];
         } else {
             // Usamos la configuración por defecto
+            $settings["script_url"] = $_ENV['URL_PDOCRUD'];
             $settings["hostname"] = $_ENV['DB_HOST'];
             $settings["database"] = $_ENV['DB_NAME'];
             $settings["username"] = $_ENV['DB_USER'];
