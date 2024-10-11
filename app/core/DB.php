@@ -4,18 +4,29 @@ namespace App\core;
 use PDOCrud;
 
 class DB {
-    public static function PDOCrud($multi = false, $template = "", $skin = "", $settings = array())
+    public static function PDOCrud($multi = false, $template = "", $skin = "", $dbSettings = array(), $settings = array())
     {
         $settings["script_url"] = $_ENV['URL_PDOCRUD'];
         $settings["uploadURL"] = $_ENV['UPLOAD_URL'];
         $settings["downloadURL"] = $_ENV['DOWNLOAD_URL'];
-        $settings["hostname"] = $_ENV['DB_HOST'];
-        $settings["database"] = $_ENV['DB_NAME'];
-        $settings["username"] = $_ENV['DB_USER'];
-        $settings["password"] = $_ENV['DB_PASS'];
-        $settings["dbtype"] = $_ENV['DB_TYPE'];
-        $settings["characterset"] = $_ENV["CHARACTER_SET"];
+        if (!empty($dbSettings)) {
+            $settings["hostname"] = $dbSettings['hostname'];
+            $settings["database"] = $dbSettings['database'];
+            $settings["username"] = $dbSettings['username'];
+            $settings["password"] = $dbSettings['password'];
+            $settings["dbtype"] = $dbSettings['dbtype'];
+            $settings["characterset"] = isset($dbSettings['characterset']) ? $dbSettings['characterset'] : $_ENV["CHARACTER_SET"];
+        } else {
+            // Usamos la configuración por defecto
+            $settings["hostname"] = $_ENV['DB_HOST'];
+            $settings["database"] = $_ENV['DB_NAME'];
+            $settings["username"] = $_ENV['DB_USER'];
+            $settings["password"] = $_ENV['DB_PASS'];
+            $settings["dbtype"] = $_ENV['DB_TYPE'];
+            $settings["characterset"] = $_ENV["CHARACTER_SET"];
+        }
 
+        // Inicializar PDOCrud con los ajustes proporcionados
         $pdocrud = new PDOCrud($multi, $template, $skin, $settings);
         return $pdocrud;
     }

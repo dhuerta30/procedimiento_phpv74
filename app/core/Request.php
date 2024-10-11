@@ -37,7 +37,7 @@ class Request
         $numSegments = count($segments);
         
         if($numSegments < 4){
-            echo die("Error Proporcione los parámetros Faltantes en la url ya que es de Tipo GET");
+            //echo die("Error Proporcione los parámetros Faltantes en la url ya que es de Tipo GET");
         } else {
             for ($i = 0; $i < $numSegments; $i += 2) {
                 $key = isset($segments[$i]) ? $segments[$i] : null;
