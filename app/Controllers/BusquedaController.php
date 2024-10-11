@@ -93,7 +93,7 @@ class BusquedaController
         
         // Verificar si el campo 'data' existe
         if (isset($responseData['data'])) {
-            return $responseData['data']; 
+            return $responseData['data'];
         } else {
             echo "Error: No se encontraron Datos.";
             return null;
@@ -113,5 +113,10 @@ class BusquedaController
         } else {
             echo "No se pudieron obtener los datos de la tabla 'servicios'.";
         }
+    }
+
+    public function por_rut()
+    {
+        View::render('busqueda_por_rut');
     }
 }

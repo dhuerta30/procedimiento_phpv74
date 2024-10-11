@@ -1,4 +1,3 @@
-
 <?php require "layouts/header.php"; ?>
 <?php require "layouts/sidebar.php"; ?>
 <div class="content-wrapper">
