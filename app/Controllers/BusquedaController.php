@@ -34,7 +34,7 @@ class BusquedaController
         // Configurar la solicitud CURL para obtener el token
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://10.5.131.63/sistema_apa/api/usuario/?op=jwtauth',
+            CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/usuarios/?op=jwtauth',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -45,7 +45,7 @@ class BusquedaController
             CURLOPT_POSTFIELDS => json_encode(array(
                 'data' => array(
                     'rut' => $rut,  // Usar el rut del entorno
-                    'password' => $password  // Usar el password del entorno
+                    'contrasena' => $password  // Usar el password del entorno
                 )
             )),
             CURLOPT_HTTPHEADER => array(
@@ -67,7 +67,7 @@ class BusquedaController
         curl_close($curl);
         
         // Mostrar la respuesta completa para depurar (puedes eliminar este echo si ya no lo necesitas)
-        //echo "Respuesta de la API: " . $response . "\n";
+        echo "Respuesta de la API: " . $response . "\n";
 
         // Decodificar la respuesta JSON
         $responseData = json_decode($response, true);
@@ -81,11 +81,11 @@ class BusquedaController
         }
     }
     
-    public function obtener_servicios($token)
+    public function obtener_estadisticas($token)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://10.5.131.63/sistema_apa/api/servicio',
+            CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/estadistica',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -113,28 +113,25 @@ class BusquedaController
         }
     }
 
-    public function listar_rango_tabla_nulla(){
-        $data = array();
-        echo json_encode(array('data' => $data));
-    }
-
     public function rango_fechas()
     {
         $token = $this->generarToken();
-        $servicios = $this->obtener_servicios($token);
+        $estadisticas = $this->obtener_estadisticas($token);
         
-        if ($servicios) {
-            
-            
-
-            View::render('busqueda_rango_fechas');
-        } else {
-            echo "No se pudieron obtener los datos de la tabla 'servicios'.";
-        }
+        print_r($estadisticas);
+        die();
+        
+        View::render('busqueda_rango_fechas');
+       
     }
 
     public function por_rut()
     {
         View::render('busqueda_por_rut');
+    }
+
+    public function listar_rango_tabla_nulla(){
+        $data = array();
+        echo json_encode(array('data' => $data));
     }
 }
