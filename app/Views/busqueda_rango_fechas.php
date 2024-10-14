@@ -17,11 +17,11 @@
                                 <form id="form1" name="form1" action="rango.php" onsubmit="return validar();">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <label>Ingrese fecha de Inicio de Busqueda</label>
+                                            <label>Ingrese fecha de Inicio de Búsqueda</label>
                                             <input class="form-control" type="date" name="ingreso" id="ingreso" title="Ingrese fecha de Inicio de Busqueda">
                                         </div>
                                         <div class="col-md-4">
-                                            <label>Ingrese fecha de Termino de Busqueda</label>
+                                            <label>Ingrese fecha de Término de Búsqueda</label>
                                             <input class="form-control" type="date" name="termino" id="termino" title="Ingrese Fecha de Termino de Busqueda"> 
                                         </div>
                                         <div class="col-md-4">
