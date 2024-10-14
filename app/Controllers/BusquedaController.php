@@ -28,101 +28,89 @@ class BusquedaController
     public function generarToken()
     {
         // Obteniendo rut y password desde las variables de entorno
-        $rut = $_ENV["rut_api"];
-        $password = $_ENV["clave_api"];
 
-        // Configurar la solicitud CURL para obtener el token
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/usuarios/?op=jwtauth',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode(array(
-                'data' => array(
-                    'rut' => $rut,  // Usar el rut del entorno
-                    'contrasena' => $password  // Usar el password del entorno
-                )
-            )),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json'
-            ),
-        ));
+        $request = new Request();
+    	if ($request->getMethod() === 'POST') {
+            $rut = $_ENV["rut_api"];
+            $password = $_ENV["clave_api"];
 
-        // Ejecutar la solicitud
-        $response = curl_exec($curl);
+            // Configurar la solicitud CURL para obtener el token
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/usuarios/?op=jwtauth',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode(array(
+                    'data' => array(
+                        'rut' => $rut,  // Usar el rut del entorno
+                        'contrasena' => $password  // Usar el password del entorno
+                    )
+                )),
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json'
+                ),
+            ));
 
-        // Comprobar si ocurrió un error en la solicitud CURL
-        if (curl_errno($curl)) {
-            $error_msg = curl_error($curl);
+            // Ejecutar la solicitud
+            $response = curl_exec($curl);
             curl_close($curl);
-            echo "Error en CURL: " . $error_msg;
-            return null;
-        }
+            
+            // Mostrar la respuesta completa para depurar (puedes eliminar este echo si ya no lo necesitas)
+            //echo "Respuesta de la API: " . $response . "\n";
 
-        curl_close($curl);
-        
-        // Mostrar la respuesta completa para depurar (puedes eliminar este echo si ya no lo necesitas)
-        echo "Respuesta de la API: " . $response . "\n";
-
-        // Decodificar la respuesta JSON
-        $responseData = json_decode($response, true);
-
-        // Revisar si el campo 'data' está presente
-        if (isset($responseData['data'])) {
-            return $responseData['data'];  // Retornar el token almacenado en 'data'
-        } else {
-            echo "Error: El campo 'data' no está presente en la respuesta.";
-            return null;
+            // Decodificar la respuesta JSON
+            $responseData = json_decode($response, true);
+            return $responseData["data"];
         }
     }
     
-    public function obtener_estadisticas($token)
+    public function obtener_estadisticas()
     {
+        $request = new Request();
+        $token = $request->get('token');
+        
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/estadistica',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer ' . $token
-            ),
+        CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/estadistica',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer '. $token
+        ),
         ));
 
         $response = curl_exec($curl);
+
         curl_close($curl);
-        
-        // Decodificar el JSON de respuesta
-        $responseData = json_decode($response, true);
-        
-        // Verificar si el campo 'data' existe
-        if (isset($responseData['data'])) {
-            return $responseData['data'];
-        } else {
-            echo "Error: No se encontraron Datos.";
-            return null;
-        }
+        echo $response;
+
     }
 
     public function rango_fechas()
     {
         $token = $this->generarToken();
+        echo "Token generado: " . $token . "\n";
+        
         $estadisticas = $this->obtener_estadisticas($token);
         
-        print_r($estadisticas);
-        die();
+        if ($estadisticas !== null) {
+            // Muestra el contenido de $estadisticas
+            print_r($estadisticas);
+        } else {
+            echo "No se pudieron obtener estadísticas.";
+        }
         
         View::render('busqueda_rango_fechas');
-       
     }
 
     public function por_rut()
