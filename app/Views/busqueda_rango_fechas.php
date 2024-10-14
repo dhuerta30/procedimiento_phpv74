@@ -24,8 +24,8 @@
                                             <label>Ingrese fecha de Término de Búsqueda</label>
                                             <input class="form-control" type="date" name="termino" id="termino" title="Ingrese Fecha de Termino de Busqueda"> 
                                         </div>
-                                        <div class="col-md-4">
-                                            <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary" title="Buscar" style="cursor:hand">
+                                        <div class="col-md-4 d-flex align-items-end">
+                                            <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary" title="Buscar">
                                         </div>
                                     </div>
                                 </form>
