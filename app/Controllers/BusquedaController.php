@@ -113,6 +113,7 @@ class BusquedaController
         }
     }
 
+
     public function rango_fechas()
     {
         $token = $this->generarToken();
@@ -120,7 +121,7 @@ class BusquedaController
         
         if ($servicios) {
             
-            print_r($servicios);
+            
 
             View::render('busqueda_rango_fechas');
         } else {
