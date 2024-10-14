@@ -70,60 +70,65 @@
 <div id="pdocrud-ajax-loader">
     <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
+<script src="<?=$_ENV["BASE_URL"]?>app/libs/script/js/jquery.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/flatpickr.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/moment.min.js"></script>
-<script src="<?=$_ENV["BASE_URL"]?>js/dataTables.buttons.min.js"></script>
-<script src="<?=$_ENV["BASE_URL"]?>js/jszip.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/pdfmake.min.js"></script>
-<script src="<?=$_ENV["BASE_URL"]?>js/buttons.html5.min.js"></script>
-<script src="<?=$_ENV["BASE_URL"]?>js/buttons.print.min.js"></script>
 <script>
-    function createDataTable(selector, ajaxUrl, columns, options = {}) {
-    // Configuración predeterminada para el DataTable
-    const defaultOptions = {
-        searching: false,
-        scrollX: true,
-        lengthMenu: [10],
-        dom: 'rtip',
-        language: {
-            "decimal": "",
-            "emptyTable": "No hay información",
-            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-            "infoEmpty": "Mostrando 0 a 0 de 0 Entradas",
-            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-            "thousands": ",",
-            "lengthMenu": "Mostrar _MENU_ Entradas",
-            "loadingRecords": "Cargando...",
-            "processing": "Procesando...",
-            "search": "Buscar:",
-            "zeroRecords": "Sin resultados encontrados",
-            "paginate": {
-                "first": "Primero",
-                "last": "Último",
-                "next": "Siguiente",
-                "previous": "Anterior"
+$(document).ready(function() {
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV['BASE_URL']?>Busqueda/listar_rango_tabla_nulla",
+        dataType: "json",
+        success: function(data) {
+            // Verifica si hay datos y luego inicializa la DataTable
+            if (data.data && data.data.length > 0) {
+                // Crear un array para los datos de DataTable
+                let tableData = data.data.map(item => [
+                    item.rut,
+                    item.codigo,
+                    item.nombre,
+                    item.apaterno,
+                    item.amaterno,
+                    item.fechaestudio,
+                    item.estudio,
+                    item.observaciones,
+                    item.fecharegistro,
+                    item.documento1,
+                    item.documento2,
+                    item.documento3
+                ]);
+
+                // Inicializa la DataTable con los datos
+                $(".tabla_rango_fechas").DataTable({
+                    data: tableData,
+                    columns: [
+                        { title: "rut" },     // Títulos de las columnas
+                        { title: "codigo" },
+                        { title: "nombre" },
+                        { title: "apaterno" },
+                        { title: "amaterno" },
+                        { title: "fechaestudio" },
+                        { title: "estudio" },
+                        { title: "observaciones" },
+                        { title: "fecharegistro" },
+                        { title: "documento1" },
+                        { title: "documento2" },
+                        { title: "documento3" }
+                    ]
+                });
+            } else {
+                console.log("No hay datos para mostrar.");
             }
         },
-        ajax: {
-            url: ajaxUrl,
-            type: "POST",
-            dataType: "json"
-        },
-        columns: columns
-    };
-
-    // Combinar opciones predeterminadas con las proporcionadas por el usuario
-    const config = $.extend(true, {}, defaultOptions, options);
-
-    // Inicializar DataTable
-    return $(selector).DataTable(config);
-}
-
-
-//createDataTable('.tabla_rango_fechas', "<?//$_ENV['BASE_URL']?>home/mostrar_grilla_rango_fechas", columns);
-
+        error: function(xhr, status, error) {
+            // Manejo de errores
+            console.error("Error en la solicitud AJAX:", status, error);
+        }
+    });
+});
 
 </script>
 <?php require "layouts/footer.php"; ?>

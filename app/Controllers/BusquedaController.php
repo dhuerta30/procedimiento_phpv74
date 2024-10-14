@@ -113,6 +113,10 @@ class BusquedaController
         }
     }
 
+    public function listar_rango_tabla_nulla(){
+        $data = array();
+        echo json_encode(array('data' => $data));
+    }
 
     public function rango_fechas()
     {
