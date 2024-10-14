@@ -12,6 +12,19 @@ use Xinvoice;
         
 class BusquedaController
 {
+
+    public $token;
+
+	public function __construct()
+	{
+		SessionManager::startSession();
+		$Sesusuario = SessionManager::get('usuario');
+		if (!isset($Sesusuario)) {
+			Redirect::to("login/index");
+		}
+        $this->token = Token::generateFormToken('send_message');
+	}
+    
     public function generarToken()
     {
         // Obteniendo rut y password desde las variables de entorno
