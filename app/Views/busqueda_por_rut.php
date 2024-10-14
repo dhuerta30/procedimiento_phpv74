@@ -17,12 +17,9 @@
                                 <form id="form1" name="form1" action="rango.php" onsubmit="return validar();">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <input class="form-control" type="date" name="ingreso" id="ingreso" title="Ingrese fecha de Inicio de Busqueda">
+                                            <input class="form-control" type="text" name="ingreso" id="ingreso" placeholder="Ingresar Rut o Pasaporte">
                                         </div>
-                                        <div class="col-md-4">
-                                            <input class="form-control" type="date" name="termino" id="termino" title="Ingrese Fecha de Termino de Busqueda"> 
-                                        </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary" title="Buscar" style="cursor:hand">
                                         </div>
                                     </div>
