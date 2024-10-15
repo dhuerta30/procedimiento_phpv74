@@ -12,7 +12,6 @@ use Xinvoice;
         
 class BusquedaController
 {
-
     public $token;
 
 	public function __construct()
@@ -25,101 +24,47 @@ class BusquedaController
         $this->token = Token::generateFormToken('send_message');
 	}
     
-    public function generarToken()
+    public function obtener_rango_fechas_pacientes()
     {
-        // Obteniendo rut y password desde las variables de entorno
-
         $request = new Request();
-    	if ($request->getMethod() === 'POST') {
-            $rut = $_ENV["rut_api"];
-            $password = $_ENV["clave_api"];
+        if ($request->getMethod() === 'POST') {
+            $f1 = $request->post("ingreso");
+            $f2 = $request->post("termino");
 
-            // Configurar la solicitud CURL para obtener el token
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/usuarios/?op=jwtauth',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => json_encode(array(
-                    'data' => array(
-                        'rut' => $rut,  // Usar el rut del entorno
-                        'contrasena' => $password  // Usar el password del entorno
-                    )
-                )),
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json'
-                ),
-            ));
-
-            // Ejecutar la solicitud
-            $response = curl_exec($curl);
-            curl_close($curl);
+            // Consulta a la base de datos
+            $data = array("op" => "query", "sql" => "SELECT * FROM pacientes WHERE fechavalidacion BETWEEN '$f1' AND '$f2' ORDER BY fecha_registro DESC LIMIT 10000");
             
-            // Mostrar la respuesta completa para depurar (puedes eliminar este echo si ya no lo necesitas)
-            //echo "Respuesta de la API: " . $response . "\n";
+            // Llamada a la API
+            $data = http_build_query($data);
+            // Inicializa curl
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch);
 
-            // Decodificar la respuesta JSON
-            $responseData = json_decode($response, true);
-            return $responseData["data"];
+            // Convierte el resultado a un array asociativo
+            $resultArray = json_decode($result, true);
+            
+            // Responde con los datos obtenidos o un error
+            if (isset($resultArray['error'])) {
+                echo json_encode(array('success' => false, 'message' => $resultArray['error']));
+            } else {
+                echo json_encode(array('success' => true, 'data' => $resultArray));
+            }
+        } else {
+            echo json_encode(array('success' => false, 'message' => 'Método no permitido.'));
         }
-    }
-    
-    public function obtener_estadisticas()
-    {
-        $request = new Request();
-        $token = $request->get('token');
-        
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/estadistica',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer '. $token
-        ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        echo $response;
-
     }
 
     public function rango_fechas()
     {
-        $token = $this->generarToken();
-        echo "Token generado: " . $token . "\n";
-        
-        $estadisticas = $this->obtener_estadisticas($token);
-        
-        if ($estadisticas !== null) {
-            // Muestra el contenido de $estadisticas
-            print_r($estadisticas);
-        } else {
-            echo "No se pudieron obtener estadísticas.";
-        }
-        
         View::render('busqueda_rango_fechas');
     }
 
     public function por_rut()
     {
         View::render('busqueda_por_rut');
-    }
-
-    public function listar_rango_tabla_nulla(){
-        $data = array();
-        echo json_encode(array('data' => $data));
     }
 }

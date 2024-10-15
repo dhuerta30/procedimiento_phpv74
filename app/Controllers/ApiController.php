@@ -96,7 +96,6 @@ class ApiController
         $request = new RequestApi();
 
         if ($request->getMethod() === 'GET') {
-
             $token = $request->get('token');
 
             $usuario = new UserModel();
