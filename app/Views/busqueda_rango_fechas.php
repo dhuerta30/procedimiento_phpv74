@@ -212,7 +212,7 @@ $(document).on("click", ".ver_pdf", function() {
 
     $.ajax({
         type: "POST",
-        url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_pdf",
+        url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_pdf_por_fecha",
         dataType: "json",
         data: {
             id: id
