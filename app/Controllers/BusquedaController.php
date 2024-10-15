@@ -64,13 +64,13 @@ class BusquedaController
         if ($request->getMethod() === 'POST') {
             $f1 = $request->post("rut");
 
-            if(empty($f1) && empty($f2)){
-                echo json_encode(["error" => "Debe ingresar al menos un campo para realizar la búsqueda"]);
+            if(empty($f1)){
+                echo json_encode(["error" => "Ingrese un Rut para realizar la búsqueda"]);
                 return;
             }
 
             // Consulta a la base de datos
-            $data = array("op" => "query", "sql" => "SELECT * FROM pacientes WHERE rut like '%$f1%' or '$f2' identificador  like '%$fi%' ");
+            $data = array("op" => "query", "sql" => "SELECT * FROM pacientes WHERE rut like '%$f1%' or identificador  like '%$f1%' ");
             
             // Llamada a la API
             $data = http_build_query($data);

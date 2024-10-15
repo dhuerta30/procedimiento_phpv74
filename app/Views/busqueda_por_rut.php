@@ -102,16 +102,14 @@ $(document).ready(function(){
  $(document).on("click", ".buscar", function(){
     event.preventDefault(); // Evita el envío del formulario
 
-    var ingreso = $('#ingreso').val();
-    var termino = $('#termino').val();
+    var rut = $('#rut').val();
 
     $.ajax({
         type: "POST",
         url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_pacientes_por_rut",
         dataType: "json",
         data: {
-            ingreso: ingreso,
-            termino: termino
+            rut: rut
         },
         beforeSend: function() {
             // Puedes mostrar un indicador de carga aquí
@@ -133,7 +131,7 @@ $(document).ready(function(){
                 if (!response.data || response.data.length === 0) {
                     Swal.fire({
                         title: 'Sin resultados',
-                        text: 'No se encontraron datos para las fechas seleccionadas.',
+                        text: 'No se encontraron datos con el Rut Ingresado.',
                         icon: 'info',
                         confirmButtonText: 'Aceptar'
                     });
