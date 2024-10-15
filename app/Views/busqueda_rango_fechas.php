@@ -60,6 +60,23 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="modal fade" id="modalPDF" tabindex="-1" aria-labelledby="modalPDFLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalPDFLabel">Ver PDF</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="cargar_modal"></div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -182,13 +199,43 @@ $(document).ready(function(){
                     { data: 'fecha_registro' },
                     { data: 'rutapdf',
                         render: function(data, type, row, meta){
-                           return '<a class="btn btn-info" href='+ row.id +'>Ver</a>';
+                           return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
                         } 
                     },
                     { data: 'rutapdf2' },
                     { data: 'rutapdf3' }
                 ]
             });
+        }
+    });
+});
+
+$(document).on("click", ".ver_pdf", function() {
+    var id = $(this).data("id");
+
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_pdf",
+        dataType: "json",
+        data: {
+            id: id
+        },
+        success: function(response) {
+            if (response.error) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: response.error,
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false
+                });
+            } else {
+                // Mostrar el PDF en un <embed>
+                var pdfUrl = response.data.rutapdf;
+                var embedHtml = '<embed src="http://10.5.131.14/Imagenologia/secciones/solicitudes/' + pdfUrl + '" type="application/pdf" width="1000" height="800">';
+                $('.cargar_modal').html(embedHtml);
+                $('#modalPDF').modal('show');
+            }
         }
     });
 });

@@ -114,6 +114,49 @@ class BusquedaController
         }
     }
 
+    public function obtener_pdf(){
+        $request = new Request();
+        if ($request->getMethod() === 'POST') {
+            $id = $request->post("id");
+
+            if(empty($id)){
+                echo json_encode(["error" => "No Hay documento PDF para mostrar"]);
+                return;
+            }
+
+            // Consulta a la base de datos
+            $data = array("op" => "query", "sql" => "SELECT * FROM pacientes WHERE id = '".$id."' ");
+            
+            // Llamada a la API
+            $data = http_build_query($data);
+            // Inicializa curl
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            // Convierte el resultado a un array asociativo
+            $resultArray = json_decode($result, true);
+            
+            if ($resultArray === null || !isset($resultArray["data"]) || empty($resultArray["data"])) {
+                echo json_encode(["error" => "Documento no encontrado o respuesta inválida."]);
+                return;
+            }
+    
+            // Obtener la URL del PDF desde la respuesta de la API
+            $pdfUrl = $resultArray["data"][0]["rutapdf"] ?? null;
+    
+            if (!$pdfUrl) {
+                echo json_encode(["error" => "No se encontró la ruta del PDF."]);
+                return;
+            }
+    
+            // Responder con la URL del PDF
+            echo json_encode(["data" => ["rutapdf" => $pdfUrl]]);
+        }
+    }
 
     public function rango_fechas()
     {
