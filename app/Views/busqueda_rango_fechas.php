@@ -127,6 +127,19 @@ $(document).ready(function(){
                     confirmButtonText: 'Aceptar',
                     allowOutsideClick: false
                 });
+            } else {
+                // Verificar que la respuesta contenga datos
+                if (!response.data || response.data.length === 0) {
+                    Swal.fire({
+                        title: 'Sin resultados',
+                        text: 'No se encontraron datos para las fechas seleccionadas.',
+                        icon: 'info',
+                        confirmButtonText: 'Aceptar'
+                    });
+                    return;
+                }
+                // Reconstruir la tabla DataTable con los nuevos datos
+                table.clear().rows.add(response.data).draw();
             }
             // Reconstruir la tabla DataTable con los nuevos datos
             table = $('.tabla_rango_fechas').DataTable({
@@ -156,47 +169,18 @@ $(document).ready(function(){
                 data: response.data, // Los datos filtrados del controlador PHP
                 destroy: true,
                 columns: [
-                    { data: 'rut' },
+                    { data: 'rut' }, // Ensure this key exists in the returned objects
                     { data: 'poc' },
                     { data: 'dnombre' },
                     { data: 'apellidop' },
                     { data: 'apellidom' },
-                    { data: 'fechaestudio',
-                        render: function(data, type, row, meta){
-                            var fecha = moment(data);
-
-                            if (!fecha.isValid()) {
-                                return "<div class='badge badge-danger'>Sin Fecha</div>";
-                            }
-                            // Formatear la fecha en el formato deseado (d/m/y)
-                            var fechaFormateada = fecha.format('DD/MM/Y');
-                            return fechaFormateada;
-                        }
-                    },
-                    { data: 'estudio'},
-                    { data: 'observaciones'},
-                    { data: 'fecha_registro',
-                        render: function(data, type, row, meta){
-                            var fecha = moment(data);
-
-                            if (!fecha.isValid()) {
-                                return "<div class='badge badge-danger'>Sin Fecha</div>";
-                            }
-                            // Formatear la fecha en el formato deseado (d/m/y)
-                            var fechaFormateada = fecha.format('DD/MM/Y');
-                            return fechaFormateada;
-                        } 
-                    },
-                    { data: 'rutapdf'},
-                    { data: 'rutapdf2'},
-                    { data: 'rutapdf3'}, 
-                    {
-                        render: function(data, type, row) {
-                            return '<td>' +
-                                        '<a href="javascript:;" title="Ver" class="btn btn-info btn-sm modificar" data-id="'+ row.id +'"><i class="fa fa-eye"></i> Ver</a>'+
-                                    '</td>';
-                        }
-                    }
+                    { data: 'fechaestudio' },
+                    { data: 'estudio' },
+                    { data: 'observaciones' },
+                    { data: 'fecha_registro' },
+                    { data: 'rutapdf' },
+                    { data: 'rutapdf2' },
+                    { data: 'rutapdf3' }
                 ]
             });
         }
