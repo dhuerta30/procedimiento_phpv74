@@ -83,9 +83,6 @@
         </div>
     </section>
 </div>
-<div id="pdocrud-ajax-loader">
-	<img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
-</div>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/js/jquery.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
@@ -136,10 +133,10 @@ $(document).ready(function(){
         },
         beforeSend: function() {
             // Puedes mostrar un indicador de carga aquí
-            $("#pdocrud-ajax-loader").show();
+            $("#loader").show();
         },
         success: function(response){
-            $("#pdocrud-ajax-loader").hide();
+            $("#loader").hide();
 
             if(response["error"]){
                 Swal.fire({
@@ -220,8 +217,12 @@ $(document).on("click", ".ver_pdf", function() {
         data: {
             id: id
         },
+        beforeSend: function() {
+            $("#loader").show();
+        },
         success: function(response) {
             if (response.error) {
+                $("#loader").hide();
                 Swal.fire({
                     title: 'Error!',
                     text: response.error,
@@ -230,7 +231,7 @@ $(document).on("click", ".ver_pdf", function() {
                     allowOutsideClick: false
                 });
             } else {
-                // Mostrar el PDF en un <embed>
+                $("#loader").hide();
                 var pdfUrl = response.data.rutapdf;
                 var embedHtml = '<embed src="http://10.5.131.14/Imagenologia/secciones/solicitudes/' + pdfUrl + '" type="application/pdf" width="1000" height="800">';
                 $('.cargar_modal').html(embedHtml);
