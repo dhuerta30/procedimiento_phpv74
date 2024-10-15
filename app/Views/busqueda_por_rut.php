@@ -20,7 +20,7 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label>(Rut sin puntos y con guion)</label>
-                                            <input class="form-control" type="text" name="rut" id="rut" placeholder="Ingresar Rut o Pasaporte" required>
+                                            <input class="form-control rut" type="text" name="rut" placeholder="Ingresar Rut o Pasaporte" required>
                                         </div>
                                         <div class="col-md-4 d-flex align-items-end">
                                             <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary buscar" title="Buscar">
@@ -102,7 +102,7 @@ $(document).ready(function(){
  $(document).on("click", ".buscar", function(){
     event.preventDefault(); // Evita el envío del formulario
 
-    var rut = $('#rut').val();
+    var rut = $('.rut').val();
 
     $.ajax({
         type: "POST",
@@ -135,10 +135,7 @@ $(document).ready(function(){
                         icon: 'info',
                         confirmButtonText: 'Aceptar'
                     });
-                    return;
                 }
-                // Reconstruir la tabla DataTable con los nuevos datos
-                table.clear().rows.add(response.data).draw();
             }
             // Reconstruir la tabla DataTable con los nuevos datos
             table = $('.tabla_por_rut').DataTable({
