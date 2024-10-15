@@ -1,26 +1,29 @@
-
 <?php require "layouts/header.php"; ?>
 <?php require "layouts/sidebar.php"; ?>
 <link href="<?=$_ENV["BASE_URL"]?>css/sweetalert2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/buttons.dataTables.min.css">
+<style>
+     .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td {
+        white-space: nowrap;
+    }
+</style>
 <div class="content-wrapper">
     <section class="content">
         <div class="card mt-4">
             <div class="card-body">
-
                 <div class="row procedimiento">
                     <div class="col-md-12">
-
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <form id="form1" name="form1" action="rango.php" onsubmit="return validar();">
+                                <form id="form1" name="form1" onsubmit="return buscarPacientes(event);">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <input class="form-control" type="text" name="ingreso" id="ingreso" placeholder="Ingresar Rut o Pasaporte">
+                                            <label>(Rut sin puntos y con guion)</label>
+                                            <input class="form-control" type="text" name="rut" id="rut" placeholder="Ingresar Rut o Pasaporte" required>
                                         </div>
-                                        <div class="col-md-6">
-                                            <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary" title="Buscar" style="cursor:hand">
+                                        <div class="col-md-4 d-flex align-items-end">
+                                            <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary buscar" title="Buscar">
                                         </div>
                                     </div>
                                 </form>
@@ -28,98 +31,161 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-
-                            <div class='table-responsive tabla_principal'>
-                                <table class="table table-striped tabla_por_rut text-center" style="width:100%">
-                                    <thead class="bg-primary">
-                                        <tr>
-                                            <th>N° Rut</th>
-                                            <th>Código</th>
-                                            <th>Nombre</th>
-                                            <th>Apellido Paterno</th>
-                                            <th>Apellido Materno</th>
-                                            <th>Fecha Estudio</th>
-                                            <th>Estudio</th>
-                                            <th>Observaciones</th>
-                                            <th>Fecha Registro</th>
-                                            <th>Ver</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    
-                                    </tbody>
-                                </table>
-                            </div>
-
+                                <div class='table-responsive tabla_principal'>
+                                    <table class="table table-striped tabla_por_rut text-center" style="width:100%">
+                                        <thead class="bg-primary">
+                                            <tr>
+                                                <th>N° Rut</th>
+                                                <th>Código</th>
+                                                <th>Nombre</th>
+                                                <th>Apellido Paterno</th>
+                                                <th>Apellido Materno</th>
+                                                <th>Fecha Estudio</th>
+                                                <th>Estudio</th>
+                                                <th>Observaciones</th>
+                                                <th>Fecha Registro</th>
+                                                <th>Documento 1</th>
+                                                <th>Documento 2</th>
+                                                <th>Documento 3</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Los datos se llenarán aquí con AJAX -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 </div>
 <div id="pdocrud-ajax-loader">
-    <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
+	<img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/js/jquery.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
-<script src="<?=$_ENV["BASE_URL"]?>js/flatpickr.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/moment.min.js"></script>
-<script src="<?=$_ENV["BASE_URL"]?>js/pdfmake.min.js"></script>
 <script>
-$(document).ready(function() {
-    $.ajax({
-        type: "POST",
-        url: "<?=$_ENV['BASE_URL']?>Busqueda/listar_rango_tabla_nulla",
-        dataType: "json",
-        success: function(data) {
-            // Verifica si hay datos y luego inicializa la DataTable
-            if (data.data && data.data.length > 0) {
-                // Crear un array para los datos de DataTable
-                let tableData = data.data.map(item => [
-                    item.rut,
-                    item.codigo,
-                    item.nombre,
-                    item.apaterno,
-                    item.amaterno,
-                    item.fechaestudio,
-                    item.estudio,
-                    item.observaciones,
-                    item.fecharegistro,
-                    item.ver
-                ]);
-
-                // Inicializa la DataTable con los datos
-                $(".tabla_por_rut").DataTable({
-                    data: tableData,
-                    columns: [
-                        { title: "rut" },     // Títulos de las columnas
-                        { title: "codigo" },
-                        { title: "nombre" },
-                        { title: "apaterno" },
-                        { title: "amaterno" },
-                        { title: "fechaestudio" },
-                        { title: "estudio" },
-                        { title: "observaciones" },
-                        { title: "fecharegistro" },
-                        { title: "ver" }
-                    ]
-                });
-            } else {
-                console.log("No hay datos para mostrar.");
+var table;
+$(document).ready(function(){
+    table = $('.tabla_por_rut').DataTable({
+        searching: true,
+        scrollX: true,
+        lengthMenu: [10],
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Entradas",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
             }
-        },
-        error: function(xhr, status, error) {
-            // Manejo de errores
-            console.error("Error en la solicitud AJAX:", status, error);
         }
     });
 });
 
+ $(document).on("click", ".buscar", function(){
+    event.preventDefault(); // Evita el envío del formulario
+
+    var ingreso = $('#ingreso').val();
+    var termino = $('#termino').val();
+
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_pacientes_por_rut",
+        dataType: "json",
+        data: {
+            ingreso: ingreso,
+            termino: termino
+        },
+        beforeSend: function() {
+            // Puedes mostrar un indicador de carga aquí
+            $("#pdocrud-ajax-loader").show();
+        },
+        success: function(response){
+            $("#pdocrud-ajax-loader").hide();
+
+            if(response["error"]){
+                Swal.fire({
+                    title: 'error!',
+                    text: response["error"],
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false
+                });
+            } else {
+                // Verificar que la respuesta contenga datos
+                if (!response.data || response.data.length === 0) {
+                    Swal.fire({
+                        title: 'Sin resultados',
+                        text: 'No se encontraron datos para las fechas seleccionadas.',
+                        icon: 'info',
+                        confirmButtonText: 'Aceptar'
+                    });
+                    return;
+                }
+                // Reconstruir la tabla DataTable con los nuevos datos
+                table.clear().rows.add(response.data).draw();
+            }
+            // Reconstruir la tabla DataTable con los nuevos datos
+            table = $('.tabla_por_rut').DataTable({
+                searching: true,
+                scrollX: true,
+                lengthMenu: [10],
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                data: response.data, // Los datos filtrados del controlador PHP
+                destroy: true,
+                columns: [
+                    { data: 'rut' }, // Ensure this key exists in the returned objects
+                    { data: 'poc' },
+                    { data: 'dnombre' },
+                    { data: 'apellidop' },
+                    { data: 'apellidom' },
+                    { data: 'fechaestudio' },
+                    { data: 'estudio' },
+                    { data: 'observaciones' },
+                    { data: 'fecha_registro' },
+                    { data: 'rutapdf' },
+                    { data: 'rutapdf2' },
+                    { data: 'rutapdf3' }
+                ]
+            });
+        }
+    });
+});
 </script>
 <?php require "layouts/footer.php"; ?>
