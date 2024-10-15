@@ -184,7 +184,7 @@ $(document).ready(function(){
                         render: function(data, type, row, meta){
                            return '<a class="btn btn-info" href='+ row.id +'>Ver</a>';
                         } 
-                     },
+                    },
                     { data: 'rutapdf2' },
                     { data: 'rutapdf3' }
                 ]

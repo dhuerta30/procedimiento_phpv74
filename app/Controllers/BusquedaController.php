@@ -70,7 +70,7 @@ class BusquedaController
             }
 
             // Consulta a la base de datos
-            $data = array("op" => "query", "sql" => "SELECT * FROM pacientes WHERE rut LIKE '%$rut%' or identificador LIKE '%$rut%' ");
+            $data = array("op" => "query", "sql" => "SELECT * FROM pacientes WHERE rut LIKE '%$rut%' OR identificador LIKE '%$rut%' ");
             
             // Llamada a la API
             $data = http_build_query($data);
