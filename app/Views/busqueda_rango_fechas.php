@@ -103,7 +103,7 @@ $(document).ready(function(){
     });
 });
 
- $(document).on("click", ".buscar", function(){
+ $(document).on("click", ".buscar", function(event){
     event.preventDefault(); // Evita el envío del formulario
 
     var ingreso = $('.ingreso').val();

@@ -99,7 +99,7 @@ $(document).ready(function(){
     });
 });
 
- $(document).on("click", ".buscar", function(){
+ $(document).on("click", ".buscar", function(event){
     event.preventDefault(); // Evita el envío del formulario
 
     var rut = $('.rut').val();
