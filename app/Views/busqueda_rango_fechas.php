@@ -22,7 +22,7 @@
                                             <input class="form-control" type="date" name="termino" id="termino" title="Ingrese Fecha de Termino de Busqueda" required> 
                                         </div>
                                         <div class="col-md-4 d-flex align-items-end">
-                                            <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary" title="Buscar">
+                                            <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary buscar" title="Buscar">
                                         </div>
                                     </div>
                                 </form>
@@ -73,62 +73,111 @@ $(document).ready(function() {
     // Inicializa DataTable
     var table = $(".tabla_rango_fechas").DataTable();
 
-    window.buscarPacientes = function(event) {
+    $(document).on("click", ".buscar", function(){
         event.preventDefault(); // Evita el envío del formulario
 
         var ingreso = $('#ingreso').val();
         var termino = $('#termino').val();
 
         $.ajax({
+            type: "POST",
             url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_rango_fechas_pacientes",
-            type: 'POST', // Cambia a GET si la API lo permite
-            dataType: 'json',
+            dataType: "json",
             data: {
                 ingreso: ingreso,
                 termino: termino
             },
-            success: function(response) {
-                // Limpia la tabla
-                table.clear();
-
-                // Verifica si hay datos
-                if (response.success) {
-                    // Crea un array para los datos de DataTable
-                    let tableData = response.data.map(item => [
-                        item.rut,
-                        item.poc,
-                        item.dnombre,
-                        item.apellidop,
-                        item.apellidom,
-                        item.fechaestudio,
-                        item.estudio,
-                        item.observaciones,
-                        item.fecha_registro,
-                        item.rutapdf,
-                        item.rutapdf2,
-                        item.rutapdf3
-                    ]);
-
-                    // Rellena la tabla con nuevos datos
-                    table.rows.add(tableData).draw();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.message
-                    });
-                }
+            beforeSend: function() {
+                // Puedes mostrar un indicador de carga aquí
+                $("#pdocrud-ajax-loader").show();
             },
-            error: function(xhr, status, error) {
-                console.error("Error en la solicitud AJAX:", status, error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error al obtener los datos.'
+            success: function(response){
+                $("#pdocrud-ajax-loader").hide();
+
+                if(response["error"]){
+                    Swal.fire({
+                        title: 'error!',
+                        text: response["error"],
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false
+                    });
+                    $(".rut").val("");
+                }
+                // Reconstruir la tabla DataTable con los nuevos datos
+                table = $('.tabla_rango_fechas').DataTable({
+                    searching: false,
+                    scrollX: true,
+                    lengthMenu: [10],
+                    dom: 'rtip',
+                    language: {
+                        "decimal": "",
+                        "emptyTable": "No hay información",
+                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                        "infoPostFix": "",
+                        "thousands": ",",
+                        "lengthMenu": "Mostrar _MENU_ Entradas",
+                        "loadingRecords": "Cargando...",
+                        "processing": "Procesando...",
+                        "search": "Buscar:",
+                        "zeroRecords": "Sin resultados encontrados",
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Ultimo",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    },
+                    data: response.data, // Los datos filtrados del controlador PHP
+                    destroy: true,
+                    columns: [
+                        { data: 'rut' },
+                        { data: 'poc' },
+                        { data: 'dnombre' },
+                        { data: 'apellidop' },
+                        { data: 'apellidom' },
+                        { data: 'fechaestudio',
+                            render: function(data, type, row, meta){
+                                var fecha = moment(data);
+
+                                if (!fecha.isValid()) {
+                                    return "<div class='badge badge-danger'>Sin Fecha</div>";
+                                }
+                                // Formatear la fecha en el formato deseado (d/m/y)
+                                var fechaFormateada = fecha.format('DD/MM/Y');
+                                return fechaFormateada;
+                            }
+                        },
+                        { data: 'estudio'},
+                        { data: 'observaciones'},
+                        { data: 'fecha_registro',
+                            render: function(data, type, row, meta){
+                                var fecha = moment(data);
+
+                                if (!fecha.isValid()) {
+                                    return "<div class='badge badge-danger'>Sin Fecha</div>";
+                                }
+                                // Formatear la fecha en el formato deseado (d/m/y)
+                                var fechaFormateada = fecha.format('DD/MM/Y');
+                                return fechaFormateada;
+                            } 
+                        },
+                        { data: 'rutapdf'},
+                        { data: 'rutapdf2'},
+                        { data: 'rutapdf3'}, 
+                        {
+                            render: function(data, type, row) {
+                                return '<td>' +
+                                            '<a href="javascript:;" title="Ver" class="btn btn-info btn-sm modificar" data-id="'+ row.id +'"><i class="fa fa-eye"></i> Ver</a>'+
+                                        '</td>';
+                            }
+                        }
+                    ]
                 });
             }
-        });
-    };
+    });
 });
 </script>
 <?php require "layouts/footer.php"; ?>
