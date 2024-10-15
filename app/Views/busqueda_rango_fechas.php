@@ -233,7 +233,7 @@ $(document).on("click", ".ver_pdf", function() {
             } else {
                 $("#loader").hide();
                 var pdfUrl = response.data.rutapdf;
-                var embedHtml = '<embed src="http://10.5.131.14/Imagenologia/secciones/solicitudes/' + pdfUrl + '" type="application/pdf" width="1000" height="800">';
+                var embedHtml = '<embed src="http://10.5.131.14/Imagenologia/secciones/solicitudes/' + pdfUrl + '" type="application/pdf" width="100%" height="600">';
                 $('.cargar_modal').html(embedHtml);
                 $('#modalPDF').modal('show');
             }
