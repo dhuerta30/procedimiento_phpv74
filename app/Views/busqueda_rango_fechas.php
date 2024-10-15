@@ -20,11 +20,11 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label>Ingrese fecha de Inicio de Búsqueda</label>
-                                            <input class="form-control" type="date" name="ingreso" id="ingreso" title="Ingrese fecha de Inicio de Busqueda" required>
+                                            <input class="form-control ingreso" type="date" name="ingreso" title="Ingrese fecha de Inicio de Busqueda" required>
                                         </div>
                                         <div class="col-md-4">
                                             <label>Ingrese fecha de Término de Búsqueda</label>
-                                            <input class="form-control" type="date" name="termino" id="termino" title="Ingrese Fecha de Termino de Busqueda" required> 
+                                            <input class="form-control termino" type="date" name="termino" title="Ingrese Fecha de Termino de Busqueda" required> 
                                         </div>
                                         <div class="col-md-4 d-flex align-items-end">
                                             <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary buscar" title="Buscar">
@@ -106,8 +106,8 @@ $(document).ready(function(){
  $(document).on("click", ".buscar", function(){
     event.preventDefault(); // Evita el envío del formulario
 
-    var ingreso = $('#ingreso').val();
-    var termino = $('#termino').val();
+    var ingreso = $('.ingreso').val();
+    var termino = $('.termino').val();
 
     $.ajax({
         type: "POST",
@@ -141,10 +141,7 @@ $(document).ready(function(){
                         icon: 'info',
                         confirmButtonText: 'Aceptar'
                     });
-                    return;
                 }
-                // Reconstruir la tabla DataTable con los nuevos datos
-                table.clear().rows.add(response.data).draw();
             }
             // Reconstruir la tabla DataTable con los nuevos datos
             table = $('.tabla_rango_fechas').DataTable({
