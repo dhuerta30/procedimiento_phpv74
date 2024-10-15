@@ -31,6 +31,11 @@ class BusquedaController
             $f1 = $request->post("ingreso");
             $f2 = $request->post("termino");
 
+            if(empty($f1) && empty($f2)){
+                echo json_encode(["error" => "Debe ingresar al menos un campo para realizar la búsqueda"]);
+                return;
+            }
+
             // Consulta a la base de datos
             $data = array("op" => "query", "sql" => "SELECT * FROM pacientes WHERE fechavalidacion BETWEEN '$f1' AND '$f2' ORDER BY fecha_registro DESC LIMIT 10000");
             
@@ -48,13 +53,7 @@ class BusquedaController
             $resultArray = json_decode($result, true);
             
             // Responde con los datos obtenidos o un error
-            if (isset($resultArray['error'])) {
-                echo json_encode(array('success' => false, 'message' => $resultArray['error']));
-            } else {
-                echo json_encode(array('success' => true, 'data' => $resultArray));
-            }
-        } else {
-            echo json_encode(array('success' => false, 'message' => 'Método no permitido.'));
+            echo json_encode(array('data' => $resultArray["data"]));
         }
     }
 

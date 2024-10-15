@@ -64,119 +64,142 @@
 <div id="pdocrud-ajax-loader">
     <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
-
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/js/jquery.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
+<script src="<?=$_ENV["BASE_URL"]?>js/moment.min.js"></script>
 <script>
-$(document).ready(function() {
-    // Inicializa DataTable
-    var table = $(".tabla_rango_fechas").DataTable();
+var table;
+$(document).ready(function(){
+    table = $('.tabla_rango_fechas').DataTable({
+        searching: false,
+        scrollX: true,
+        lengthMenu: [10],
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Entradas",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        }
+    });
+});
 
-    $(document).on("click", ".buscar", function(){
-        event.preventDefault(); // Evita el envío del formulario
+ $(document).on("click", ".buscar", function(){
+    event.preventDefault(); // Evita el envío del formulario
 
-        var ingreso = $('#ingreso').val();
-        var termino = $('#termino').val();
+    var ingreso = $('#ingreso').val();
+    var termino = $('#termino').val();
 
-        $.ajax({
-            type: "POST",
-            url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_rango_fechas_pacientes",
-            dataType: "json",
-            data: {
-                ingreso: ingreso,
-                termino: termino
-            },
-            beforeSend: function() {
-                // Puedes mostrar un indicador de carga aquí
-                $("#pdocrud-ajax-loader").show();
-            },
-            success: function(response){
-                $("#pdocrud-ajax-loader").hide();
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_rango_fechas_pacientes",
+        dataType: "json",
+        data: {
+            ingreso: ingreso,
+            termino: termino
+        },
+        beforeSend: function() {
+            // Puedes mostrar un indicador de carga aquí
+            $("#pdocrud-ajax-loader").show();
+        },
+        success: function(response){
+            $("#pdocrud-ajax-loader").hide();
 
-                if(response["error"]){
-                    Swal.fire({
-                        title: 'error!',
-                        text: response["error"],
-                        icon: 'error',
-                        confirmButtonText: 'Aceptar',
-                        allowOutsideClick: false
-                    });
-                    $(".rut").val("");
-                }
-                // Reconstruir la tabla DataTable con los nuevos datos
-                table = $('.tabla_rango_fechas').DataTable({
-                    searching: false,
-                    scrollX: true,
-                    lengthMenu: [10],
-                    dom: 'rtip',
-                    language: {
-                        "decimal": "",
-                        "emptyTable": "No hay información",
-                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                        "infoPostFix": "",
-                        "thousands": ",",
-                        "lengthMenu": "Mostrar _MENU_ Entradas",
-                        "loadingRecords": "Cargando...",
-                        "processing": "Procesando...",
-                        "search": "Buscar:",
-                        "zeroRecords": "Sin resultados encontrados",
-                        "paginate": {
-                            "first": "Primero",
-                            "last": "Ultimo",
-                            "next": "Siguiente",
-                            "previous": "Anterior"
-                        }
-                    },
-                    data: response.data, // Los datos filtrados del controlador PHP
-                    destroy: true,
-                    columns: [
-                        { data: 'rut' },
-                        { data: 'poc' },
-                        { data: 'dnombre' },
-                        { data: 'apellidop' },
-                        { data: 'apellidom' },
-                        { data: 'fechaestudio',
-                            render: function(data, type, row, meta){
-                                var fecha = moment(data);
-
-                                if (!fecha.isValid()) {
-                                    return "<div class='badge badge-danger'>Sin Fecha</div>";
-                                }
-                                // Formatear la fecha en el formato deseado (d/m/y)
-                                var fechaFormateada = fecha.format('DD/MM/Y');
-                                return fechaFormateada;
-                            }
-                        },
-                        { data: 'estudio'},
-                        { data: 'observaciones'},
-                        { data: 'fecha_registro',
-                            render: function(data, type, row, meta){
-                                var fecha = moment(data);
-
-                                if (!fecha.isValid()) {
-                                    return "<div class='badge badge-danger'>Sin Fecha</div>";
-                                }
-                                // Formatear la fecha en el formato deseado (d/m/y)
-                                var fechaFormateada = fecha.format('DD/MM/Y');
-                                return fechaFormateada;
-                            } 
-                        },
-                        { data: 'rutapdf'},
-                        { data: 'rutapdf2'},
-                        { data: 'rutapdf3'}, 
-                        {
-                            render: function(data, type, row) {
-                                return '<td>' +
-                                            '<a href="javascript:;" title="Ver" class="btn btn-info btn-sm modificar" data-id="'+ row.id +'"><i class="fa fa-eye"></i> Ver</a>'+
-                                        '</td>';
-                            }
-                        }
-                    ]
+            if(response["error"]){
+                Swal.fire({
+                    title: 'error!',
+                    text: response["error"],
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false
                 });
             }
+            // Reconstruir la tabla DataTable con los nuevos datos
+            table = $('.tabla_rango_fechas').DataTable({
+                searching: false,
+                scrollX: true,
+                lengthMenu: [10],
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                data: response.data, // Los datos filtrados del controlador PHP
+                destroy: true,
+                columns: [
+                    { data: 'rut' },
+                    { data: 'poc' },
+                    { data: 'dnombre' },
+                    { data: 'apellidop' },
+                    { data: 'apellidom' },
+                    { data: 'fechaestudio',
+                        render: function(data, type, row, meta){
+                            var fecha = moment(data);
+
+                            if (!fecha.isValid()) {
+                                return "<div class='badge badge-danger'>Sin Fecha</div>";
+                            }
+                            // Formatear la fecha en el formato deseado (d/m/y)
+                            var fechaFormateada = fecha.format('DD/MM/Y');
+                            return fechaFormateada;
+                        }
+                    },
+                    { data: 'estudio'},
+                    { data: 'observaciones'},
+                    { data: 'fecha_registro',
+                        render: function(data, type, row, meta){
+                            var fecha = moment(data);
+
+                            if (!fecha.isValid()) {
+                                return "<div class='badge badge-danger'>Sin Fecha</div>";
+                            }
+                            // Formatear la fecha en el formato deseado (d/m/y)
+                            var fechaFormateada = fecha.format('DD/MM/Y');
+                            return fechaFormateada;
+                        } 
+                    },
+                    { data: 'rutapdf'},
+                    { data: 'rutapdf2'},
+                    { data: 'rutapdf3'}, 
+                    {
+                        render: function(data, type, row) {
+                            return '<td>' +
+                                        '<a href="javascript:;" title="Ver" class="btn btn-info btn-sm modificar" data-id="'+ row.id +'"><i class="fa fa-eye"></i> Ver</a>'+
+                                    '</td>';
+                        }
+                    }
+                ]
+            });
+        }
     });
 });
 </script>
