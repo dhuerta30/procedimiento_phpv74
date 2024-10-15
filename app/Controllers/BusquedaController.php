@@ -114,7 +114,7 @@ class BusquedaController
         }
     }
 
-    public function obtener_pdf(){
+    public function obtener_pdf_rut(){
         $request = new Request();
         if ($request->getMethod() === 'POST') {
             $id = $request->post("id");
