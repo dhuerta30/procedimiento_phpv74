@@ -77,7 +77,7 @@
 var table;
 $(document).ready(function(){
     table = $('.tabla_rango_fechas').DataTable({
-        searching: false,
+        searching: true,
         scrollX: true,
         lengthMenu: [10],
         language: {
@@ -148,7 +148,7 @@ $(document).ready(function(){
             }
             // Reconstruir la tabla DataTable con los nuevos datos
             table = $('.tabla_rango_fechas').DataTable({
-                searching: false,
+                searching: true,
                 scrollX: true,
                 lengthMenu: [10],
                 language: {
