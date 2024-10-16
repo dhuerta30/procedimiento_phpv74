@@ -145,6 +145,7 @@ $(document).on("click", ".buscar", function(event) {
 
     var ingreso = $('.ingreso').val();
     var termino = $('.termino').val();
+    var tokenRegenerado = false;
 
     function realizarBusqueda() {
         var token = localStorage.getItem("tokenApi");
@@ -175,8 +176,19 @@ $(document).on("click", ".buscar", function(event) {
                         });
                     }
                 } else if (response["mensaje"]) {
-                    generarToken(realizarBusqueda);  // Volver a generar el Token
-                    console.log("Token generado nuevamente");
+                   if (!tokenRegenerado) {
+                        tokenRegenerado = true; // Marcar el token como regenerado
+                        generarToken(realizarBusqueda); // Volver a generar el Token y reintentar
+                        console.log("Token generado nuevamente");
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: "El token no es válido, incluso después de regenerarlo.",
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false
+                        });
+                    }
                 } else {
                     // Verificar que la respuesta contenga datos
                     if (!response.data || response.data.length === 0) {
