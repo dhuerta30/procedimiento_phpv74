@@ -240,12 +240,15 @@ function generarToken(){
 $(document).on("click", ".ver_pdf", function() {
     var id = $(this).data("id");
 
+    var token = localStorage.getItem("tokenApi");
+
     $.ajax({
         type: "POST",
         url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_pdf_por_fecha",
         dataType: "json",
         data: {
-            id: id
+            id: id,
+            token: token
         },
         beforeSend: function() {
             $("#loader").show();
