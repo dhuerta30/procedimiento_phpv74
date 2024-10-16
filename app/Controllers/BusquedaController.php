@@ -60,6 +60,7 @@ class BusquedaController
 
             $f1 = $request->post("ingreso");
             $f2 = $request->post("termino");
+            $token = $request->post("token");
 
             if(empty($f1) && empty($f2)){
                 echo json_encode(["error" => "Debe ingresar al menos un campo para realizar la búsqueda"]);
@@ -75,7 +76,7 @@ class BusquedaController
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
-                'Authorization: Bearer '
+                'Authorization: Bearer '. $token
             ));
             curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

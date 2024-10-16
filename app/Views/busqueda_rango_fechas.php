@@ -137,13 +137,16 @@ function generarToken(){
     var ingreso = $('.ingreso').val();
     var termino = $('.termino').val();
 
+    var token = localStorage.getItem("tokenApi");
+
     $.ajax({
         type: "POST",
         url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_rango_fechas_pacientes",
         dataType: "json",
         data: {
             ingreso: ingreso,
-            termino: termino
+            termino: termino,
+            token: token
         },
         beforeSend: function() {
             // Puedes mostrar un indicador de carga aquí
