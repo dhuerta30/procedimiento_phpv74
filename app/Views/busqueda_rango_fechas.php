@@ -117,6 +117,20 @@ $(document).ready(function(){
     });
 });
 
+function generarToken(){
+   $.ajax({
+    type: "POST",
+    url: "<?=$_ENV['BASE_URL']?>Busqueda/generarToken",
+    dataType: "json",
+    success: function(data){
+        var token = data["data"];
+        if (token) {
+            localStorage.setItem("tokenApi", token);
+        }
+    }
+   });
+}
+
  $(document).on("click", ".buscar", function(event){
     event.preventDefault(); // Evita el envío del formulario
 
@@ -146,6 +160,18 @@ $(document).ready(function(){
                     confirmButtonText: 'Aceptar',
                     allowOutsideClick: false
                 });
+            } else if(response["mensaje"]){
+                Swal.fire({
+                    title: 'error!',
+                    text: response["mensaje"],
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        generarToken();
+                    }
+                });
             } else {
                 // Verificar que la respuesta contenga datos
                 if (!response.data || response.data.length === 0) {
@@ -157,6 +183,7 @@ $(document).ready(function(){
                     });
                 }
             }
+
             // Reconstruir la tabla DataTable con los nuevos datos
             table = $('.tabla_rango_fechas').DataTable({
                 searching: true,

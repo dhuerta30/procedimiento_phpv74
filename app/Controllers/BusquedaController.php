@@ -50,8 +50,7 @@ class BusquedaController
 
         curl_close($curl);
         $resultArray = json_decode($response, true);
-
-        return $resultArray["data"];
+        echo json_encode(array('data' => $resultArray["data"]));
     }
     
     public function obtener_rango_fechas_pacientes()
@@ -76,7 +75,7 @@ class BusquedaController
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
-                'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwODEwNTYsImlzcyI6ImxvY2FsaG9zdCIsIm5iZiI6MTcyOTA4MTA3NiwidXNlcklkIjoiNCJ9.YGs6sPRZSfR-ffpp0lrKMgsD7ZuA7ti7Iv-fikS_BcA'
+                'Authorization: Bearer '
             ));
             curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -86,8 +85,12 @@ class BusquedaController
             // Convierte el resultado a un array asociativo
             $resultArray = json_decode($result, true);
 
-            // Responde con los datos obtenidos o un error
-            echo json_encode(array('data' => $resultArray["data"]));
+            if($resultArray["mensaje"] == "No tienes permitido acceder a este recurso."){
+                // Responde con los datos obtenidos o un error
+                echo json_encode(array('mensaje' => $resultArray["mensaje"]));
+            } else {
+                echo json_encode(array('data' => $resultArray["data"]));
+            }
         }
     }
 
