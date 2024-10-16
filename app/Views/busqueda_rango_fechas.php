@@ -126,6 +126,14 @@ function generarToken(){
         var token = data["data"];
         if (token) {
             localStorage.setItem("tokenApi", token);
+        } else {
+            Swal.fire({
+                title: 'error!',
+                text: "Error Al Generar el Token",
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                allowOutsideClick: false
+            });
         }
     }
    });
