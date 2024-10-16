@@ -54,7 +54,7 @@
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script>
-    function generarToken(){
+    $(".generarToken").click(function(){
         $.ajax({
             type: "POST",
             url: "<?=$_ENV['BASE_URL']?>Busqueda/generarToken",
@@ -66,7 +66,7 @@
                 }
             }
         });
-    }
+    });
 
     $(document).on("change", ".seleccion_de_acceso", function(){
         let val = $(this).val();
@@ -161,17 +161,18 @@
         $(".rut").val("");
         $(".pdocrud-password").val("");
       } else {
-        generarToken();
-        Swal.fire({
+
+        $(".generarToken").click();
+        /*Swal.fire({
             title: "Genial!",
             text: "Bienvenido",
             icon: "success",
             confirmButtonText: "Aceptar"
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href="<?=$_ENV["BASE_URL"]?>Home/datos_paciente";
+                window.location.href="<?//$_ENV["BASE_URL"]?>Home/datos_paciente";
             }
-        });
+        });*/
       }
     });
 </script>

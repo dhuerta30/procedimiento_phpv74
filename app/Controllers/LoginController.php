@@ -30,11 +30,6 @@ class LoginController {
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
 		}
-
-		$Sesusuario = SessionManager::get('usuario');
-		if (isset($Sesusuario)) {
-			Redirect::to("Home/datos_paciente");
-		}
 	}
 
     public function index(){
@@ -89,6 +84,7 @@ class LoginController {
 				<div class="col-md-12 text-center botones d-none">
 					<input type="submit" class="btn btn-primary pdocrud-form-control pdocrud-submit mb-3" data-action="selectform" value="Ingresar">
 					<button type="reset" class="btn btn-danger pdocrud-form-control pdocrud-button mb-3 pdocrud-cancel-btn">Limpiar</button>
+					<a href="javascript:;" class="btn btn-success generarToken d-none">Generar Token</a>
 				</div>
 			</div>';
 		
