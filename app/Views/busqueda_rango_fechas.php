@@ -173,9 +173,9 @@ function generarToken(){
                 });
             } else if(response["mensaje"]){
                 Swal.fire({
-                    title: 'error! ' . response["mensaje"],
+                    title: response["mensaje"],
                     text: '¿Desea Volver a Generar los Datos?',
-                    icon: 'error',
+                    icon: 'warning',
                     confirmButtonText: 'Aceptar',
                     cancelButtonText: 'Cancelar',
                     showCancelButton: true,
