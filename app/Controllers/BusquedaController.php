@@ -23,11 +23,42 @@ class BusquedaController
 		}
         $this->token = Token::generateFormToken('send_message');
 	}
+
+    public function generarToken(){
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/usuarios?op=jwtauth',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>'{
+                "data": {
+                    "rut": "15622885",
+                    "contrasena": "1562"
+                }
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $resultArray = json_decode($response, true);
+
+        return $resultArray["data"];
+    }
     
     public function obtener_rango_fechas_pacientes()
     {
         $request = new Request();
         if ($request->getMethod() === 'POST') {
+
             $f1 = $request->post("ingreso");
             $f2 = $request->post("termino");
 
@@ -43,7 +74,10 @@ class BusquedaController
             $data = http_build_query($data);
             // Inicializa curl
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwODEwNTYsImlzcyI6ImxvY2FsaG9zdCIsIm5iZiI6MTcyOTA4MTA3NiwidXNlcklkIjoiNCJ9.YGs6sPRZSfR-ffpp0lrKMgsD7ZuA7ti7Iv-fikS_BcA'
+            ));
             curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $result = curl_exec($ch);
@@ -51,7 +85,7 @@ class BusquedaController
 
             // Convierte el resultado a un array asociativo
             $resultArray = json_decode($result, true);
-            
+
             // Responde con los datos obtenidos o un error
             echo json_encode(array('data' => $resultArray["data"]));
         }
@@ -75,7 +109,10 @@ class BusquedaController
             // Llamada a la API
             $data = http_build_query($data);
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwODEwNTYsImlzcyI6ImxvY2FsaG9zdCIsIm5iZiI6MTcyOTA4MTA3NiwidXNlcklkIjoiNCJ9.YGs6sPRZSfR-ffpp0lrKMgsD7ZuA7ti7Iv-fikS_BcA'
+            ));
             curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $result = curl_exec($ch);
@@ -131,7 +168,10 @@ class BusquedaController
             $data = http_build_query($data);
             // Inicializa curl
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwODEwNTYsImlzcyI6ImxvY2FsaG9zdCIsIm5iZiI6MTcyOTA4MTA3NiwidXNlcklkIjoiNCJ9.YGs6sPRZSfR-ffpp0lrKMgsD7ZuA7ti7Iv-fikS_BcA'
+            ));
             curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $result = curl_exec($ch);
@@ -175,7 +215,10 @@ class BusquedaController
             $data = http_build_query($data);
             // Inicializa curl
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwODEwNTYsImlzcyI6ImxvY2FsaG9zdCIsIm5iZiI6MTcyOTA4MTA3NiwidXNlcklkIjoiNCJ9.YGs6sPRZSfR-ffpp0lrKMgsD7ZuA7ti7Iv-fikS_BcA'
+            ));
             curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $result = curl_exec($ch);
