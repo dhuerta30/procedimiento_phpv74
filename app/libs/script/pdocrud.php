@@ -1171,9 +1171,10 @@ function afterLoginCallBack($data, $obj) {
 
             // Verificar la contraseña ingresada con el hash almacenado
             if (password_verify($pass, $stored_hash)) {
-                @session_start();
                 // La contraseña es correcta, guardar los datos en la sesión
-                $_SESSION["data"] = $data;
+                @session_start();
+                $_SESSION["data"] = $_POST;
+                print_r($_SESSION["data"]);
 
                 // Realizar la solicitud cURL para obtener el token del API
                 $curl = curl_init();
@@ -1204,9 +1205,12 @@ function afterLoginCallBack($data, $obj) {
 
                 if (isset($resultArray["data"])) {
                     // Si el token se obtiene correctamente, se guarda en el arreglo de respuesta
-                    $response["message"] = "Bienvenido";
+                    $response["message"] = "Bienveido";
                     $response["tokenApi"] = $resultArray["data"];
-                    $response["redirectionurl"] = "http://localhost/".$_ENV["BASE_URL"]."Home/datos_paciente"; // URL de redirección si es necesario
+                    $response["redirectionurl"] = ""; // Agregar la URL de redirección si es necesario
+
+                    $obj->setLangData("tokenApi", $resultArray["data"]);
+                    $obj->formRedirection("http://localhost".$_ENV["BASE_URL"]."Home/datos_paciente");
                 } else {
                     // Error al obtener el token del API
                     $response["message"] = "Error al autenticar con el API.";
@@ -1232,7 +1236,6 @@ function afterLoginCallBack($data, $obj) {
     echo json_encode($response);
     die(); // Finalizar el script después de enviar la respuesta
 }
-
  
 function insertar_submenu($data, $obj){
     $id_menu = $data["submenu"]["id_menu"];

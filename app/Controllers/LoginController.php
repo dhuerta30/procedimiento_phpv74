@@ -26,7 +26,7 @@ class LoginController {
 		if (isset($_SESSION["data"]["usuario"]["usuario"])) {
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->where("usuario", $_SESSION["data"]["usuario"]["usuario"]);
+			$pdomodel->where("usuario", $_SESSION["data"]["dXN1YXJpbyMkdXN1YXJpb0AzZHNmc2RmKio5OTM0MzI0"]);
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
 		}
