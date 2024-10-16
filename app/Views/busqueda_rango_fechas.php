@@ -117,142 +117,110 @@ $(document).ready(function(){
     });
 });
 
-function generarToken(callback) {
-    $.ajax({
-        type: "POST",
-        url: "<?=$_ENV['BASE_URL']?>Busqueda/generarToken",
-        dataType: "json",
-        success: function(data) {
-            var token = data["data"];
-            if (token) {
-                localStorage.setItem("tokenApi", token);
-                if (callback) callback(); // Llamar al callback si existe, para reintentar la operación original
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: "Error al generar el token",
-                    icon: 'error',
-                    confirmButtonText: 'Aceptar',
-                    allowOutsideClick: false
-                });
-            }
-        }
-    });
-}
-
-$(document).on("click", ".buscar", function(event) {
+ $(document).on("click", ".buscar", function(event){
     event.preventDefault(); // Evita el envío del formulario
 
     var ingreso = $('.ingreso').val();
     var termino = $('.termino').val();
-    var tokenRegenerado = false;
 
-    function realizarBusqueda() {
-        var token = localStorage.getItem("tokenApi");
+    var token = localStorage.getItem("tokenApi");
 
-        $.ajax({
-            type: "POST",
-            url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_rango_fechas_pacientes",
-            dataType: "json",
-            data: {
-                ingreso: ingreso,
-                termino: termino,
-                token: token
-            },
-            beforeSend: function() {
-                $("#loader").show(); // Mostrar indicador de carga
-            },
-            success: function(response) {
-                $("#loader").hide();
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_rango_fechas_pacientes",
+        dataType: "json",
+        data: {
+            ingreso: ingreso,
+            termino: termino,
+            token: token
+        },
+        beforeSend: function() {
+            // Puedes mostrar un indicador de carga aquí
+            $("#loader").show();
+        },
+        success: function(response){
+            $("#loader").hide();
 
-                if (response["error"]) {
-                    if (response["error"]) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: response["error"],
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar',
-                            allowOutsideClick: false
-                        });
+            if(response["error"]){
+                Swal.fire({
+                    title: 'error!',
+                    text: response["error"],
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false
+                });
+            } else if(response["mensaje"]){
+                Swal.fire({
+                    title: 'error!',
+                    text: response["mensaje"],
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        generarToken();
                     }
-                } else if (response["mensaje"]) {
-                   if (!tokenRegenerado) {
-                        tokenRegenerado = true; // Marcar el token como regenerado
-                        generarToken(realizarBusqueda); // Volver a generar el Token y reintentar
-                        console.log("Token generado nuevamente");
-                    } else {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: "El token no es válido, incluso después de regenerarlo.",
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar',
-                            allowOutsideClick: false
-                        });
-                    }
-                } else {
-                    // Verificar que la respuesta contenga datos
-                    if (!response.data || response.data.length === 0) {
-                        Swal.fire({
-                            title: 'Sin resultados',
-                            text: 'No se encontraron datos para las fechas seleccionadas.',
-                            icon: 'info',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    } else {
-                        // Reconstruir la tabla DataTable con los nuevos datos
-                        table = $('.tabla_rango_fechas').DataTable({
-                            searching: true,
-                            scrollX: true,
-                            lengthMenu: [10],
-                            language: {
-                                "decimal": "",
-                                "emptyTable": "No hay información",
-                                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                                "infoEmpty": "Mostrando 0 a 0 de 0 Entradas",
-                                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                                "infoPostFix": "",
-                                "thousands": ",",
-                                "lengthMenu": "Mostrar _MENU_ Entradas",
-                                "loadingRecords": "Cargando...",
-                                "processing": "Procesando...",
-                                "search": "Buscar:",
-                                "zeroRecords": "Sin resultados encontrados",
-                                "paginate": {
-                                    "first": "Primero",
-                                    "last": "Último",
-                                    "next": "Siguiente",
-                                    "previous": "Anterior"
-                                }
-                            },
-                            data: response.data,
-                            destroy: true,
-                            columns: [
-                                { data: 'rut' },
-                                { data: 'poc' },
-                                { data: 'dnombre' },
-                                { data: 'apellidop' },
-                                { data: 'apellidom' },
-                                { data: 'fechaestudio' },
-                                { data: 'estudio' },
-                                { data: 'observaciones' },
-                                { data: 'fecha_registro' },
-                                {
-                                    data: 'rutapdf',
-                                    render: function(data, type, row, meta) {
-                                        return '<button class="btn btn-info ver_pdf" data-id="' + row.id + '">Ver</button>';
-                                    }
-                                },
-                                { data: 'rutapdf2' },
-                                { data: 'rutapdf3' }
-                            ]
-                        });
-                    }
+                });
+            } else {
+                // Verificar que la respuesta contenga datos
+                if (!response.data || response.data.length === 0) {
+                    Swal.fire({
+                        title: 'Sin resultados',
+                        text: 'No se encontraron datos para las fechas seleccionadas.',
+                        icon: 'info',
+                        confirmButtonText: 'Aceptar'
+                    });
                 }
             }
-        });
-    }
 
-    realizarBusqueda(); // Realizar la búsqueda inicial
+            // Reconstruir la tabla DataTable con los nuevos datos
+            table = $('.tabla_rango_fechas').DataTable({
+                searching: true,
+                scrollX: true,
+                lengthMenu: [10],
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                data: response.data, // Los datos filtrados del controlador PHP
+                destroy: true,
+                columns: [
+                    { data: 'rut' }, // Ensure this key exists in the returned objects
+                    { data: 'poc' },
+                    { data: 'dnombre' },
+                    { data: 'apellidop' },
+                    { data: 'apellidom' },
+                    { data: 'fechaestudio' },
+                    { data: 'estudio' },
+                    { data: 'observaciones' },
+                    { data: 'fecha_registro' },
+                    { data: 'rutapdf',
+                        render: function(data, type, row, meta){
+                           return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
+                        } 
+                    },
+                    { data: 'rutapdf2' },
+                    { data: 'rutapdf3' }
+                ]
+            });
+        }
+    });
 });
 
 $(document).on("click", ".ver_pdf", function() {

@@ -37,8 +37,8 @@ class BusquedaController
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS =>'{
                 "data": {
-                    "rut": "' . $_ENV["rut_api"] . '",
-                    "contrasena": "' . $_ENV["clave_api"] . '"
+                    "rut": "15622885",
+                    "contrasena": "1562"
                 }
             }',
             CURLOPT_HTTPHEADER => array(
@@ -47,9 +47,10 @@ class BusquedaController
         ));
 
         $response = curl_exec($curl);
-
         curl_close($curl);
+
         $resultArray = json_decode($response, true);
+
         echo json_encode(array('data' => $resultArray["data"]));
     }
     

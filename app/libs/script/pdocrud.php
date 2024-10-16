@@ -1132,7 +1132,6 @@ function beforeloginCallback($data, $obj) {
             if (password_verify($pass, $hash[0]['password'])) {
                 @session_start();
                 $_SESSION["data"] = $data;
-                $obj->setLangData("no_data", "Bienvenido");
             } else {
                 echo "El usuario o la contraseña ingresada no coinciden";
                 die();
