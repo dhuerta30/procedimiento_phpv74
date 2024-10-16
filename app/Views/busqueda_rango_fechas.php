@@ -173,7 +173,7 @@ function generarToken(){
                 });
             } else if(response["mensaje"]){
                 Swal.fire({
-                    title: 'error!' . response["mensaje"],
+                    title: 'error! ' . response["mensaje"],
                     text: '¿Desea Volver a Generar los Datos?',
                     icon: 'error',
                     confirmButtonText: 'Aceptar',
