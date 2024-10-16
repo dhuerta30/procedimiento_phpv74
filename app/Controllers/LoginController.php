@@ -23,10 +23,10 @@ class LoginController {
 			$_SESSION["usuario"] = $sesion_users;
 		}
 
-		if (isset($_SESSION["data"]["usuario"]["dXN1YXJpbyMkdXN1YXJpb0AzZHNmc2RmKio5OTM0MzI0"])) {
+		if (isset($_SESSION["data"]["usuario"]["usuario"])) {
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->where("usuario", $_SESSION["data"]["dXN1YXJpbyMkdXN1YXJpb0AzZHNmc2RmKio5OTM0MzI0"]);
+			$pdomodel->where("usuario", $_SESSION["data"]["usuario"]);
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
 		}
@@ -104,7 +104,6 @@ class LoginController {
 		");
 		//$pdocrud->addCallback("before_select", "beforeloginCallback");
 		$pdocrud->addCallback("after_select", "afterLoginCallBack");
-		//$pdocrud->formRedirection("http://localhost/".$_ENV["BASE_URL"]."Home/datos_paciente",);
 		$pdocrud->formFields(array("usuario", "rut", "password"));
 		$pdocrud->setLangData("login", "Ingresar");
 		$login = $pdocrud->dbTable("usuario")->render("selectform");
