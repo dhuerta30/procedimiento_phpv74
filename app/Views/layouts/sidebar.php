@@ -72,7 +72,7 @@
                                         <?php endforeach; ?>
                                     </ul>
                                 <?php else: ?>
-                                    <a href="<?= rtrim($_ENV["BASE_URL"], '/') . $item['url_menu'] ?>" class="nav-link <?= (strpos($current_url, $item['url_menu']) !== false) ? 'active' : ''; ?>">
+                                    <a href="<?= rtrim($_ENV["BASE_URL"], '/') . $item['url_menu'] ?>" class="nav-link <?=$item['nombre_menu'] == "Salir" ? 'salir_menu' : '' ?> <?= (strpos($current_url, $item['url_menu']) !== false) ? 'active' : ''; ?>">
                                         <i class="<?= $item['icono_menu'] ?>"></i>
                                         <p><?= $item['nombre_menu'] ?></p>
                                     </a>
@@ -89,3 +89,4 @@
      </div>
      <!-- /.sidebar -->
  </aside>
+ 

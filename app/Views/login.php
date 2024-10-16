@@ -54,7 +54,7 @@
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script>
-    $(".generarToken").click(function(){
+    $(".generarToken",).click(function(){
         $.ajax({
             type: "POST",
             url: "<?=$_ENV['BASE_URL']?>Busqueda/generarToken",
@@ -159,15 +159,34 @@
         $(".rut").val("");
         $(".pdocrud-password").val("");
       } else {
-        $(".generarToken").click();
-        Swal.fire({
-            title: "Genial!",
-            text: "Bienvenido",
-            icon: "success",
-            confirmButtonText: "Aceptar"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href="<?=$_ENV["BASE_URL"]?>Home/datos_paciente";
+        $.ajax({
+            type: "POST",
+            url: "<?=$_ENV['BASE_URL']?>Busqueda/generarToken",
+            dataType: "json",
+            success: function(data){
+                var token = data["data"];
+                localStorage.setItem("tokenApi", token);
+                
+                // Una vez generado el token, mostrar mensaje de éxito y redirigir
+                Swal.fire({
+                    title: "Genial!",
+                    text: "Bienvenido",
+                    icon: "success",
+                    confirmButtonText: "Aceptar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "<?=$_ENV['BASE_URL']?>Home/datos_paciente";
+                    }
+                });
+            },
+            error: function() {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Hubo un problema al generar el token. Por favor, intente de nuevo.",
+                    icon: "error",
+                    confirmButtonText: "Aceptar",
+                    allowOutsideClick: false
+                });
             }
         });
       }
