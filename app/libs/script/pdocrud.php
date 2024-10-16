@@ -1174,7 +1174,6 @@ function afterLoginCallBack($data, $obj) {
                 // La contraseña es correcta, guardar los datos en la sesión
                 @session_start();
                 $_SESSION["data"] = $_POST;
-                print_r($_SESSION["data"]);
 
                 // Realizar la solicitud cURL para obtener el token del API
                 $curl = curl_init();
@@ -1210,7 +1209,6 @@ function afterLoginCallBack($data, $obj) {
                     $response["redirectionurl"] = ""; // Agregar la URL de redirección si es necesario
 
                     $obj->setLangData("tokenApi", $resultArray["data"]);
-                    $obj->formRedirection("http://localhost".$_ENV["BASE_URL"]."Home/datos_paciente");
                 } else {
                     // Error al obtener el token del API
                     $response["message"] = "Error al autenticar con el API.";

@@ -23,7 +23,7 @@ class LoginController {
 			$_SESSION["usuario"] = $sesion_users;
 		}
 
-		if (isset($_SESSION["data"]["usuario"]["usuario"])) {
+		if (isset($_SESSION["data"]["usuario"]["dXN1YXJpbyMkdXN1YXJpb0AzZHNmc2RmKio5OTM0MzI0"])) {
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
 			$pdomodel->where("usuario", $_SESSION["data"]["dXN1YXJpbyMkdXN1YXJpb0AzZHNmc2RmKio5OTM0MzI0"]);
@@ -93,6 +93,7 @@ class LoginController {
 		$pdocrud->addPlugin("bootstrap-inputmask");
 		$pdocrud->fieldCssClass("rut", array("rut"));
 		$pdocrud->fieldCssClass("usuario", array("usuario"));
+		//$pdocrud->setSettings("encryption", false);
 		//$pdocrud->addCallback("before_select", "beforeloginCallback");
 		$pdocrud->addCallback("after_select", "afterLoginCallBack");
 		//$pdocrud->formRedirection("http://localhost/".$_ENV["BASE_URL"]."Home/datos_paciente",);
