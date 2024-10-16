@@ -54,18 +54,6 @@
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
 <script>
-    $(".generarToken",).click(function(){
-        $.ajax({
-            type: "POST",
-            url: "<?=$_ENV['BASE_URL']?>Busqueda/generarToken",
-            dataType: "json",
-            success: function(data){
-                var token = data["data"];
-                localStorage.setItem("tokenApi", token);
-            }
-        });
-    });
-
     $(document).on("change", ".seleccion_de_acceso", function(){
         let val = $(this).val();
 
