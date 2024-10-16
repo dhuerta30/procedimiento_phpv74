@@ -32,9 +32,9 @@ class LoginController {
 		}
 
 		$Sesusuario = SessionManager::get('usuario');
-		/*if (isset($Sesusuario)) {
+		if (isset($Sesusuario)) {
 			Redirect::to("Home/datos_paciente");
-		}*/
+		}
 	}
 
     public function index(){
