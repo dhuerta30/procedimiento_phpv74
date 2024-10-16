@@ -149,9 +149,11 @@
       } else {
         var json = JSON.parse(data);
         var token = json["tokenApi"];
-        localStorage.setItem("tokenApi", token);
-
-        window.location.href="<?=$_ENV["BASE_URL"]?>Home/datos_paciente";
+        if(token){
+            localStorage.setItem("tokenApi", token);
+        } else {
+            window.location.href="<?=$_ENV["BASE_URL"]?>Home/datos_paciente";
+        }
     
       }
     });

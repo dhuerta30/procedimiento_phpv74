@@ -1155,14 +1155,14 @@ function beforeloginCallback($data, $obj) {
 }
 
 function afterLoginCallBack($data, $obj) {
-    $pass = $_POST['password'];
-    $user_or_rut = $_POST["usuario"] ?? $_POST['rut'] ?? null;
+    $pass = $_POST['dXN1YXJpbyMkcGFzc3dvcmRAM2RzZnNkZioqOTkzNDMyNA=='];
+    $user_or_rut = $_POST["dXN1YXJpbyMkdXN1YXJpb0AzZHNmc2RmKio5OTM0MzI0"] ?? $_POST['dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ='] ?? null;
 
     $response = array("message" => "", "error" => "", "tokenApi" => "", "redirectionurl" => "");
 
     if ($user_or_rut) {
         $pdomodel = $obj->getPDOModelObj();
-        $field = isset($_POST['rut']) ? "rut" : "usuario";
+        $field = isset($_POST['dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ=']) ? "rut" : "usuario";
         $pdomodel->where($field, $user_or_rut);
         $user_data = $pdomodel->select("usuario");
 
@@ -1174,6 +1174,8 @@ function afterLoginCallBack($data, $obj) {
                 // La contraseña es correcta, guardar los datos en la sesión
                 @session_start();
                 $_SESSION["data"] = $_POST;
+
+                //print_r($_SESSION["data"]);
 
                 // Realizar la solicitud cURL para obtener el token del API
                 $curl = curl_init();
@@ -1221,7 +1223,7 @@ function afterLoginCallBack($data, $obj) {
             }
         } else {
             // El usuario o RUT no existe en la base de datos
-            $response["message"] = isset($_POST['rut']) ? "El RUT ingresado no coincide" : "El usuario ingresado no existe";
+            $response["message"] = isset($_POST['dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ=']) ? "El RUT ingresado no coincide" : "El usuario ingresado no existe";
             $response["error"] = "Usuario no encontrado.";
         }
     } else {

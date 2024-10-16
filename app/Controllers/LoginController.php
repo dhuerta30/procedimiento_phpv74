@@ -15,18 +15,18 @@ class LoginController {
 	{
 		SessionManager::startSession();
 
-		if (isset($_SESSION["data"]["usuario"]["rut"])) {
+		/*if (isset($_SESSION["data"]["dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ="])) {
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->where("rut", $_SESSION["data"]["usuario"]["rut"]);
+			$pdomodel->where("rut", $_SESSION["data"]["dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ="]);
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
-		}
+		}*/
 
-		if (isset($_SESSION["data"]["usuario"]["usuario"])) {
+		if (isset($_SESSION["data"])) {
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->where("usuario", $_SESSION["data"]["usuario"]);
+			$pdomodel->where("usuario", $_SESSION["data"]["dXN1YXJpbyMkdXN1YXJpb0AzZHNmc2RmKio5OTM0MzI0"]);
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
 		}
@@ -49,13 +49,21 @@ class LoginController {
 			<div class="row mt-2">
 				<div class="col-md-12 usuario_col d-none">
 					<div class="form-group">
-						{input_usuario}
+						<label class="form-label">Usuario:</label>
+						<div class="input-group-append">
+							<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>	
+							{usuario}
+						</div>
 						<p class="pdocrud_help_block help-block form-text with-errors"></p>
 					</div>
 				</div>
 				<div class="col-md-12 rut_col d-none">
 					<div class="form-group">
-						{input_rut}
+						<label class="form-label">Rut:</label>
+						<div class="input-group-append">
+							<span class="input-group-text" id="basic-addon1"><i class="fa fa-credit-card"></i></span>	
+							{rut}
+						</div>
 						<p class="pdocrud_help_block help-block form-text with-errors"></p>
 					</div>
 				</div>
@@ -63,7 +71,11 @@ class LoginController {
 			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group">
-						{input_clave}
+						<label class="form-label">Contraseña:</label>
+						<div class="input-group-append">
+							<span class="input-group-text" id="basic-addon1"><i class="fa fa-key"></i></span>	
+							{password}
+						</div>
 						<p class="pdocrud_help_block help-block form-text with-errors"></p>
 					</div>
 				</div>
@@ -81,29 +93,15 @@ class LoginController {
 		$pdocrud->addPlugin("bootstrap-inputmask");
 		$pdocrud->fieldCssClass("rut", array("rut"));
 		$pdocrud->fieldCssClass("usuario", array("usuario"));
-		$pdocrud->formStaticFields("input_usuario", "html", "
-			<label class='form-label'>Usuario:</label>
-			<div class='input-group-append'>
-				<span class='input-group-text' id='basic-addon1'><i class='fa fa-user'></i></span>	
-				<input type='text' class='form-control pdocrud-form-control pdocrud-text usuario' name='usuario' required='1'>
-			</div>
+		$pdocrud->formStaticFields("input", "html", "
+			<label>Usuario</label>
+			<input type='text' class='form-control pdocrud-form-control pdocrud-text usuario' name='usuario'>
 		");
-		$pdocrud->formStaticFields("input_rut", "html", "
-			<label class='form-label'>Rut:</label>
-			<div class='input-group-append'>
-				<span class='input-group-text' id='basic-addon1'><i class='fa fa-credit-card'></i></span>	
-				<input type='text' class='form-control pdocrud-form-control pdocrud-text rut' name='rut' required='1'>
-			</div>
-		");
-		$pdocrud->formStaticFields("input_clave", "html", "
-			<label class='form-label'>Contraseña:</label>
-			<div class='input-group-append'>
-				<span class='input-group-text' id='basic-addon1'><i class='fa fa-key'></i></span>	
-				<input type='password' class='form-control pdocrud-form-control pdocrud-password password' name='password' required='1'>
-			</div>
-		");
+		//$pdocrud->fieldAttributes("usuario", array("name"=>"usuario"));
+		//$pdocrud->setSettings("encryption", false);
 		//$pdocrud->addCallback("before_select", "beforeloginCallback");
 		$pdocrud->addCallback("after_select", "afterLoginCallBack");
+		//$pdocrud->formRedirection("http://localhost/".$_ENV["BASE_URL"]."Home/datos_paciente", true);
 		$pdocrud->formFields(array("usuario", "rut", "password"));
 		$pdocrud->setLangData("login", "Ingresar");
 		$login = $pdocrud->dbTable("usuario")->render("selectform");
