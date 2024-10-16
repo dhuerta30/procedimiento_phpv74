@@ -175,19 +175,7 @@ $(document).on("click", ".buscar", function(event) {
                         });
                     }
                 } else if (response["mensaje"]) {
-                    Swal.fire({
-                        title: response["mensaje"],
-                        text: '¿Desea volver a generar los datos?',
-                        icon: 'warning',
-                        confirmButtonText: 'Aceptar',
-                        cancelButtonText: 'Cancelar',
-                        showCancelButton: true,
-                        allowOutsideClick: false
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            generarToken(realizarBusqueda);
-                        }
-                    });
+                    generarToken(realizarBusqueda);  // Volver a generar el Token
                 } else {
                     // Verificar que la respuesta contenga datos
                     if (!response.data || response.data.length === 0) {
