@@ -176,6 +176,7 @@ $(document).on("click", ".buscar", function(event) {
                     }
                 } else if (response["mensaje"]) {
                     generarToken(realizarBusqueda);  // Volver a generar el Token
+                    console.log("Token generado nuevamente");
                 } else {
                     // Verificar que la respuesta contenga datos
                     if (!response.data || response.data.length === 0) {
