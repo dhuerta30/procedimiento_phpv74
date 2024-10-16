@@ -61,9 +61,7 @@
             dataType: "json",
             success: function(data){
                 var token = data["data"];
-                if (token) {
-                    localStorage.setItem("tokenApi", token);
-                }
+                localStorage.setItem("tokenApi", token);
             }
         });
     });
@@ -161,18 +159,17 @@
         $(".rut").val("");
         $(".pdocrud-password").val("");
       } else {
-
         $(".generarToken").click();
-        /*Swal.fire({
+        Swal.fire({
             title: "Genial!",
             text: "Bienvenido",
             icon: "success",
             confirmButtonText: "Aceptar"
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href="<?//$_ENV["BASE_URL"]?>Home/datos_paciente";
+                window.location.href="<?=$_ENV["BASE_URL"]?>Home/datos_paciente";
             }
-        });*/
+        });
       }
     });
 </script>

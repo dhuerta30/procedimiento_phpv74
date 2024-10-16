@@ -135,7 +135,6 @@ $(document).ready(function(){
             token: token
         },
         beforeSend: function() {
-            // Puedes mostrar un indicador de carga aquí
             $("#loader").show();
         },
         success: function(response){
