@@ -103,8 +103,8 @@
     });
 
     $(document).on("pdocrud_after_submission", function(event, obj, data) {
-      $('.pdocrud_error').hide();
-      $('.pdocrud_message').hide();
+      //$('.pdocrud_error').hide();
+      //$('.pdocrud_message').hide();
 
       if(data == "Datos erróneos"){
         Swal.fire({
@@ -147,38 +147,10 @@
         $(".rut").val("");
         $(".pdocrud-password").val("");
       } else {
-        $.ajax({
-            type: "POST",
-            url: "<?=$_ENV['BASE_URL']?>Busqueda/generarToken",
-            dataType: "json",
-            success: function(data){
-                var token = data["data"];
-                localStorage.setItem("tokenApi", token);
-                
-                setTimeout(() => {
-                   // Una vez generado el token, mostrar mensaje de éxito y redirigir
-                    Swal.fire({
-                        title: "Genial!",
-                        text: "Bienvenido",
-                        icon: "success",
-                        confirmButtonText: "Aceptar"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "<?=$_ENV['BASE_URL']?>Home/datos_paciente";
-                        }
-                    }); 
-                }, 200);
-            },
-            error: function() {
-                Swal.fire({
-                    title: "Error!",
-                    text: "Hubo un problema al generar el token. Por favor, intente de nuevo.",
-                    icon: "error",
-                    confirmButtonText: "Aceptar",
-                    allowOutsideClick: false
-                });
-            }
-        });
+        var json = JSON.parse(data);
+        var token = json["tokenApi"];
+        localStorage.setItem("tokenApi", token);
+    
       }
     });
 </script>

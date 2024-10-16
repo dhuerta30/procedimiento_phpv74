@@ -93,7 +93,9 @@ class LoginController {
 		$pdocrud->addPlugin("bootstrap-inputmask");
 		$pdocrud->fieldCssClass("rut", array("rut"));
 		$pdocrud->fieldCssClass("usuario", array("usuario"));
-		$pdocrud->addCallback("before_select", "beforeloginCallback");
+		//$pdocrud->addCallback("before_select", "beforeloginCallback");
+		$pdocrud->addCallback("after_select", "afterLoginCallBack");
+		//$pdocrud->formRedirection("http://localhost/".$_ENV["BASE_URL"]."Home/datos_paciente",);
 		$pdocrud->formFields(array("usuario", "rut", "password"));
 		$pdocrud->setLangData("login", "Ingresar");
 		$login = $pdocrud->dbTable("usuario")->render("selectform");
