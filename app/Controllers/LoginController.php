@@ -49,21 +49,13 @@ class LoginController {
 			<div class="row mt-2">
 				<div class="col-md-12 usuario_col d-none">
 					<div class="form-group">
-						<label class="form-label">Usuario:</label>
-						<div class="input-group-append">
-							<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>	
-							{usuario}
-						</div>
+						{input_usuario}
 						<p class="pdocrud_help_block help-block form-text with-errors"></p>
 					</div>
 				</div>
 				<div class="col-md-12 rut_col d-none">
 					<div class="form-group">
-						<label class="form-label">Rut:</label>
-						<div class="input-group-append">
-							<span class="input-group-text" id="basic-addon1"><i class="fa fa-credit-card"></i></span>	
-							{rut}
-						</div>
+						{input_rut}
 						<p class="pdocrud_help_block help-block form-text with-errors"></p>
 					</div>
 				</div>
@@ -71,11 +63,7 @@ class LoginController {
 			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group">
-						<label class="form-label">Contraseña:</label>
-						<div class="input-group-append">
-							<span class="input-group-text" id="basic-addon1"><i class="fa fa-key"></i></span>	
-							{password}
-						</div>
+						{input_clave}
 						<p class="pdocrud_help_block help-block form-text with-errors"></p>
 					</div>
 				</div>
@@ -93,7 +81,27 @@ class LoginController {
 		$pdocrud->addPlugin("bootstrap-inputmask");
 		$pdocrud->fieldCssClass("rut", array("rut"));
 		$pdocrud->fieldCssClass("usuario", array("usuario"));
-		//$pdocrud->setSettings("encryption", false);
+		$pdocrud->formStaticFields("input_usuario", "html", "
+			<label class='form-label'>Usuario:</label>
+			<div class='input-group-append'>
+				<span class='input-group-text' id='basic-addon1'><i class='fa fa-user'></i></span>	
+				<input type='text' class='form-control pdocrud-form-control pdocrud-text usuario' name='usuario' required='1'>
+			</div>
+		");
+		$pdocrud->formStaticFields("input_rut", "html", "
+			<label class='form-label'>Rut:</label>
+			<div class='input-group-append'>
+				<span class='input-group-text' id='basic-addon1'><i class='fa fa-credit-card'></i></span>	
+				<input type='text' class='form-control pdocrud-form-control pdocrud-text rut' name='rut' required='1'>
+			</div>
+		");
+		$pdocrud->formStaticFields("input_clave", "html", "
+			<label class='form-label'>Contraseña:</label>
+			<div class='input-group-append'>
+				<span class='input-group-text' id='basic-addon1'><i class='fa fa-key'></i></span>	
+				<input type='password' class='form-control pdocrud-form-control pdocrud-password password' name='password' required='1'>
+			</div>
+		");
 		//$pdocrud->addCallback("before_select", "beforeloginCallback");
 		$pdocrud->addCallback("after_select", "afterLoginCallBack");
 		//$pdocrud->formRedirection("http://localhost/".$_ENV["BASE_URL"]."Home/datos_paciente",);
