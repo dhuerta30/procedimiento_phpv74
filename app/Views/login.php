@@ -155,17 +155,19 @@
                 var token = data["data"];
                 localStorage.setItem("tokenApi", token);
                 
-                // Una vez generado el token, mostrar mensaje de éxito y redirigir
-                Swal.fire({
-                    title: "Genial!",
-                    text: "Bienvenido",
-                    icon: "success",
-                    confirmButtonText: "Aceptar"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "<?=$_ENV['BASE_URL']?>Home/datos_paciente";
-                    }
-                });
+                setTimeout(() => {
+                   // Una vez generado el token, mostrar mensaje de éxito y redirigir
+                    Swal.fire({
+                        title: "Genial!",
+                        text: "Bienvenido",
+                        icon: "success",
+                        confirmButtonText: "Aceptar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "<?=$_ENV['BASE_URL']?>Home/datos_paciente";
+                        }
+                    }); 
+                }, 200);
             },
             error: function() {
                 Swal.fire({
