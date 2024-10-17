@@ -155,7 +155,8 @@
             title: "Genial!",
             text: "Bienvenido",
             icon: "success",
-            confirmButtonText: "Aceptar"
+            confirmButtonText: "Aceptar",
+            allowOutsideClick: false
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href="<?=$_ENV["BASE_URL"]?>/home/index";
