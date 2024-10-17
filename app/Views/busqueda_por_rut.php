@@ -119,13 +119,15 @@ $(document).ready(function(){
     event.preventDefault(); // Evita el envío del formulario
 
     var rut = $('.rut').val();
+    var token = localStorage.getItem("tokenApi");
 
     $.ajax({
         type: "POST",
         url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_pacientes_por_rut",
         dataType: "json",
         data: {
-            rut: rut
+            rut: rut,
+            token: token
         },
         beforeSend: function() {
             // Puedes mostrar un indicador de carga aquí
@@ -141,6 +143,18 @@ $(document).ready(function(){
                     icon: 'error',
                     confirmButtonText: 'Aceptar',
                     allowOutsideClick: false
+                });
+            } else if(response["mensaje"]){
+                Swal.fire({
+                    title: 'error!',
+                    text: response["mensaje"],
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        generarToken();
+                    }
                 });
             } else {
                 // Verificar que la respuesta contenga datos
@@ -206,12 +220,15 @@ $(document).ready(function(){
 $(document).on("click", ".ver_pdf", function() {
     var id = $(this).data("id");
 
+    var token = localStorage.getItem("tokenApi");
+
     $.ajax({
         type: "POST",
         url: "<?=$_ENV['BASE_URL']?>Busqueda/obtener_pdf_rut",
         dataType: "json",
         data: {
-            id: id
+            id: id,
+            token: token
         },
         beforeSend: function() {
             $("#loader").show();
