@@ -84,7 +84,12 @@ class BusquedaController
             // Convierte el resultado a un array asociativo
             $resultArray = json_decode($result, true);
 
-            echo json_encode(array('data' => $resultArray["data"]));
+            if($resultArray["mensaje"] == "No tienes permitido acceder a este recurso."){
+                // Responde con los datos obtenidos o un error
+                echo json_encode(array('mensaje' => $resultArray["mensaje"]));
+            } else {
+                echo json_encode(array('data' => $resultArray["data"]));
+            }
         }
     }
 
