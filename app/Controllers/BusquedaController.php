@@ -102,6 +102,7 @@ class BusquedaController
         $request = new Request();
         if ($request->getMethod() === 'POST') {
             $rut = $request->post("rut");
+            $token = $request->post("token");
 
             if (empty($rut)) {
                 echo json_encode(["error" => "Ingrese un Rut para realizar la búsqueda"]);
@@ -116,7 +117,7 @@ class BusquedaController
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
-                'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwODEwNTYsImlzcyI6ImxvY2FsaG9zdCIsIm5iZiI6MTcyOTA4MTA3NiwidXNlcklkIjoiNCJ9.YGs6sPRZSfR-ffpp0lrKMgsD7ZuA7ti7Iv-fikS_BcA'
+                'Authorization: Bearer '. $token
             ));
             curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
