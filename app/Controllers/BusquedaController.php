@@ -152,8 +152,12 @@ class BusquedaController
                 return;
             }
 
-            // Responde con los datos obtenidos
-            echo json_encode(array('data' => $resultArray["data"]));
+            if($resultArray["mensaje"] == "No tienes permitido acceder a este recurso."){
+                // Responde con los datos obtenidos o un error
+                echo json_encode(array('mensaje' => $resultArray["mensaje"]));
+            } else {
+                echo json_encode(array('data' => $resultArray["data"]));
+            }
         }
     }
 
@@ -209,6 +213,7 @@ class BusquedaController
         $request = new Request();
         if ($request->getMethod() === 'POST') {
             $id = $request->post("id");
+            $token = $request->post("token");
 
             if(empty($id)){
                 echo json_encode(["error" => "No Hay documento PDF para mostrar"]);
@@ -224,7 +229,7 @@ class BusquedaController
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
-                'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkwODEwNTYsImlzcyI6ImxvY2FsaG9zdCIsIm5iZiI6MTcyOTA4MTA3NiwidXNlcklkIjoiNCJ9.YGs6sPRZSfR-ffpp0lrKMgsD7ZuA7ti7Iv-fikS_BcA'
+                'Authorization: Bearer '. $token
             ));
             curl_setopt($ch, CURLOPT_URL, "http://10.5.131.14/Imagenologia/api/pacientes?" . $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
