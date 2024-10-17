@@ -15,20 +15,25 @@ class LoginController {
 	{
 		SessionManager::startSession();
 
-		/*if (isset($_SESSION["data"]["dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ="])) {
+		if (isset($_SESSION["data"]["usuario"]["rut"])) {
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->where("rut", $_SESSION["data"]["dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ="]);
+			$pdomodel->where("rut", $_SESSION["data"]["usuario"]["rut"]);
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
-		}*/
+		}
 
-		if (isset($_SESSION["data"])) {
+		if (isset($_SESSION["data"]["usuario"]["usuario"])) {
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->where("usuario", $_SESSION["data"]["dXN1YXJpbyMkdXN1YXJpb0AzZHNmc2RmKio5OTM0MzI0"]);
+			$pdomodel->where("usuario", $_SESSION["data"]["usuario"]["usuario"]);
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
+		}
+
+		$Sesusuario = SessionManager::get('usuario');
+		if (isset($Sesusuario)) {
+			Redirect::to("Home/datos_paciente");
 		}
 	}
 
@@ -99,8 +104,8 @@ class LoginController {
 		");
 		//$pdocrud->fieldAttributes("usuario", array("name"=>"usuario"));
 		//$pdocrud->setSettings("encryption", false);
-		//$pdocrud->addCallback("before_select", "beforeloginCallback");
-		$pdocrud->addCallback("after_select", "afterLoginCallBack");
+		$pdocrud->addCallback("before_select", "beforeloginCallback");
+		//$pdocrud->addCallback("after_select", "afterLoginCallBack");
 		//$pdocrud->formRedirection("http://localhost/".$_ENV["BASE_URL"]."Home/datos_paciente", true);
 		$pdocrud->formFields(array("usuario", "rut", "password"));
 		$pdocrud->setLangData("login", "Ingresar");

@@ -1132,8 +1132,6 @@ function beforeloginCallback($data, $obj) {
             if (password_verify($pass, $hash[0]['password'])) {
                 @session_start();
                 $_SESSION["data"] = $data;
-                
-                //$obj->formRedirection($_ENV["BASE_URL"]."Home/datos_paciente");
             } else {
                 echo "El usuario o la contraseña ingresada no coinciden";
                 die();
@@ -1151,90 +1149,35 @@ function beforeloginCallback($data, $obj) {
         die();
     }
 
-    return $data;
-}
-
-function afterLoginCallBack($data, $obj) {
-    $pass = $_POST['dXN1YXJpbyMkcGFzc3dvcmRAM2RzZnNkZioqOTkzNDMyNA=='];
-    $user_or_rut = $_POST["dXN1YXJpbyMkdXN1YXJpb0AzZHNmc2RmKio5OTM0MzI0"] ?? $_POST['dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ='] ?? null;
-
-    $response = array("message" => "", "error" => "", "tokenApi" => "", "redirectionurl" => "");
-
-    if ($user_or_rut) {
-        $pdomodel = $obj->getPDOModelObj();
-        $field = isset($_POST['dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ=']) ? "rut" : "usuario";
-        $pdomodel->where($field, $user_or_rut);
-        $user_data = $pdomodel->select("usuario");
-
-        if ($user_data) {
-            $stored_hash = $user_data[0]['password']; // Hash de la contraseña almacenada en la base de datos
-
-            // Verificar la contraseña ingresada con el hash almacenado
-            if (password_verify($pass, $stored_hash)) {
-                // La contraseña es correcta, guardar los datos en la sesión
-                @session_start();
-                $_SESSION["data"] = $_POST;
-
-                //print_r($_SESSION["data"]);
-
-                // Realizar la solicitud cURL para obtener el token del API
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/usuarios?op=jwtauth',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => json_encode(array(
-                        "data" => array(
-                            "rut" => $_ENV["rut_api"],
-                            "contrasena" => $_ENV["clave_api"]
-                        )
-                    )),
-                    CURLOPT_HTTPHEADER => array(
-                        'Content-Type: application/json'
-                    ),
-                ));
-
-                $api_response = curl_exec($curl);
-                curl_close($curl);
-
-                $resultArray = json_decode($api_response, true);
-
-                if (isset($resultArray["data"])) {
-                    // Si el token se obtiene correctamente, se guarda en el arreglo de respuesta
-                    $response["message"] = "Bienveido";
-                    $response["tokenApi"] = $resultArray["data"];
-                    $response["redirectionurl"] = ""; // Agregar la URL de redirección si es necesario
-
-                    $obj->setLangData("tokenApi", $resultArray["data"]);
-                } else {
-                    // Error al obtener el token del API
-                    $response["message"] = "Error al autenticar con el API.";
-                    $response["error"] = "No se pudo obtener el token.";
-                }
-            } else {
-                // La contraseña es incorrecta
-                $response["message"] = "El usuario o la contraseña son incorrectos.";
-                $response["error"] = "Credenciales inválidas.";
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://10.5.131.14/Imagenologia/api/usuarios?op=jwtauth',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>'{
+            "data": {
+                "rut": "15622885",
+                "contrasena": "1562"
             }
-        } else {
-            // El usuario o RUT no existe en la base de datos
-            $response["message"] = isset($_POST['dXN1YXJpbyMkcnV0QDNkc2ZzZGYqKjk5MzQzMjQ=']) ? "El RUT ingresado no coincide" : "El usuario ingresado no existe";
-            $response["error"] = "Usuario no encontrado.";
-        }
-    } else {
-        $response["message"] = "Datos erróneos.";
-        $response["error"] = "No se proporcionaron los datos requeridos.";
-    }
+        }',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
+    ));
 
-    // Enviar la respuesta en formato JSON
-    header('Content-Type: application/json');
-    echo json_encode($response);
-    die(); // Finalizar el script después de enviar la respuesta
+    $response = curl_exec($curl);
+    curl_close($curl);
+
+    $resultArray = json_decode($response, true);
+
+    $obj->setLangData("tokenApi", $resultArray["data"]);
+
+    return $data;
 }
  
 function insertar_submenu($data, $obj){

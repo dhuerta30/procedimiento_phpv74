@@ -103,8 +103,8 @@
     });
 
     $(document).on("pdocrud_after_submission", function(event, obj, data) {
-      //$('.pdocrud_error').hide();
-      //$('.pdocrud_message').hide();
+      $('.pdocrud_error').hide();
+      $('.pdocrud_message').hide();
 
       if(data == "Datos erróneos"){
         Swal.fire({
@@ -149,20 +149,18 @@
       } else {
         var json = JSON.parse(data);
         var token = json["tokenApi"];
-        if(token){
-            localStorage.setItem("tokenApi", token);
-            Swal.fire({
-                title: "Genial!",
-                text: "Bienvenido",
-                icon: "success",
-                confirmButtonText: "Aceptar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "<?=$_ENV['BASE_URL']?>Home/datos_paciente";
-                }
-            }); 
-        }
-    
+        localStorage.setItem("tokenApi", token);
+
+        Swal.fire({
+            title: "Genial!",
+            text: "Bienvenido",
+            icon: "success",
+            confirmButtonText: "Aceptar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href="<?=$_ENV["BASE_URL"]?>/home/index";
+            }
+        });
       }
     });
 </script>
