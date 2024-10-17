@@ -133,7 +133,6 @@ $(document).ready(function(){
 
     var ingreso = $('.ingreso').val();
     var termino = $('.termino').val();
-
     var token = localStorage.getItem("tokenApi");
 
     $.ajax({
@@ -158,18 +157,6 @@ $(document).ready(function(){
                     icon: 'error',
                     confirmButtonText: 'Aceptar',
                     allowOutsideClick: false
-                });
-            } else if(response["mensaje"]){
-                Swal.fire({
-                    title: 'error!',
-                    text: response["mensaje"],
-                    icon: 'error',
-                    confirmButtonText: 'Aceptar',
-                    allowOutsideClick: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        generarToken();
-                    }
                 });
             } else {
                 // Verificar que la respuesta contenga datos
@@ -235,7 +222,6 @@ $(document).ready(function(){
 
 $(document).on("click", ".ver_pdf", function() {
     var id = $(this).data("id");
-
     var token = localStorage.getItem("tokenApi");
 
     $.ajax({
@@ -262,7 +248,7 @@ $(document).on("click", ".ver_pdf", function() {
             } else {
                 $("#loader").hide();
                 var pdfUrl = response.data.rutapdf;
-                var embedHtml = '<embed src="http://10.5.131.14/Imagenologia/secciones/solicitudes/' + pdfUrl + '" type="application/pdf" width="100%" height="600">';
+                var embedHtml = '<embed src="' + pdfUrl + '" type="application/pdf" width="100%" height="600">';
                 $('.cargar_modal').html(embedHtml);
                 $('#modalPDF').modal('show');
             }

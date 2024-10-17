@@ -12,8 +12,6 @@ use Xinvoice;
         
 class BusquedaController
 {
-    public $token;
-
 	public function __construct()
 	{
 		SessionManager::startSession();
@@ -21,7 +19,6 @@ class BusquedaController
 		if (!isset($Sesusuario)) {
 			Redirect::to("Login/index");
 		}
-        $this->token = Token::generateFormToken('send_message');
 	}
 
     public function generarToken(){
@@ -87,12 +84,7 @@ class BusquedaController
             // Convierte el resultado a un array asociativo
             $resultArray = json_decode($result, true);
 
-            if($resultArray["mensaje"] == "No tienes permitido acceder a este recurso."){
-                // Responde con los datos obtenidos o un error
-                echo json_encode(array('mensaje' => $resultArray["mensaje"]));
-            } else {
-                echo json_encode(array('data' => $resultArray["data"]));
-            }
+            echo json_encode(array('data' => $resultArray["data"]));
         }
     }
 
@@ -205,7 +197,7 @@ class BusquedaController
             }
     
             // Responder con la URL del PDF
-            echo json_encode(["data" => ["rutapdf" => $pdfUrl]]);
+            echo json_encode(["data" => ["rutapdf" => "http://10.5.131.14/Imagenologia/secciones/solicitudes/".$pdfUrl]]);
         }
     }
 
@@ -253,7 +245,7 @@ class BusquedaController
             }
     
             // Responder con la URL del PDF
-            echo json_encode(["data" => ["rutapdf" => $pdfUrl]]);
+            echo json_encode(["data" => ["rutapdf" => "http://10.5.131.14/Imagenologia/secciones/solicitudes/".$pdfUrl]]);
         }
     }
 
