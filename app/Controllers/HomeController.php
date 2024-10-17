@@ -28,7 +28,7 @@ class HomeController
 		SessionManager::startSession();
 		$Sesusuario = SessionManager::get('usuario');
 		if (!isset($Sesusuario)) {
-			Redirect::to("login/index");
+			Redirect::to("Login/index");
 		}
         $this->token = Token::generateFormToken('send_message');
 	}
@@ -1845,7 +1845,7 @@ class HomeController
 			View::render('home',
 				['render' => $render, 'upload' => $upload]);
 		} else {
-			Redirect::to("home/datos_paciente");
+			Redirect::to("Home/datos_paciente");
 		}
 	}
 
@@ -5042,14 +5042,14 @@ class HomeController
 			$id = $request->get('modulo');
 			
 			if (is_numeric($id)) {
-				Redirect::to("home/modulos");
+				Redirect::to("Home/modulos");
 			}
 
 			$page = new PageModel();
 			$id_page = $page->PageById($id);
 
 			if (!isset($id_page)) {
-				Redirect::to("home/modulos");
+				Redirect::to("Home/modulos");
 			}
 
 			$tabla = $id_page['modulos']['tabla'];

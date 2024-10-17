@@ -18,7 +18,7 @@ class Carga_Masiva_PacientesController
 		SessionManager::startSession();
 		$Sesusuario = SessionManager::get('usuario');
 		if (!isset($Sesusuario)) {
-			Redirect::to("login/index");
+			Redirect::to("Login/index");
 		}
         $this->token = Token::generateFormToken('send_message');
 	}
