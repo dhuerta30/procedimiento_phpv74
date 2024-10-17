@@ -88,6 +88,17 @@
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/moment.min.js"></script>
 <script>
+function generarToken(){
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV['BASE_URL']?>Busqueda/generarToken",
+        dataType: "json",
+        success: function(data){
+            var token = data["data"];
+            localStorage.setItem("tokenApi", token);
+        }
+    });
+}
 var table;
 $(document).ready(function(){
     table = $('.tabla_rango_fechas').DataTable({
