@@ -2738,7 +2738,9 @@ class HomeController
 				"Servicio Médico Quirurgico Medicina" => "Servicio Médico Quirurgico Medicina",
 				"Servicio Médico Quirurgico UPC Adulto" => "Servicio Médico Quirurgico UPC Adulto",
 				"Servicio Pensionado" => "Servicio Pensionado",
-				"Servicio Cirugia Mayor Ambulatoria" => "Servicio Cirugia Mayor Ambulatoria"
+				"Servicio Cirugia Mayor Ambulatoria" => "Servicio Cirugia Mayor Ambulatoria",
+				"CirugíaPediátricaHme" => "Cirugía Pediátrica",
+				"CirugíaGeneralHme" => "Cirugía General"
 			), "", "","array");
 
 			$pdocrud->fieldTypes("tipo_solicitud", "select");
