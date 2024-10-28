@@ -21,6 +21,10 @@
     .chosen-container {
         width: 100%!important;
     }
+
+    .page-title.clearfix.card-header.pdocrud-table-heading {
+        display: none;
+    }
 </style>
 <div class="content-wrapper">
 	<section class="content">
