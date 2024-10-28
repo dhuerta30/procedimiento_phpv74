@@ -11,7 +11,7 @@
     
     .btn:not(:disabled):not(.disabled) {
         cursor: pointer;
-        margin: 3px;
+        margin: 0px;
     }
 
     .col-form-label {
@@ -114,6 +114,11 @@
 <script src="<?=$_ENV["BASE_URL"]?>js/buttons.html5.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/buttons.print.min.js"></script>
 <script>
+
+$(document).on("click", ".eliminar_examen", function(){
+    $('.examen').val("");
+    $('.codigo_fonasa').val("");
+});
 
 $(document).on("change", ".tipo_solicitud", function(){
     let tipo_solicitud = $(this).val();
