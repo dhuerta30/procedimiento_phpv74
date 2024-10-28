@@ -17,6 +17,10 @@
     .col-form-label {
         font-size: 13px!important;
     }
+
+    .chosen-container {
+        width: 100%!important;
+    }
 </style>
 <div class="content-wrapper">
 	<section class="content">
@@ -777,6 +781,8 @@ $(document).on("click", ".modificar", function(){
             $("#pdocrud-ajax-loader").hide();
             $('.cargar_modal').html(data);
             $('#modificar').modal('show');
+            $('.especialidad').chosen();
+            $('.tipo_examen').chosen();
         }
     });
 });

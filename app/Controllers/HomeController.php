@@ -2661,6 +2661,7 @@ class HomeController
 
 		if ($request->getMethod() === 'POST') {
 			$pdocrud = DB::PDOCrud(true);
+			$pdocrud->addPlugin("chosen");
 
 			$id = $request->post('id');
 
