@@ -2671,6 +2671,9 @@ class HomeController
 			$pdomodel->where("datos_paciente.id_datos_paciente", $id, "=", "AND");
 			$id_datos_paciente = $pdomodel->select("datos_paciente");
 
+			$pdomodel->where("id_datos_paciente", $id, "=", "AND");
+			$diagnostico_antecedentes_paciente = $pdomodel->select("diagnostico_antecedentes_paciente");
+
 			$paciente = new DatosPacienteModel();
 			$data = $paciente->PacientePorId($id);
 		
@@ -2678,6 +2681,7 @@ class HomeController
 			$pdocrud->formFieldValue("fecha_solicitud", $id_datos_paciente[0]["fecha_solicitud"]);
 
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
+			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->setPK("id_datos_paciente");
 			$pdocrud->fieldHideLable("id_datos_paciente");
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
@@ -2694,11 +2698,60 @@ class HomeController
 				</div>
 				
 			");
-			$pdocrud->fieldDisplayOrder(array("fecha_solicitud", "buttons"));      
+			$pdocrud->fieldDisplayOrder(array("fecha_solicitud", "especialidad", "profesional", "tipo_solicitud", "tipo_examen", "examen", "buttons"));   
+			
+			$pdocrud->fieldTypes("profesional", "select");
+			$pdocrud->fieldCssClass("especialidad", array("especialidad"));
+
+			$pdocrud->fieldTypes("especialidad", "select");
+			$pdocrud->fieldDataBinding("especialidad", array(
+				"Imagenologia" => "Imagenologia",
+				"Neurologia" => "Neurologia",
+				"Geriatría" => "Geriatría",
+				"Broncopulmonar Adulto" => "Broncopulmonar Adulto",
+				"Medicina" => "Medicina",
+				"Maternidad" => "Maternidad",
+				"Cirugía" => "Cirugía",
+				"Reumatologia" => "Reumatologia",
+				"Diabetología" => "Diabetología",
+				"Oftalmología" => "Oftalmología", 
+				"Otorrinolaringología" => "Otorrinolaringología",
+				"Dermatologia y tegumentos" => "Dermatologia y tegumentos",
+				"Cardiología" => "Cardiología",
+				"Aparato Respiratorio" => "Aparato Respiratorio",
+				"Gastroenterología" => "Gastroenterología",
+				"Urologia y nefrología" => "Urologia y nefrología",
+				"Ginecología y obstetricia" => "Ginecología y obstetricia",
+				"Traumatología" => "Traumatología",
+				"Imagenológicos odontológica" => "Imagenológicos odontológica",
+				"Servicio Neomatologia" => "Servicio Neomatologia",
+				"Servicio Cuidados Intermedio Adulto (UTI)" => "Servicio Cuidados Intermedio Adulto (UTI)",
+				"Servicio Obstetrica" => "Servicio Obstetrica",
+				"Servicio Hospitalización Domiciliaria" => "Servicio Hospitalización Domiciliaria",
+				"Servicio Médico Pediátrico" => "Servicio Médico Pediátrico",
+				"Servicio Médico Quirurgico Cirugia" => "Servicio Médico Quirurgico Cirugia",
+				"Servicio Médico Quirurgico Medicina" => "Servicio Médico Quirurgico Medicina",
+				"Servicio Médico Quirurgico UPC Adulto" => "Servicio Médico Quirurgico UPC Adulto",
+				"Servicio Pensionado" => "Servicio Pensionado",
+				"Servicio Cirugia Mayor Ambulatoria" => "Servicio Cirugia Mayor Ambulatoria"
+			), "", "","array");
+
+			$pdocrud->fieldTypes("tipo_solicitud", "select");
+			$pdocrud->fieldDataBinding("tipo_solicitud", array(
+				"Imageneologica" => "Imageneologica",
+				"Procedimientos" => "Procedimientos"
+			), "", "","array");
+
+			$pdocrud->fieldTypes("tipo_examen", "select");
+
+			$pdocrud->fieldCssClass("tipo_solicitud", array("tipo_solicitud"));
+			$pdocrud->fieldCssClass("tipo_examen", array("tipo_examen"));
+			$pdocrud->fieldCssClass("examen", array("examen"));
 
 			$pdocrud->setSettings("template", "datos_usuario_busqueda");
 			$pdocrud->fieldRenameLable("observacion", "Observación");
-			$pdocrud->formFields(array("id_datos_paciente", "fecha_solicitud"));
+			$pdocrud->fieldTypes("examen", "input");
+			$pdocrud->formFields(array("id_datos_paciente", "fecha_solicitud", "especialidad", "profesional", "tipo_solicitud", "tipo_examen", "examen"));
 			$pdocrud->setLangData("login", "Guardar"); 
 
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
