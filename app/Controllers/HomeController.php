@@ -2675,11 +2675,15 @@ class HomeController
 			$pdomodel->where("id_datos_paciente", $id, "=", "AND");
 			$diagnostico_antecedentes_paciente = $pdomodel->select("diagnostico_antecedentes_paciente");
 
+			print_r($diagnostico_antecedentes_paciente);
+
 			$paciente = new DatosPacienteModel();
 			$data = $paciente->PacientePorId($id);
 		
 			$pdocrud->formFieldValue("id_datos_paciente", $id_datos_paciente[0]["id_datos_paciente"]);
 			$pdocrud->formFieldValue("fecha_solicitud", $id_datos_paciente[0]["fecha_solicitud"]);
+
+			$pdocrud->formFieldValue("especialidad", $diagnostico_antecedentes_paciente[0]["especialidad"]);
 
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 			$pdocrud->joinTable("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
@@ -2715,7 +2719,7 @@ class HomeController
 				"Cirugía" => "Cirugía",
 				"Reumatologia" => "Reumatologia",
 				"Diabetología" => "Diabetología",
-				"Oftalmología" => "Oftalmología", 
+				"Oftalmología" => "Oftalmología",
 				"Otorrinolaringología" => "Otorrinolaringología",
 				"Dermatologia y tegumentos" => "Dermatologia y tegumentos",
 				"Cardiología" => "Cardiología",
