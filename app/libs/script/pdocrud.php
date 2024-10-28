@@ -753,16 +753,24 @@ function editar_lista_examenes_notas($data, $obj){
 function editar_lista_examenes_modificar($data, $obj){
     $id_datos_paciente = $data["datos_paciente"]["id_datos_paciente"];
     $fecha_solicitud = $data["detalle_de_solicitud"]["fecha_solicitud"];
+    $tipo_solicitud = $data["detalle_de_solicitud"]["tipo_solicitud"];
+    $tipo_examen = $data["detalle_de_solicitud"]["tipo_examen"];
+    $examen = $data["detalle_de_solicitud"]["examen"];
+    $especialidad = $data["diagnostico_antecedentes_paciente"]["especialidad"];
 
     $pdomodel = $obj->getPDOModelObj();
     $pdomodel->where("id_datos_paciente", $id_datos_paciente);
     $pdomodel->update("detalle_de_solicitud", array(
-        "fecha_solicitud" => $fecha_solicitud
+        "fecha_solicitud" => $fecha_solicitud,
+        "tipo_solicitud" => $tipo_solicitud,
+        "tipo_examen" => $tipo_examen,
+        "examen" => $examen
     ));
 
     $pdomodel->where("id_datos_paciente", $id_datos_paciente);
     $pdomodel->update("diagnostico_antecedentes_paciente", array(
-        "fecha_solicitud_paciente" => $fecha_solicitud
+        "fecha_solicitud_paciente" => $fecha_solicitud,
+        "especialidad" => $especialidad
     ));
    return $data;
 }

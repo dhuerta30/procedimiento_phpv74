@@ -2703,9 +2703,8 @@ class HomeController
 				</div>
 				
 			");
-			$pdocrud->fieldDisplayOrder(array("fecha_solicitud", "especialidad", "profesional", "tipo_solicitud", "tipo_examen", "examen", "buttons"));   
+			$pdocrud->fieldDisplayOrder(array("fecha_solicitud", "especialidad", "tipo_solicitud", "tipo_examen", "examen", "buttons"));   
 			
-			$pdocrud->fieldTypes("profesional", "select");
 			$pdocrud->fieldCssClass("especialidad", array("especialidad"));
 
 			$pdocrud->fieldTypes("especialidad", "select");
@@ -2713,7 +2712,10 @@ class HomeController
 				"Imagenologia" => "Imagenologia",
 				"Neurologia" => "Neurologia",
 				"Geriatría" => "Geriatría",
+				"Pediatría Hme" => "Pediatria",
 				"BRONCOPULMONAR ADULTO" => "Broncopulmonar Adulto",
+				" CIRUGIA COLOPROCTOLOGICA HME" => "Cirugia Coloproctologica",
+				"URGENCIA" => "Urgencia",
 				"Medicina" => "Medicina",
 				"Maternidad" => "Maternidad",
 				"Cirugía" => "Cirugía",
@@ -2760,7 +2762,7 @@ class HomeController
 			$pdocrud->setSettings("template", "datos_usuario_busqueda");
 			$pdocrud->fieldRenameLable("observacion", "Observación");
 			$pdocrud->fieldTypes("examen", "input");
-			$pdocrud->formFields(array("id_datos_paciente", "fecha_solicitud", "especialidad", "profesional", "tipo_solicitud", "tipo_examen", "examen"));
+			$pdocrud->formFields(array("id_datos_paciente", "fecha_solicitud", "especialidad", "tipo_solicitud", "tipo_examen", "examen"));
 			$pdocrud->setLangData("login", "Guardar"); 
 
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
