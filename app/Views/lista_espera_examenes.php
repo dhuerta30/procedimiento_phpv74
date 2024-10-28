@@ -25,6 +25,25 @@
     .page-title.clearfix.card-header.pdocrud-table-heading {
         display: none;
     }
+
+    .ui-autocomplete {
+        position: absolute !important;
+        max-height: 400px; /* ajusta la altura máxima según sea necesario */
+        max-width: 338px;
+        overflow-x: auto; /* permite el desplazamiento vertical si hay demasiados elementos */
+        z-index: 999999999999999!important;
+    }
+
+    .ui-menu-item {
+        font-size: 14px;
+    }
+
+    .ui-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
 </style>
 <div class="content-wrapper">
 	<section class="content">
