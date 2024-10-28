@@ -96,6 +96,110 @@
 <script src="<?=$_ENV["BASE_URL"]?>js/buttons.print.min.js"></script>
 <script>
 
+$(document).on("change", ".tipo_solicitud", function(){
+    let tipo_solicitud = $(this).val();
+
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV["BASE_URL"]?>home/cargar_datos_tipo_examen",
+        dataType: "json",
+        data: {
+            tipo_solicitud: tipo_solicitud,
+        },
+        beforeSend: function() {
+            $("#pdocrud-ajax-loader").show();
+        },
+        success: function(data){
+            $("#pdocrud-ajax-loader").hide();
+            $('.tipo_examen').empty();
+            $('.tipo_examen').html("<option value='0'>Seleccionar</option>");
+
+            // Agregar nuevas opciones
+            $.each(data['tipo_examen'], function(key, value) {
+                if(tipo_solicitud != 0){
+                    $('.tipo_examen').append('<option value="' + key + '">' + value + '</option>');
+                } else {
+                    $('.tipo_examen').val("0");
+                    $('.tipo_examen').chosen("destroy");
+                    $('.tipo_examen').chosen();
+                    $(".examen").autocomplete("destroy");
+                }
+            });
+
+            // Actualizar Chosen
+            $('.tipo_examen').trigger('chosen:updated');
+
+        }
+    });
+});
+
+$(document).on("change", ".tipo_examen", function () {
+    let tipo_examen = $(this).val();
+    if(tipo_examen != 0){
+        cargarAutocompletado(tipo_examen);
+    } else {
+        $(".examen").autocomplete("destroy");
+    }
+});
+
+function cargarAutocompletado(tipo_examen) {
+    $(".examen").autocomplete({
+        minLength: 1,
+        delay: 0,
+        autoFocus: true,
+        source: function (request, response) {
+            $.ajax({
+                url: "<?=$_ENV["BASE_URL"]?>home/buscar_examenes_prestacion",
+                type: 'POST',
+                dataType: 'json',
+                data: { query: request.term, tipo_examen: tipo_examen }, // Enviar el tipo_examen
+                success: function (data) {
+                    if (!data['error']) {
+                        response(data['glosa']);
+                    } else {
+                        Swal.fire({
+                            title: "Lo siento!",
+                            text: data['error'],
+                            icon: "error",
+                            confirmButtonText: "Aceptar"
+                        });
+                    }
+                }
+            });
+        },
+        open: function (event, ui) {
+            var term = $(".examen").val();
+            var matcher = new RegExp("(" + $.ui.autocomplete.escapeRegex(term) + ")", "ig");
+            $(".ui-autocomplete").find("li").each(function () {
+                var text = $(this).text();
+                $(this).html(text.replace(matcher, "<span style='color:black; font-weight: bold;'>$1</span>"));
+            });
+        },
+        select: function (event, ui) {
+            let val = ui['item']['value'];
+
+            $.ajax({
+                type: "POST",
+                url: "<?=$_ENV["BASE_URL"]?>home/buscar_examenes_prestacion",
+                dataType: "json",
+                data: {
+                    query: val,
+                    tipo_examen: tipo_examen // Enviar el tipo_examen
+                },
+                beforeSend: function () {
+                    $("#pdocrud-ajax-loader").show();
+                },
+                success: function (data) {
+                    if (data['codigo_fonasa']) {
+                        $("#pdocrud-ajax-loader").hide();
+                        $('.codigo_fonasa').val(data['codigo_fonasa']);
+                    }
+                }
+            });
+        }
+    });
+}
+
 var table;
 $(document).ready(function(){
     table = $('.tabla_reportes').DataTable({
