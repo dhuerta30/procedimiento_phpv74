@@ -756,7 +756,6 @@ function editar_lista_examenes_modificar($data, $obj){
     $tipo_solicitud = $data["detalle_de_solicitud"]["tipo_solicitud"];
     $tipo_examen = $data["detalle_de_solicitud"]["tipo_examen"];
     $examen = $data["detalle_de_solicitud"]["examen"];
-    $especialidad = $data["diagnostico_antecedentes_paciente"]["especialidad"];
 
     $pdomodel = $obj->getPDOModelObj();
     $pdomodel->where("id_datos_paciente", $id_datos_paciente);
@@ -769,8 +768,7 @@ function editar_lista_examenes_modificar($data, $obj){
 
     $pdomodel->where("id_datos_paciente", $id_datos_paciente);
     $pdomodel->update("diagnostico_antecedentes_paciente", array(
-        "fecha_solicitud_paciente" => $fecha_solicitud,
-        "especialidad" => $especialidad
+        "fecha_solicitud_paciente" => $fecha_solicitud
     ));
    return $data;
 }

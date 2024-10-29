@@ -950,8 +950,7 @@ $(document).on("click", ".modificar", function(){
                     
                 }
             });
-
-            $('.especialidad').chosen();
+            
             $('.tipo_examen').chosen();
         }
     });
