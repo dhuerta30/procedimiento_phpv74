@@ -2697,14 +2697,17 @@ class HomeController
 			$id = $request->post('id');
 
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "tipo_solicitud", "tipo_examen", "examen", "observacion");
+			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "especialidad", "tipo_solicitud", "tipo_examen", "examen", "observacion");
 			$pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 
 			$pdomodel->where("datos_paciente.id_datos_paciente", $id, "=", "AND");
 			$id_datos_paciente = $pdomodel->select("datos_paciente");
 
 			$pdomodel->where("id_datos_paciente", $id, "=", "AND");
+			$pdomodel->where("fecha_solicitud_paciente", $id_datos_paciente[0]["fecha_solicitud"]);
 			$diagnostico_antecedentes_paciente = $pdomodel->select("diagnostico_antecedentes_paciente");
+
+			print_r($diagnostico_antecedentes_paciente);
 
 			$paciente = new DatosPacienteModel();
 			$data = $paciente->PacientePorId($id);
@@ -2712,10 +2715,10 @@ class HomeController
 			$pdocrud->formFieldValue("id_datos_paciente", $id_datos_paciente[0]["id_datos_paciente"]);
 			$pdocrud->formFieldValue("fecha_solicitud", $id_datos_paciente[0]["fecha_solicitud"]);
 			$pdocrud->formFieldValue("tipo_solicitud", $id_datos_paciente[0]["tipo_solicitud"]);
-			$pdocrud->formFieldValue("tipo_examen", $id_datos_paciente[0]["tipo_examen"]);
+			//$pdocrud->formFieldValue("tipo_examen", $id_datos_paciente[0]["tipo_examen"]);
 			$pdocrud->formFieldValue("examen", $id_datos_paciente[0]["examen"]);
 
-			$pdocrud->formFieldValue("especialidad", $diagnostico_antecedentes_paciente[0]["especialidad"]);
+			//$pdocrud->formFieldValue("especialidad", $diagnostico_antecedentes_paciente[0]["especialidad"]);
 
 			$pdocrud->fieldAddOnInfo("examen", "after", '<div class="input-group-append eliminar_examen"><span class="btn btn-default border eliminar_examen" id="basic-addon1"><i class="fa fa-remove"></i></span></div>');
 			$pdocrud->joinTable("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
