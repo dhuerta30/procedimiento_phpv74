@@ -938,8 +938,8 @@ $(document).on("click", ".modificar", function(){
                     });
 
                     // Asignar el valor de tipoExamen
-                    $('.tipo_examen').chosen('destroy');
                     $('.tipo_examen').val(tipoExamen);
+                    $('.tipo_examen').trigger('chosen:updated');
                 }
             });
 
