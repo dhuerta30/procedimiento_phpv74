@@ -940,6 +940,14 @@ $(document).on("click", ".modificar", function(){
                     // Asignar el valor de tipoExamen
                     $('.tipo_examen').val(tipoExamen);
                     $('.tipo_examen').trigger('chosen:updated');
+
+                    let tipo_examen = $(".tipo_examen").val();
+                    if(tipo_examen != 0){
+                        cargarAutocompletado(tipo_examen);
+                    } else {
+                        $(".examen").autocomplete("destroy");
+                    }
+                    
                 }
             });
 
