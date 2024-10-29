@@ -2336,6 +2336,7 @@ class HomeController
 					"Radiografía" => "Radiografía",
 					"Scanner" => "Scanner",
 					"Ecografía" => "Ecografía",
+					"ECOTOMOGRAFÍA" => "ECOTOMOGRAFÍA",
 					"Resonancia magnética" => "Resonancia magnética"
 				];
 			} else {
@@ -2666,7 +2667,7 @@ class HomeController
 			$id = $request->post('id');
 
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "tipo_solicitud", "examen", "observacion");
+			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "tipo_solicitud", "tipo_examen", "examen", "observacion");
 			$pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 
 			$pdomodel->where("datos_paciente.id_datos_paciente", $id, "=", "AND");
@@ -2681,6 +2682,7 @@ class HomeController
 			$pdocrud->formFieldValue("id_datos_paciente", $id_datos_paciente[0]["id_datos_paciente"]);
 			$pdocrud->formFieldValue("fecha_solicitud", $id_datos_paciente[0]["fecha_solicitud"]);
 			$pdocrud->formFieldValue("tipo_solicitud", $id_datos_paciente[0]["tipo_solicitud"]);
+			$pdocrud->formFieldValue("tipo_examen", $id_datos_paciente[0]["tipo_examen"]);
 			$pdocrud->formFieldValue("examen", $id_datos_paciente[0]["examen"]);
 
 			$pdocrud->formFieldValue("especialidad", $diagnostico_antecedentes_paciente[0]["especialidad"]);

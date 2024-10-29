@@ -120,6 +120,43 @@ $(document).on("click", ".eliminar_examen", function(){
     $('.codigo_fonasa').val("");
 });
 
+$(document).on("change", ".tipo_solicitud", function(){
+    let tipo_solicitud = $(this).val();
+
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV["BASE_URL"]?>home/cargar_datos_tipo_examen",
+        dataType: "json",
+        data: {
+            tipo_solicitud: tipo_solicitud,
+        },
+        beforeSend: function() {
+            $("#pdocrud-ajax-loader").show();
+        },
+        success: function(data){
+            $("#pdocrud-ajax-loader").hide();
+            $('.tipo_examen').empty();
+            $('.tipo_examen').html("<option value='0'>Seleccionar</option>");
+
+            // Agregar nuevas opciones
+            $.each(data['tipo_examen'], function(key, value) {
+                if(tipo_solicitud != 0){
+                    $('.tipo_examen').append('<option value="' + key + '">' + value + '</option>');
+                } else {
+                    $('.tipo_examen').val("0");
+                    $('.tipo_examen').chosen("destroy");
+                    $('.tipo_examen').chosen();
+                    $(".examen").autocomplete("destroy");
+                }
+            });
+
+            // Actualizar Chosen
+            $('.tipo_examen').trigger('chosen:updated');
+
+        }
+    });
+});
+
 function cargarAutocompletado(tipo_examen) {
     $(".examen").autocomplete({
         minLength: 1,
