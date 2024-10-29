@@ -2336,7 +2336,7 @@ class HomeController
 					"Radiografía" => "Radiografía",
 					"Scanner" => "Scanner",
 					"Ecografía" => "Ecografía",
-					"ECOTOMOGRAFÍA" => "ECOTOMOGRAFÍA",
+					"ECOTOMOGRAFIA" => "ECOTOMOGRAFIA",
 					"Resonancia magnética" => "Resonancia magnética",
 					"TOMOGRAFIA AXIAL COMPUTARIZADA (TAC) (CON O SIN MEDIO DE CONTRASTE)" => "TOMOGRAFIA AXIAL COMPUTARIZADA (TAC) (CON O SIN MEDIO DE CONTRASTE)"
 				];
@@ -2770,7 +2770,17 @@ class HomeController
 			$pdocrud->setLangData("login", "Guardar"); 
 
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
+			
+			ob_start();
 			HomeController::modal("modificar", "<i class='fa fa-edit'></i> Modificar", $render);
+			$modal_html = ob_get_clean();
+
+			// Enviamos el HTML del modal y el array de diagnostico como respuesta JSON
+			echo json_encode([
+				'html' => $modal_html,
+				'id_datos_paciente' => $id_datos_paciente,
+				'diagnostico_antecedentes_paciente' => $diagnostico_antecedentes_paciente
+			]);
 		}
 	}
 

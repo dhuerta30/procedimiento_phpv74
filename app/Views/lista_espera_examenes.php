@@ -120,6 +120,15 @@ $(document).on("click", ".eliminar_examen", function(){
     $('.codigo_fonasa').val("");
 });
 
+$(document).on("change", ".tipo_examen", function () {
+    let tipo_examen = $(this).val();
+    if(tipo_examen != 0){
+        cargarAutocompletado(tipo_examen);
+    } else {
+        $(".examen").autocomplete("destroy");
+    }
+});
+
 $(document).on("change", ".tipo_solicitud", function(){
     let tipo_solicitud = $(this).val();
 
@@ -893,19 +902,20 @@ $(document).on("click", ".modificar", function(){
     $.ajax({
         type: "POST",
         url: "<?=$_ENV["BASE_URL"]?>home/cargar_modal_modificar",
-        dataType: "html",
+        dataType: "json",
         data: {
             id: id
         },
         beforeSend: function() {
             $("#pdocrud-ajax-loader").show();
         },
-        success: function(data){
+        success: function(response){
             $("#pdocrud-ajax-loader").hide();
-            $('.cargar_modal').html(data);
+            $('.cargar_modal').html(response.html);
             $('#modificar').modal('show');
-
+            
             let tipo_solicitud = $(".tipo_solicitud").val();
+            let tipoExamen = response.id_datos_paciente[0].tipo_examen;
 
             $.ajax({
                 type: "POST",
@@ -924,28 +934,12 @@ $(document).on("click", ".modificar", function(){
 
                     // Agregar nuevas opciones
                     $.each(data['tipo_examen'], function(key, value) {
-                        if(tipo_solicitud != 0){
-                            $('.tipo_examen').append('<option value="' + key + '">' + value + '</option>');
-                        } else {
-                            $('.tipo_examen').val("0");
-                            $('.tipo_examen').chosen("destroy");
-                            $('.tipo_examen').chosen();
-                            $(".examen").autocomplete("destroy");
-                        }
+                        $('.tipo_examen').append('<option value="' + key + '">' + value + '</option>');
                     });
 
-                    // Actualizar Chosen
-                    $('.tipo_examen').trigger('chosen:updated');
-
-                }
-            });
-
-            $(document).on("change", ".tipo_examen", function () {
-                let tipo_examen = $(this).val();
-                if(tipo_examen != 0){
-                    cargarAutocompletado(tipo_examen);
-                } else {
-                    $(".examen").autocomplete("destroy");
+                    // Asignar el valor de tipoExamen
+                    $('.tipo_examen').chosen('destroy');
+                    $('.tipo_examen').val(tipoExamen);
                 }
             });
 
@@ -954,7 +948,6 @@ $(document).on("click", ".modificar", function(){
         }
     });
 });
-
 
 $(document).on("click", ".agregar_notas", function(){
     let id = $(this).data('id');
