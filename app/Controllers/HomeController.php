@@ -2337,6 +2337,7 @@ class HomeController
 					"Scanner" => "Scanner",
 					"Ecografía" => "Ecografía",
 					"ECOTOMOGRAFIA" => "ECOTOMOGRAFIA",
+					"RESONANCIA MAGNETICA (incluye medio de contraste)" => "RESONANCIA MAGNETICA (incluye medio de contraste)",
 					"Resonancia magnética" => "Resonancia magnética",
 					"TOMOGRAFIA AXIAL COMPUTARIZADA (TAC) (CON O SIN MEDIO DE CONTRASTE)" => "TOMOGRAFIA AXIAL COMPUTARIZADA (TAC) (CON O SIN MEDIO DE CONTRASTE)"
 				];
