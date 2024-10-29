@@ -2337,7 +2337,8 @@ class HomeController
 					"Scanner" => "Scanner",
 					"Ecografía" => "Ecografía",
 					"ECOTOMOGRAFÍA" => "ECOTOMOGRAFÍA",
-					"Resonancia magnética" => "Resonancia magnética"
+					"Resonancia magnética" => "Resonancia magnética",
+					"TOMOGRAFIA AXIAL COMPUTARIZADA (TAC) (CON O SIN MEDIO DE CONTRASTE)" => "TOMOGRAFIA AXIAL COMPUTARIZADA (TAC) (CON O SIN MEDIO DE CONTRASTE)"
 				];
 			} else {
 				$tipo_examen = [
