@@ -2698,7 +2698,7 @@ class HomeController
 			$id_detalle_de_solicitud = $request->post('id_detalle_de_solicitud');
 
 			$pdomodel = $pdocrud->getPDOModelObj();
-			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "tipo_solicitud", "tipo_examen", "examen", "observacion");
+			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "tipo_solicitud", "tipo_examen", "examen", "observacion");
 			$pdomodel->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 
 			$pdomodel->where("datos_paciente.id_datos_paciente", $id, "=", "AND");
@@ -2712,6 +2712,7 @@ class HomeController
 			$data = $paciente->PacientePorId($id);
 		
 			$pdocrud->formFieldValue("id_datos_paciente", $id_datos_paciente[0]["id_datos_paciente"]);
+			$pdocrud->formFieldValue("id_detalle_de_solicitud", $id_datos_paciente[0]["id_detalle_de_solicitud"]);
 			$pdocrud->formFieldValue("fecha_solicitud", $id_datos_paciente[0]["fecha_solicitud"]);
 			$pdocrud->formFieldValue("tipo_solicitud", $id_datos_paciente[0]["tipo_solicitud"]);
 			$pdocrud->formFieldValue("examen", $id_datos_paciente[0]["examen"]);
@@ -2722,6 +2723,9 @@ class HomeController
 			$pdocrud->setPK("id_datos_paciente");
 			$pdocrud->fieldHideLable("id_datos_paciente");
 			$pdocrud->fieldDataAttr("id_datos_paciente", array("style"=>"display:none"));
+
+			$pdocrud->fieldHideLable("id_detalle_de_solicitud");
+			$pdocrud->fieldDataAttr("id_detalle_de_solicitud", array("style"=>"display:none"));
 
 			$pdocrud->addCallback("before_select", "editar_lista_examenes_modificar");
 			$pdocrud->setSettings("hideAutoIncrement", false);
@@ -2735,7 +2739,7 @@ class HomeController
 				</div>
 				
 			");
-			$pdocrud->fieldDisplayOrder(array("fecha_solicitud", "tipo_solicitud", "tipo_examen", "examen", "buttons"));   
+			$pdocrud->fieldDisplayOrder(array("id_detalle_de_solicitud", "fecha_solicitud", "tipo_solicitud", "tipo_examen", "examen", "buttons"));   
 			
 			$pdocrud->fieldCssClass("especialidad", array("especialidad"));
 
@@ -2815,7 +2819,7 @@ class HomeController
 			$pdocrud->setSettings("template", "datos_usuario_busqueda");
 			$pdocrud->fieldRenameLable("observacion", "Observación");
 			$pdocrud->fieldTypes("examen", "input");
-			$pdocrud->formFields(array("id_datos_paciente", "fecha_solicitud", "tipo_solicitud", "tipo_examen", "examen"));
+			$pdocrud->formFields(array("id_datos_paciente", "id_detalle_de_solicitud", "fecha_solicitud", "tipo_solicitud", "tipo_examen", "examen"));
 			$pdocrud->setLangData("login", "Guardar"); 
 
 			$render = $pdocrud->dbTable("datos_paciente")->render("selectform");
