@@ -289,11 +289,7 @@ $(document).ready(function(){
             },
             { data: 'tipo_examen',
                 render: function(data, type, row, meta){
-                    if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
-                        return data.substr(0, 300) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
-                    } else {
-                        return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
-                    }
+                    return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
                 }
              },
             { data: 'examen',
@@ -507,11 +503,7 @@ $(document).on("click", ".limpiar_filtro", function(){
             },
             { data: 'tipo_examen',
                 render: function(data, type, row, meta){
-                    if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
-                        return data.substr(0, 300) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
-                    } else {
-                        return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
-                    }
+                    return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
                 }
              },
             { data: 'examen',
@@ -694,11 +686,7 @@ $(document).on("click", ".buscar", function(){
                     },
                     { data: 'tipo_examen',
                         render: function(data, type, row, meta){
-                            if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
-                                return data.substr(0, 300) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
-                            } else {
-                                return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
-                            }
+                            return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
                         }
                     },
                     { data: 'examen',
