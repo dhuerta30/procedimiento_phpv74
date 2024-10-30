@@ -81,6 +81,7 @@
                                     <th>Teléfono</th>
                                     <th>Edad</th>
                                     <th>Código</th>
+                                    <th>Tipo Exámen</th>
                                     <th>Exámen</th>
                                     <th>Fecha Solicitud</th>
                                     <th>Fecha Agendada</th>
@@ -286,6 +287,15 @@ $(document).ready(function(){
                     return "<div class='badge badge-info'>"+ data +"</div>";
                 }
             },
+            { data: 'tipo_examen',
+                render: function(data, type, row, meta){
+                    if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
+                        return data.substr(0, 100) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
+                    } else {
+                        return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
+                    }
+                }
+             },
             { data: 'examen',
                 render: function(data, type, row, meta){
                     if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
@@ -495,6 +505,15 @@ $(document).on("click", ".limpiar_filtro", function(){
                     return "<div class='badge badge-info'>"+ data +"</div>";
                 }
             },
+            { data: 'tipo_examen',
+                render: function(data, type, row, meta){
+                    if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
+                        return data.substr(0, 100) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
+                    } else {
+                        return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
+                    }
+                }
+             },
             { data: 'examen',
                 render: function(data, type, row, meta){
                     if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
@@ -671,6 +690,15 @@ $(document).on("click", ".buscar", function(){
                     { data: 'codigo',
                         render: function(data, type, row, meta){
                             return "<div class='badge badge-info'>"+ data +"</div>";
+                        }
+                    },
+                    { data: 'tipo_examen',
+                        render: function(data, type, row, meta){
+                            if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
+                                return data.substr(0, 100) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
+                            } else {
+                                return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
+                            }
                         }
                     },
                     { data: 'examen',
