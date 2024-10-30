@@ -735,7 +735,7 @@ $(document).on("click", ".buscar", function(){
                     {
                         render: function(data, type, row) {
                             return '<td>' +
-                                        '<a href="javascript:;" title="Modificar" class="btn btn-warning btn-sm modificar" data-id="'+ row.id_datos_paciente +'"><i class="fa fa-edit"></i></a>'+
+                                        '<a href="javascript:;" title="Modificar" class="btn btn-warning btn-sm modificar" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-edit"></i></a>'+
                                         '<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'+ row.id_datos_paciente +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-file-o"></i></a>' +
                                         '<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-arrow-right"></i></a>' +
                                         '<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-o"></i></a>' +
@@ -898,13 +898,15 @@ $(document).on("click", ".procedimientos", function(){
 
 $(document).on("click", ".modificar", function(){
     let id = $(this).data('id');
+    let id_detalle_de_solicitud = $(this).data('solicitud');
 
     $.ajax({
         type: "POST",
         url: "<?=$_ENV["BASE_URL"]?>home/cargar_modal_modificar",
         dataType: "json",
         data: {
-            id: id
+            id: id,
+            id_detalle_de_solicitud: id_detalle_de_solicitud
         },
         beforeSend: function() {
             $("#pdocrud-ajax-loader").show();

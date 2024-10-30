@@ -2695,6 +2695,7 @@ class HomeController
 			$pdocrud->addPlugin("chosen");
 
 			$id = $request->post('id');
+			$id_detalle_de_solicitud = $request->post('id_detalle_de_solicitud');
 
 			$pdomodel = $pdocrud->getPDOModelObj();
 			$pdomodel->columns = array("datos_paciente.id_datos_paciente", "fecha_solicitud", "tipo_solicitud", "tipo_examen", "examen", "observacion");
