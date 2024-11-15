@@ -48,6 +48,10 @@ class BuscarListaEsperaController
 						<label class='control-label col-form-label'>RUN</label>
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text rut'>
 					</div>
+                    <div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
+						<label class='control-label col-form-label'>Pasaporte o Código Interno</label>
+						<input type='text' class='form-control pdocrud-form-control pdocrud-text pasaporte'>
+					</div>
 					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>Nombre Paciente</label>
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text nombre_paciente'>
@@ -153,9 +157,10 @@ class BuscarListaEsperaController
 
 			$where = "";
 			$run = $request->post('run');
+            $pasaporte = $request->post('pasaporte');
 			$nombre_paciente = $request->post('nombre_paciente');
 
-			if (empty($run) && empty($nombre_paciente)) {
+			if (empty($run) && empty($pasaporte) && empty($nombre_paciente)) {
 				echo json_encode(["error" => "Debe ingresar al menos un campo para realizar la búsqueda"]);
 				return;
 			}
@@ -166,9 +171,13 @@ class BuscarListaEsperaController
 					echo json_encode(["error" => "Rut Inválido"]);
 					return;
 				}
-                
+
 				$where .= " AND dp.rut = '$run' ";
 			} 
+
+            if (!empty($pasaporte)) {
+				$where .= " AND dp.pasaporte_o_codigo_interno LIKE '%$pasaporte%' ";
+			}
 
 			if (!empty($nombre_paciente)) {
 				$where .= " AND (dp.nombres = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_materno) = '$nombre_paciente')";

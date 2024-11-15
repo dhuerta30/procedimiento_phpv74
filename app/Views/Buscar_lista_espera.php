@@ -416,6 +416,7 @@ $(document).ready(function(){
 $(document).on("click", ".limpiar_filtro", function(){
 
     $('.rut').val("");
+    $('.pasaporte').val("");
     $('.nombre_paciente').val("");
     $('.cargar_modal').empty();
 
@@ -567,6 +568,7 @@ $(document).on("click", ".limpiar_filtro", function(){
 $(document).on("click", ".buscar", function(){
     // Obtener los valores de los filtros
     let run = $('.rut').val();
+    let pasaporte = $('.pasaporte').val();
     let nombre_paciente = $('.nombre_paciente').val();
 
     $.ajax({
@@ -575,6 +577,7 @@ $(document).on("click", ".buscar", function(){
         dataType: "json",
         data: {
             run: run,
+            pasaporte: pasaporte,
             nombre_paciente: nombre_paciente
         },
         beforeSend: function() {
