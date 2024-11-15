@@ -9,9 +9,19 @@ use App\core\View;
 use App\core\Redirect;
 use App\core\DB;
 use Xinvoice;
-        
+use App\Controllers\HomeController;
+
 class BuscarListaEsperaController
 {
+    public function __construct()
+	{
+		SessionManager::startSession();
+		$Sesusuario = SessionManager::get('usuario');
+		if (!isset($Sesusuario)) {
+			Redirect::to("Login/index");
+		}
+	}
+
     public function index()
     {
         $pdocrud = DB::PDOCrud();
@@ -39,59 +49,8 @@ class BuscarListaEsperaController
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text rut'>
 					</div>
 					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
-						<label class='control-label col-form-label'>Pasaporte o Código Interno</label>
-						<input type='text' class='form-control pdocrud-form-control pdocrud-text pasaporte'>
-					</div>
-					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
 						<label class='control-label col-form-label'>Nombre Paciente</label>
 						<input type='text' class='form-control pdocrud-form-control pdocrud-text nombre_paciente'>
-					</div>
-					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
-						<label class='control-label col-form-label'>Prestación</label>
-						<input type='text' class='form-control pdocrud-form-control pdocrud-text prestacion'>
-					</div>
-				</div>
-				<div class='row d-flex'>
-					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
-						<label class='control-label col-form-label'>Estado</label>
-						<select class='form-control pdocrud-form-control pdocrud-select estado'>
-							<option value=''>Seleccionar</option>
-							<option value='Ingresado'>Ingresado</option>
-							<option value='Agendado'>Agendado</option>
-							<option value='Egresado'>Egresado</option>
-						</select>
-					</div>
-					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
-						<label class='control-label col-form-label'>Procedencia</label>
-						<select class='form-control pdocrud-form-control pdocrud-select procedencia'>
-							<option value=''>Seleccionar</option>
-							<option value='Hospitalizado'>Hospitalizado</option>
-							<option value='Urgencia'>Urgencia</option>
-							<option value='Ambulatorio'>Ambulatorio</option>
-							<option value=''>Sin Procedencia</option>
-						</select>
-					</div>
-					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
-						<label class='control-label col-form-label'>Fecha Solicitud</label>
-						<div class='input-group'>
-							<input type='text' class='form-control pdocrud-form-control pdocrud-text fecha_solicitud pdocrud-date flatpickr-input' data-type='date'>                
-							<div class='input-group-append'>
-								<span class='input-group-text' id='basic-addon1'>
-									<i class='fa fa-calendar'></i>
-								</span>
-							</div> 
-						</div>
-					</div>
-
-					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
-						<label class='control-label col-form-label'>Tiene Adjunto</label>
-						<div class='input-group'>
-							<select class='form-control pdocrud-form-control pdocrud-select adjuntar'>
-								<option value=''>Seleccionar</option>
-								<option value='Si'>Si</option>
-								<option value='No'>No</option>
-							</select>
-						</div>
 					</div>
 				</div>
 		");
@@ -130,4 +89,129 @@ class BuscarListaEsperaController
 			'mask' => $mask
         ]);
     }
+
+    public function mostrar_grilla_lista_espera(){
+		$crud = DB::PDOCrud(true);
+		$pdomodel = $crud->getPDOModelObj();
+    
+		// Primer día del mes actual
+		$firstDayOfMonth = date('Y-m-01');
+		
+		// Último día del mes actual
+		$lastDayOfMonth = date('Y-m-t');
+
+		$data = $pdomodel->DBQuery(
+			"SELECT 
+			dp.id_datos_paciente,
+			ds.id_detalle_de_solicitud,
+			dp.rut,
+			CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
+			dp.telefono,
+			dp.apellido_paterno,
+			dp.apellido_materno,
+			dp.edad,
+			ds.fecha_egreso,
+			fecha_solicitud as fecha_solicitud,
+			ds.estado AS estado,
+			codigo_fonasa AS codigo,
+			tipo_examen,
+			examen,
+			ds.fecha as fecha,
+			especialidad,
+			CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
+			CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
+		FROM 
+			datos_paciente AS dp
+		INNER JOIN
+			detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
+		INNER JOIN 
+			diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+		INNER JOIN 
+			profesional AS pro ON pro.id_profesional = dg_p.profesional
+		WHERE
+			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
+			AND ds.fecha_solicitud >= '$firstDayOfMonth'
+            AND ds.fecha_solicitud <= '$lastDayOfMonth'
+		GROUP BY 
+			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen"
+		);
+
+		//echo $pdomodel->getLastQuery();
+		//die();
+
+		echo json_encode(['data' => $data]);
+	}
+
+    public function buscar_examenes_lista_espera(){
+		
+		$request = new Request();
+
+		if($request->getMethod() === 'POST'){
+
+			$pdocrud = DB::PDOCrud(true);
+			$pdomodel = $pdocrud->getPDOModelObj();
+
+			$where = "";
+			$run = $request->post('run');
+			$nombre_paciente = $request->post('nombre_paciente');
+
+			if (empty($run) && empty($nombre_paciente)) {
+				echo json_encode(["error" => "Debe ingresar al menos un campo para realizar la búsqueda"]);
+				return;
+			}
+
+            if (!empty($run)) {
+
+                if (!HomeController::validaRut($run)) {
+					echo json_encode(["error" => "Rut Inválido"]);
+					return;
+				}
+                
+				$where .= " AND dp.rut = '$run' ";
+			} 
+
+			if (!empty($nombre_paciente)) {
+				$where .= " AND (dp.nombres = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_materno) = '$nombre_paciente')";
+			}
+
+			$query = "SELECT 
+					DISTINCT
+					dp.id_datos_paciente,
+					ds.id_detalle_de_solicitud,
+					dp.rut,
+					dp.pasaporte_o_codigo_interno,
+					CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) AS paciente,
+					dp.telefono,
+					dp.edad,
+					ds.fecha_egreso,
+					ds.fecha_solicitud AS fecha_solicitud,
+					ds.estado AS estado,
+					ds.codigo_fonasa AS codigo,
+					ds.tipo_examen,
+					ds.examen,
+					ds.procedencia AS procedencia,
+					ds.fecha AS fecha,
+					dg_p.especialidad AS especialidad,
+					CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional) AS profesional,
+                    CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
+				FROM 
+					datos_paciente dp
+				INNER JOIN 
+					detalle_de_solicitud ds ON ds.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					diagnostico_antecedentes_paciente dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
+				INNER JOIN 
+					profesional pro ON pro.id_profesional = dg_p.profesional
+				WHERE 
+					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
+				GROUP BY 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen
+			";
+
+			$data = $pdomodel->DBQuery($query);
+
+			echo json_encode(['data' => $data]);
+
+		}
+	}
 }

@@ -253,7 +253,7 @@ $(document).ready(function(){
             }
         },
         ajax: {
-            url: "<?=$_ENV["BASE_URL"]?>home/mostrar_grilla_lista_espera",
+            url: "<?=$_ENV["BASE_URL"]?>BuscarListaEspera/mostrar_grilla_lista_espera",
             type: "POST",
             dataType: "json"
         },
@@ -416,14 +416,7 @@ $(document).ready(function(){
 $(document).on("click", ".limpiar_filtro", function(){
 
     $('.rut').val("");
-    $('.pasaporte').val("");
     $('.nombre_paciente').val("");
-    $('.estado').val("");
-    $('.procedencia').val("");
-    $('.prestacion').val("");
-    $('.profesional').val("");
-    $('.fecha_solicitud').val("");
-    $('.adjuntar').val("");
     $('.cargar_modal').empty();
 
     if ($('.tabla_reportes').DataTable()) {
@@ -456,7 +449,7 @@ $(document).on("click", ".limpiar_filtro", function(){
             }
         },
         ajax: {
-            url: "<?=$_ENV["BASE_URL"]?>home/mostrar_grilla_lista_espera",
+            url: "<?=$_ENV["BASE_URL"]?>BuscarListaEspera/mostrar_grilla_lista_espera",
             type: "POST",
             dataType: "json",
             beforeSend: function() {
@@ -571,33 +564,18 @@ $(document).on("click", ".limpiar_filtro", function(){
     });
 });
 
-
 $(document).on("click", ".buscar", function(){
     // Obtener los valores de los filtros
     let run = $('.rut').val();
-    let pasaporte = $('.pasaporte').val();
     let nombre_paciente = $('.nombre_paciente').val();
-    let estado = $('.estado').val();
-    let procedencia = $('.procedencia').val();
-    let prestacion = $('.prestacion').val();
-    let profesional = $('.profesional').val();
-    let fecha_solicitud = $('.fecha_solicitud').val();
-    let adjuntar = $(".adjuntar").val();
 
     $.ajax({
         type: "POST",
-        url: "<?=$_ENV["BASE_URL"]?>home/buscar_examenes",
+        url: "<?=$_ENV["BASE_URL"]?>BuscarListaEspera/buscar_examenes_lista_espera",
         dataType: "json",
         data: {
             run: run,
-            pasaporte: pasaporte,
-            nombre_paciente: nombre_paciente,
-            estado: estado,
-            procedencia: procedencia,
-            prestacion: prestacion,
-            profesional: profesional,
-            fecha_solicitud: fecha_solicitud,
-            adjuntar: adjuntar
+            nombre_paciente: nombre_paciente
         },
         beforeSend: function() {
             // Puedes mostrar un indicador de carga aquí

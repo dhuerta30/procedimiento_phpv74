@@ -11,7 +11,7 @@
 
         <br>
         <br>
-        <div class="carga_masiva d-none">
+        <div class="carga_masiva">
           <?=$upload?>
         </div>
 
