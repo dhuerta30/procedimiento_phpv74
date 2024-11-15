@@ -52,7 +52,7 @@
 			display: inline;
 			margin: 0;
 			white-space: nowrap!important;
-			font-size: 13px;
+			font-size: 15px;
 		}
 	</style>
 	<!-- Site wrapper -->
