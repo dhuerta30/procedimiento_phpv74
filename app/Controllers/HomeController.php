@@ -625,7 +625,7 @@ class HomeController
 	}
 
 	public function exportacion_ingreso_egreso(){
-		$pdocrud = DB::PDOCrud(false, "", "", array("autoSuggestion" => true, "showAllSearch" => false));
+		$pdocrud = DB::PDOCrud();
 		$pdocrud->colRename("tipo_exportacion", "Tipo Exportación");
 		$pdocrud->colRename("fecha_exportacion", "Fecha Exportación");
 		$pdocrud->tableHeading("Descarga Ingreso/Egreso");
