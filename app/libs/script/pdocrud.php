@@ -1020,10 +1020,12 @@ function insetar_usuario($data, $obj){
     }
 
     $nombre = $data["usuario"]["nombre"];
+    $rut = $data["usuario"]["rut"];
     $email  = $data["usuario"]["email"];
     $user   = $data["usuario"]["usuario"];
     $clave  = $data["usuario"]["password"];
     $rol    = $data["usuario"]["idrol"];
+    $cargo    = $data["usuario"]["cargo"];
     $avatar = $data["usuario"]["avatar"];
 
     if(empty($nombre)){
@@ -1052,6 +1054,7 @@ function insetar_usuario($data, $obj){
     } else {
         $newdata = array();
         $newdata["usuario"]["nombre"] = $nombre;
+        $newdata["usuario"]["rut"] = $rut;
         $newdata["usuario"]["usuario"] = $user;
         $newdata["usuario"]["email"] = $email;
         if (empty($avatar)) {
@@ -1064,6 +1067,7 @@ function insetar_usuario($data, $obj){
         $newdata["usuario"]["token"] = $token;
         $newdata["usuario"]["expiration_token"] = 0;
         $newdata["usuario"]["idrol"] = $rol;
+        $newdata["usuario"]["cargo"] = $cargo;
         $newdata["usuario"]["estatus"] = 1;
 
         return $newdata;
@@ -1080,10 +1084,12 @@ function editar_usuario($data, $obj){
 
     $id     = $data["usuario"]["id"];
     $nombre = $data["usuario"]["nombre"];
+    $rut = $data["usuario"]["rut"];
     $email  = $data["usuario"]["email"];
     $clave  = $data["usuario"]["password"];
     $user   = $data["usuario"]["usuario"];
     $rol    = $data["usuario"]["idrol"];
+    $cargo = $data["usuario"]["cargo"];
 
     
     if(empty($nombre)){
@@ -1113,6 +1119,7 @@ function editar_usuario($data, $obj){
         $newdata = array();
         $newdata["usuario"]["id"] = $id;
         $newdata["usuario"]["nombre"] = $nombre;
+        $newdata["usuario"]["rut"] = $rut;
         $newdata["usuario"]["usuario"] = $user;
         $newdata["usuario"]["email"] = $email;
         $newdata["usuario"]["avatar"] = basename($data["usuario"]["avatar"]);
@@ -1120,6 +1127,7 @@ function editar_usuario($data, $obj){
         $newdata["usuario"]["token"] = $token;
         $newdata["usuario"]["expiration_token"] = 0;
         $newdata["usuario"]["idrol"] = $rol;
+        $newdata["usuario"]["cargo"] = $cargo;
         $newdata["usuario"]["estatus"] = 1;
 
         return $newdata;

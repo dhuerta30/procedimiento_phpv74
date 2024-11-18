@@ -430,7 +430,7 @@ class HomeController
 		$pdocrud->relatedData('idrol','rol','idrol','nombre_rol');
 		$pdocrud->tableColFormatting("avatar", "html",array("type" =>"html","str"=>'<img width="50" src="'.$_ENV["BASE_URL"].'app/libs/script/uploads/{col-name}">'));
 		$pdocrud->crudRemoveCol(array("rol","estatus","password", "token", "token_api", "expiration_token"));
-		$pdocrud->setSearchCols(array("id","nombre","email", "usuario", "idrol"));
+		$pdocrud->setSearchCols(array("id","nombre", "rut","email", "usuario", "idrol"));
 		$pdocrud->setSettings("addbtn", false);
 		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setSettings("editbtn", false);
@@ -1799,9 +1799,9 @@ class HomeController
 			$pdocrud->tableColFormatting("avatar", "html",array("type" =>"html","str"=>'<img width="80" src="'.$_ENV["BASE_URL"].'app/libs/script/uploads/{col-name}">'));
 			$pdocrud->fieldDataAttr("password", array("value"=>"", "placeholder" => "*****", "autocomplete" => "new-password"));
 			$pdocrud->formDisplayInPopup();
-			$pdocrud->fieldGroups("Name",array("nombre","email"));
+			$pdocrud->fieldGroups("Name",array("nombre","rut"));
 			$pdocrud->fieldGroups("Name2",array("usuario","password"));
-			$pdocrud->fieldGroups("Name3",array("idrol","avatar"));
+			$pdocrud->fieldGroups("Name3",array("idrol", "cargo"));
 			$pdocrud->setSettings("required", false);
 			$pdocrud->setSettings("checkboxCol", false);
 			$pdocrud->setSettings("deleteMultipleBtn", false);
@@ -1825,7 +1825,7 @@ class HomeController
 			$pdocrud->setSettings("hideAutoIncrement", false);
 			$pdocrud->setSettings("template", "usuarios");
 			$pdocrud->buttonHide("submitBtnSaveBack");
-			$pdocrud->formFields(array("id","nombre","email","password","usuario", "idrol", "avatar"));
+			$pdocrud->formFields(array("id","nombre", "rut", "email","password","usuario", "cargo", "idrol", "avatar"));
 			$pdocrud->setRecordsPerPageList(array(5, 10, 15, 'All'=> 'Todo'));
 			$pdocrud->setSettings("printBtn", false);
 			$pdocrud->setSettings("pdfBtn", false);
