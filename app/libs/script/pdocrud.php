@@ -1031,9 +1031,9 @@ function insetar_usuario($data, $obj){
     if(empty($nombre)){
         $error_msg = array("message" => "", "error" => "El campo Nombre Completo es obligatorio", "redirectionurl" => "");
         die(json_encode($error_msg));
-    } else if(empty($email)){
+    /*} else if(empty($email)){
         $error_msg = array("message" => "", "error" => "El campo Correo Electrónico es obligatorio", "redirectionurl" => "");
-        die(json_encode($error_msg));
+        die(json_encode($error_msg));*/
     } else if(empty($user)){
         $error_msg = array("message" => "", "error" => "El campo Usuario es obligatorio", "redirectionurl" => "");
         die(json_encode($error_msg));
@@ -1046,7 +1046,7 @@ function insetar_usuario($data, $obj){
     }
 
     $pdomodel = $obj->getPDOModelObj();
-    $result = $pdomodel->DBQuery("SELECT * FROM usuario WHERE usuario = '$user' OR email = '$email'");
+    $result = $pdomodel->DBQuery("SELECT * FROM usuario WHERE nombre = '$nombre'");
 
     if($result){
         $error_msg = array("message" => "", "error" => "El correo o el usuario ya existe.", "redirectionurl" => "");
@@ -1095,9 +1095,9 @@ function editar_usuario($data, $obj){
     if(empty($nombre)){
         $error_msg = array("message" => "", "error" => "El campo Nombre Completo es obligatorio", "redirectionurl" => "");
         die(json_encode($error_msg));
-    } else if(empty($email)){
+    /*} else if(empty($email)){
         $error_msg = array("message" => "", "error" => "El campo Correo Electrónico es obligatorio", "redirectionurl" => "");
-        die(json_encode($error_msg));
+        die(json_encode($error_msg));*/
     } else if(empty($user)){
         $error_msg = array("message" => "", "error" => "El campo Usuario es obligatorio", "redirectionurl" => "");
         die(json_encode($error_msg));

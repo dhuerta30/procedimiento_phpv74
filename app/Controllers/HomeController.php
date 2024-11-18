@@ -1812,7 +1812,7 @@ class HomeController
 			$pdocrud->addCallback("before_insert", "insetar_usuario");
 			$pdocrud->addCallback("before_update", "editar_usuario");
 			$pdocrud->crudRemoveCol(array("rol","estatus","password", "token", "token_api", "expiration_token"));
-			$pdocrud->setSearchCols(array("id","nombre","email", "usuario", "idrol"));
+			$pdocrud->setSearchCols(array("id","nombre","rut","email", "usuario", "idrol"));
 			$pdocrud->where("estatus", 1);
 			$pdocrud->recordsPerPage(5);
 			$pdocrud->fieldTypes("avatar", "FILE_NEW");
@@ -1931,6 +1931,15 @@ class HomeController
 	}
 
 	public function datos_paciente(){
+		if (
+			$_SESSION["usuario"][0]["cargo"] == "ENFERMERA" || 
+			$_SESSION["usuario"][0]["cargo"] == "ENFERMERO" || 
+			$_SESSION["usuario"][0]["cargo"] == "Kinesiologo" || 
+			$_SESSION["usuario"][0]["cargo"] == "MEDICO CIRUJANO" || 
+			$_SESSION["usuario"][0]["cargo"] == "Médico"
+		) {
+			Redirect::to("buscarListaEspera/index");
+		}	
 
 		date_default_timezone_set('America/Santiago');
 		$fecha_registro = date('Y-m-d H:i:s');
