@@ -1001,7 +1001,7 @@ $(document).on("click", ".mostrar_adjunto", function(){
 $(document).on("click", ".exportar_excel", function(){
     // obtener las variables de cada filtro y pasarselas a un ajax que hara la query para exportar el excel
     let run = $('.rut').val();
-    let pasaporte_o_codigo_interno = $('.pasaporte').val();
+    let pasaporte = $('.pasaporte').val();
     let nombre_paciente = $('.nombre_paciente').val();
     let prestacion = $('.prestacion').val();
     let estado = $('.estado').val();
@@ -1010,7 +1010,7 @@ $(document).on("click", ".exportar_excel", function(){
     let adjuntar = $('.adjuntar').val();
 
     // Verificar si no hay ningún filtro aplicado
-    if (!run && !pasaporte_o_codigo_interno && !nombre_paciente && !prestacion && !estado && !procedencia && !fecha_solicitud && !adjuntar) {
+    if (!run && !pasaporte && !nombre_paciente && !prestacion && !estado && !procedencia && !fecha_solicitud && !adjuntar) {
         let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_lista_espera_examenes_default";
         // Si no hay filtros, usar la URL por defecto
         window.open(url);
@@ -1019,7 +1019,7 @@ $(document).on("click", ".exportar_excel", function(){
         let url = "<?=$_ENV["BASE_URL"]?>home/descargar_excel_lista_espera_examenes";
         // Agregar filtros a la URL según estén presentes
         if (run) url += "/run/" + run;
-        if (pasaporte_o_codigo_interno) pasaporte_o_codigo_interno += "/pasaporte/" + pasaporte_o_codigo_interno;
+        if (pasaporte) pasaporte += "/pasaporte/" + pasaporte;
         if (nombre_paciente) url += "/nombre_paciente/" + nombre_paciente;
         if (prestacion) url += "/prestacion/" + prestacion;
         if (estado) url += "/estado/" + estado;

@@ -3885,6 +3885,7 @@ class HomeController
 				ds.estado,
 				especialidad AS especialidad,
 				dp.rut,
+				dp.pasaporte_o_codigo_interno,
 				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
 				dp.telefono,
 				dp.edad,
@@ -3915,7 +3916,7 @@ class HomeController
 
 		// Definir los títulos de las columnas
 		$columnTitles = [
-			'Estado', 'Especialidad', 'Rut', 'Paciente', 'Teléfono', 'Edad', 'Código', 'Tipo Exámen', 'Exámen',
+			'Estado', 'Especialidad', 'Rut', 'Pasaporte', 'Paciente', 'Teléfono', 'Edad', 'Código', 'Tipo Exámen', 'Exámen',
 			'Fecha Solicitud', 'Fecha Agendada', 'Fecha egreso', 'Tiene Adjunto', 'Profesional'
 		];
 
@@ -3936,7 +3937,7 @@ class HomeController
 
 		$where = "";
 		$run = $request->get('run');
-		$pasaporte_o_codigo_interno = $request->get('pasaporte_o_codigo_interno');
+		$pasaporte = $request->get('pasaporte');
 		$nombre_paciente = urldecode($request->get('nombre_paciente'));
 		$prestacion = $request->get('prestacion');
 		$estado = $request->get('estado');
@@ -3952,6 +3953,12 @@ class HomeController
 			}
 
 			$where .= " AND dp.rut = '$run' ";
+		}
+
+		// Si no se proporcionó un RUT, verifica si se proporciona el pasaporte o código interno
+		if (!empty($pasaporte)) {
+			// Buscando por pasaporte o código interno
+			$where .= " AND (dp.pasaporte_o_codigo_interno LIKE '%$pasaporte%') ";
 		}
 
 		if (!empty($nombre_paciente)) {
@@ -3997,6 +4004,7 @@ class HomeController
 				ds.estado,
 				especialidad AS especialidad,
 				dp.rut,
+				dp.pasaporte_o_codigo_interno,
 				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
 				dp.telefono,
 				dp.edad,
@@ -4027,7 +4035,7 @@ class HomeController
 
 		// Definir los títulos de las columnas
 		$columnTitles = [
-			'Estado', 'Especialidad', 'Rut', 'Paciente', 'Teléfono', 'Edad', 'Código', 'Tipo Exámen', 'Exámen',
+			'Estado', 'Especialidad', 'Rut', 'Pasaporte', 'Paciente', 'Teléfono', 'Edad', 'Código', 'Tipo Exámen', 'Exámen',
 			'Fecha Solicitud', 'Fecha Agendada', 'Fecha egreso', 'Tiene Adjunto', 'Profesional'
 		];
 
