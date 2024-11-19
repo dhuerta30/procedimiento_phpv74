@@ -3915,7 +3915,7 @@ class HomeController
 
 		// Definir los títulos de las columnas
 		$columnTitles = [
-			'Estado', 'Especialidad', 'Rut', 'Paciente', 'Teléfono', 'Edad', 'Código', 'Tipo Exámen',
+			'Estado', 'Especialidad', 'Rut', 'Paciente', 'Teléfono', 'Edad', 'Código', 'Tipo Exámen', 'Exámen',
 			'Fecha Solicitud', 'Fecha Agendada', 'Fecha egreso', 'Tiene Adjunto', 'Profesional'
 		];
 
