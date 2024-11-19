@@ -3882,25 +3882,20 @@ class HomeController
 
 		$data = $pdomodel->DBQuery(
 			"SELECT 
-				DISTINCT
-				dp.id_datos_paciente,
-				ds.id_detalle_de_solicitud,
+				ds.estado,
+				especialidad AS especialidad,
 				dp.rut,
 				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
 				dp.telefono,
 				dp.edad,
-				ds.fecha_egreso,
-				ds.motivo_egreso,
-				fecha_solicitud as fecha_solicitud,
-				ds.estado AS estado,
 				codigo_fonasa AS codigo,
 				ds.tipo_examen,
 				ds.examen,
-				ds.procedencia AS procedencia,
+				fecha_solicitud as fecha_solicitud,
 				ds.fecha as fecha,
-				especialidad AS especialidad,
-				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
-				CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
+				ds.fecha_egreso,
+				CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto,
+				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
 			FROM 
 				datos_paciente AS dp
 			INNER JOIN 
@@ -3920,8 +3915,8 @@ class HomeController
 
 		// Definir los títulos de las columnas
 		$columnTitles = [
-			'ID Paciente', 'ID Solicitud', 'RUT', 'Paciente', 'Teléfono', 'Edad', 'Fecha Egreso', 'Motivo Egreso',
-			'Fecha Solicitud', 'Estado', 'Código Fonasa', 'Examen', 'Procedencia', 'Fecha', 'Especialidad', 'Profesional', 'Adjuntar'
+			'Estado', 'Especialidad', 'Rut', 'Paciente', 'Teléfono', 'Edad', 'Código', 'Tipo Exámen',
+			'Fecha Solicitud', 'Fecha Agendada', 'Fecha egreso', 'Tiene Adjunto', 'Profesional'
 		];
 
 		// Insertar los títulos en la primera fila de los datos
@@ -3998,24 +3993,20 @@ class HomeController
 
 		$data = $pdomodel->DBQuery(
 			"SELECT 
-				dp.id_datos_paciente,
-				ds.id_detalle_de_solicitud,
+				ds.estado,
+				especialidad AS especialidad,
 				dp.rut,
 				CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS paciente,
 				dp.telefono,
 				dp.edad,
-				ds.fecha_egreso,
-				ds.motivo_egreso,
-				fecha_solicitud as fecha_solicitud,
-				ds.estado AS estado,
 				codigo_fonasa AS codigo,
 				ds.tipo_examen,
 				ds.examen,
-				ds.procedencia AS procedencia,
+				fecha_solicitud as fecha_solicitud,
 				ds.fecha as fecha,
-				especialidad AS especialidad,
-				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional,
-				CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto
+				ds.fecha_egreso,
+				CASE WHEN ds.adjuntar IS NOT NULL AND ds.adjuntar != '' THEN 'Si' ELSE 'No' END AS tiene_adjunto,
+				CONCAT(nombre_profesional, ' ', apellido_profesional) AS profesional
 			FROM 
 				datos_paciente AS dp
 			INNER JOIN 
@@ -4035,8 +4026,8 @@ class HomeController
 
 		// Definir los títulos de las columnas
 		$columnTitles = [
-			'ID Paciente', 'ID Solicitud', 'RUT', 'Paciente', 'Teléfono', 'Edad', 'Fecha Egreso', 'Motivo Egreso',
-			'Fecha Solicitud', 'Estado', 'Código Fonasa', 'Examen', 'Procedencia', 'Fecha', 'Especialidad', 'Profesional', 'Adjuntar'
+			'Estado', 'Especialidad', 'Rut', 'Paciente', 'Teléfono', 'Edad', 'Código', 'Tipo Exámen', 'Exámen',
+			'Fecha Solicitud', 'Fecha Agendada', 'Fecha egreso', 'Tiene Adjunto', 'Profesional'
 		];
 
 		// Insertar los títulos en la primera fila de los datos
