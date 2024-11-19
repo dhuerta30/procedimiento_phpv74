@@ -3936,11 +3936,11 @@ class HomeController
 
 		$where = "";
 		$run = $request->get('run');
-		$nombre_paciente = $request->get('nombre_paciente');
+		$pasaporte_o_codigo_interno = $request->get('pasaporte_o_codigo_interno');
+		$nombre_paciente = urldecode($request->get('nombre_paciente'));
+		$prestacion = $request->get('prestacion');
 		$estado = $request->get('estado');
 		$procedencia = $request->get('procedencia');
-		$prestacion = $request->get('prestacion');
-		$profesional = $request->get('profesional');
 		$fecha_solicitud = $request->get('fecha_solicitud');
 		$adjuntar = $request->get('adjuntar');
 
@@ -3955,7 +3955,16 @@ class HomeController
 		}
 
 		if (!empty($nombre_paciente)) {
-			$where .= " AND (dp.nombres = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_materno) = '$nombre_paciente')";
+			$where .= " AND (
+				dp.nombres LIKE '%$nombre_paciente%' 
+				OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) LIKE '%$nombre_paciente%' 
+				OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) LIKE '%$nombre_paciente%' 
+				OR CONCAT(dp.nombres, ' ', dp.apellido_materno) LIKE '%$nombre_paciente%'
+			)";
+		}		
+
+		if (!empty($prestacion)) {
+			$where .= " AND ds.examen LIKE '%$prestacion%' ";
 		}
 
 		if (!empty($estado)) {
@@ -3964,14 +3973,6 @@ class HomeController
 
 		if (!empty($procedencia)) {
 			$where .= " AND ds.procedencia = '$procedencia' ";
-		}
-
-		if (!empty($prestacion)) {
-			$where .= " AND ds.examen LIKE '%$prestacion%' ";
-		}
-
-		if (!empty($profesional)) {
-			$where .= " AND (pro.nombre_profesional = '$profesional' OR CONCAT(pro.nombre_profesional, ' ', pro.apellido_profesional) = '$profesional' OR pro.apellido_profesional = '$profesional')";
 		}
 
 		if (!empty($fecha_solicitud)) {
