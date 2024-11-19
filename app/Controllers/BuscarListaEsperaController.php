@@ -180,8 +180,14 @@ class BuscarListaEsperaController
 			}
 
 			if (!empty($nombre_paciente)) {
-				$where .= " AND (dp.nombres = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) = '$nombre_paciente' OR CONCAT(dp.nombres, ' ', dp.apellido_materno) = '$nombre_paciente')";
+				$where .= " AND (
+					dp.nombres LIKE '%$nombre_paciente%' 
+					OR CONCAT(dp.nombres, ' ', dp.apellido_paterno) LIKE '%$nombre_paciente%' 
+					OR CONCAT(dp.nombres, ' ', dp.apellido_paterno, ' ', dp.apellido_materno) LIKE '%$nombre_paciente%' 
+					OR CONCAT(dp.nombres, ' ', dp.apellido_materno) LIKE '%$nombre_paciente%'
+				)";
 			}
+			
 
 			$query = "SELECT 
 					DISTINCT
