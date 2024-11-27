@@ -2438,8 +2438,8 @@ class HomeController
 			dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
 			AND ds.fecha_solicitud >= '$firstDayOfMonth'
             AND ds.fecha_solicitud <= '$lastDayOfMonth'
-		GROUP BY 
-			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen"
+		/*GROUP BY 
+			dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen*/"
 		);
 
 		//echo $pdomodel->getLastQuery();
@@ -2514,8 +2514,9 @@ class HomeController
 								<span class='input-group-text' id='basic-addon1'>
 									<i class='fa fa-calendar'></i>
 								</span>
-							</div> 
+							</div>
 						</div>
+						<p>Cuando este campo este vacio buscará por el mes actual</p>
 					</div>
 
 					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
@@ -3767,9 +3768,10 @@ class HomeController
 				"UPDATE detalle_de_solicitud
 				SET estado = 'Egresado'
 				WHERE adjuntar IS NOT NULL AND adjuntar != ''"
-			);	
+			);
 
-			$currentWeekStart = date('Y-m-d', strtotime('monday this week'));
+			$currentMonthStart = date('Y-m-01');
+        	$currentMonthEnd = date('Y-m-t');
 
 			$where = "";
 			$run = $request->post('run');
@@ -3823,6 +3825,8 @@ class HomeController
 
 			if (!empty($fecha_solicitud)) { 
 				$where .= " AND dg_p.fecha_solicitud_paciente = '$fecha_solicitud' ";
+			} else {
+				$where .= " AND dg_p.fecha_solicitud_paciente BETWEEN '$currentMonthStart' AND '$currentMonthEnd' ";
 			}
 
 			if (!empty($adjuntar)) {
@@ -3839,7 +3843,7 @@ class HomeController
 			}
 
 			$query = "SELECT 
-					DISTINCT
+					
 					dp.id_datos_paciente,
 					ds.id_detalle_de_solicitud,
 					dp.rut,
@@ -3868,8 +3872,8 @@ class HomeController
 					profesional pro ON pro.id_profesional = dg_p.profesional
 				WHERE 
 					dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
-				GROUP BY 
-					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen
+				/*GROUP BY 
+					dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen*/
 			";
 
 			$data = $pdomodel->DBQuery($query);

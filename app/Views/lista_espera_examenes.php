@@ -625,144 +625,144 @@ $(document).on("click", ".buscar", function(){
                     allowOutsideClick: false
                 });
                 $(".rut").val("");
-            }
-            // Reconstruir la tabla DataTable con los nuevos datos
-            table = $('.tabla_reportes').DataTable({
-                searching: false,
-                scrollX: true,
-                lengthMenu: [10],
-                dom: 'rtip',
-                language: {
-                    "decimal": "",
-                    "emptyTable": "No hay información",
-                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Mostrar _MENU_ Entradas",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "zeroRecords": "Sin resultados encontrados",
-                    "paginate": {
-                        "first": "Primero",
-                        "last": "Ultimo",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    }
-                },
-                data: response.data, // Los datos filtrados del controlador PHP
-                destroy: true,
-                columns: [
-                    { data: 'estado' },
-                    { data: 'especialidad' },
-                    { data: 'rut' },
-                    { data: 'paciente' },
-                    { data: 'telefono',
-                        render: function(data, type, row, meta){
-                            
-                            if (data == null) {
-                                return "<div class='badge badge-danger'>Sin Teléfono</div>";
-                            } else {
-                                return data;
-                            }
-                        } 
-                     },
-                    { data: 'edad',
-                        render: function(data, type, row, meta){
-                            
-                            if (data == 0) {
-                                return "<div class='badge badge-danger'>Sin Edad</div>";
-                            } else {
-                                return data;
-                            }
-                        } 
-                    },
-                    { data: 'codigo',
-                        render: function(data, type, row, meta){
-                            return "<div class='badge badge-info'>"+ data +"</div>";
+            } else {
+                // Reconstruir la tabla DataTable con los nuevos datos
+                table = $('.tabla_reportes').DataTable({
+                    searching: false,
+                    scrollX: true,
+                    lengthMenu: [10],
+                    dom: 'rtip',
+                    language: {
+                        "decimal": "",
+                        "emptyTable": "No hay información",
+                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                        "infoPostFix": "",
+                        "thousands": ",",
+                        "lengthMenu": "Mostrar _MENU_ Entradas",
+                        "loadingRecords": "Cargando...",
+                        "processing": "Procesando...",
+                        "search": "Buscar:",
+                        "zeroRecords": "Sin resultados encontrados",
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Ultimo",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
                         }
                     },
-                    { data: 'tipo_examen',
-                        render: function(data, type, row, meta){
-                            return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
-                        }
-                    },
-                    { data: 'examen',
-                        render: function(data, type, row, meta){
-                            if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
-                                return data.substr(0, 100) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
-                            } else {
+                    data: response.data, // Los datos filtrados del controlador PHP
+                    destroy: true,
+                    columns: [
+                        { data: 'estado' },
+                        { data: 'especialidad' },
+                        { data: 'rut' },
+                        { data: 'paciente' },
+                        { data: 'telefono',
+                            render: function(data, type, row, meta){
+                                
+                                if (data == null) {
+                                    return "<div class='badge badge-danger'>Sin Teléfono</div>";
+                                } else {
+                                    return data;
+                                }
+                            } 
+                        },
+                        { data: 'edad',
+                            render: function(data, type, row, meta){
+                                
+                                if (data == 0) {
+                                    return "<div class='badge badge-danger'>Sin Edad</div>";
+                                } else {
+                                    return data;
+                                }
+                            } 
+                        },
+                        { data: 'codigo',
+                            render: function(data, type, row, meta){
+                                return "<div class='badge badge-info'>"+ data +"</div>";
+                            }
+                        },
+                        { data: 'tipo_examen',
+                            render: function(data, type, row, meta){
                                 return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
                             }
-                        }
-                    },
-                    { data: 'fecha_solicitud',
-                        render: function(data, type, row, meta){
-                            var fecha = moment(data);
-
-                            if (!fecha.isValid()) {
-                                return "<div class='badge badge-danger'>Sin Fecha</div>";
-                            }
-                            // Formatear la fecha en el formato deseado (d/m/y)
-                            var fechaFormateada = fecha.format('DD/MM/Y');
-                            return fechaFormateada;
-                        } 
-                    },
-                    { data: 'fecha',
-                        render: function(data, type, row, meta){
-                            var fecha = moment(data);
-
-                            if (!fecha.isValid()) {
-                                return "<div class='badge badge-danger'>Sin Fecha</div>";
-                            }
-                            // Formatear la fecha en el formato deseado (d/m/y)
-                            var fechaFormateada = fecha.format('DD/MM/Y');
-                            return fechaFormateada;
-                        } 
-                    },
-                    { data: 'fecha_egreso',
-                        render: function(data, type, row, meta){
-                            var fecha = moment(data);
-
-                            if (!fecha.isValid()) {
-                                return "<div class='badge badge-danger'>Sin Fecha</div>";
-                            }
-                            // Formatear la fecha en el formato deseado (d/m/y)
-                            var fechaFormateada = fecha.format('DD/MM/Y');
-                            return fechaFormateada;
-                        } 
-                    },
-                    { data: 'tiene_adjunto',
-                        render: function(data, type, row, meta){
-                            if (type === 'display') {
-                                if (data === "Si") {
-                                    return "<div class='badge badge-success'>" + data + "</div>";
+                        },
+                        { data: 'examen',
+                            render: function(data, type, row, meta){
+                                if(type === 'display' && data.length > 10){ // Limitar a 10 caracteres
+                                    return data.substr(0, 100) + '...'; // Mostrar solo los primeros 10 caracteres seguidos de puntos suspensivos
                                 } else {
-                                    return "<div class='badge badge-danger'>" + data + "</div>";
+                                    return data; // Devolver el dato sin cambios si tiene menos de 10 caracteres
                                 }
                             }
-                            return data;
                         },
-                        escape: false // Asegura que el HTML no se escape
-                    }, 
-                    { data: 'profesional' },
-                    {
-                        render: function(data, type, row) {
-                            return '<td>' +
-                                        '<a href="javascript:;" title="Modificar" class="btn btn-warning btn-sm modificar" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-edit"></i></a>'+
-                                        '<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'+ row.id_datos_paciente +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-file-o"></i></a>' +
-                                        '<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-arrow-right"></i></a>' +
-                                        '<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-o"></i></a>' +
-                                        '<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-pdf"></i></a>' +
-                                        '<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-folder"></i></a>' +
-                                    '</td>';
-                        }
-                    }
-                ]
-            });
+                        { data: 'fecha_solicitud',
+                            render: function(data, type, row, meta){
+                                var fecha = moment(data);
 
+                                if (!fecha.isValid()) {
+                                    return "<div class='badge badge-danger'>Sin Fecha</div>";
+                                }
+                                // Formatear la fecha en el formato deseado (d/m/y)
+                                var fechaFormateada = fecha.format('DD/MM/Y');
+                                return fechaFormateada;
+                            } 
+                        },
+                        { data: 'fecha',
+                            render: function(data, type, row, meta){
+                                var fecha = moment(data);
+
+                                if (!fecha.isValid()) {
+                                    return "<div class='badge badge-danger'>Sin Fecha</div>";
+                                }
+                                // Formatear la fecha en el formato deseado (d/m/y)
+                                var fechaFormateada = fecha.format('DD/MM/Y');
+                                return fechaFormateada;
+                            } 
+                        },
+                        { data: 'fecha_egreso',
+                            render: function(data, type, row, meta){
+                                var fecha = moment(data);
+
+                                if (!fecha.isValid()) {
+                                    return "<div class='badge badge-danger'>Sin Fecha</div>";
+                                }
+                                // Formatear la fecha en el formato deseado (d/m/y)
+                                var fechaFormateada = fecha.format('DD/MM/Y');
+                                return fechaFormateada;
+                            } 
+                        },
+                        { data: 'tiene_adjunto',
+                            render: function(data, type, row, meta){
+                                if (type === 'display') {
+                                    if (data === "Si") {
+                                        return "<div class='badge badge-success'>" + data + "</div>";
+                                    } else {
+                                        return "<div class='badge badge-danger'>" + data + "</div>";
+                                    }
+                                }
+                                return data;
+                            },
+                            escape: false // Asegura que el HTML no se escape
+                        }, 
+                        { data: 'profesional' },
+                        {
+                            render: function(data, type, row) {
+                                return '<td>' +
+                                            '<a href="javascript:;" title="Modificar" class="btn btn-warning btn-sm modificar" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-edit"></i></a>'+
+                                            '<a href="javascript:;" title="Agregar Nota" class="btn btn-primary btn-sm agregar_notas" data-id="'+ row.id_datos_paciente +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-file-o"></i></a>' +
+                                            '<a href="javascript:;" title="Egresar Solicitud" class="btn btn-success btn-sm egresar_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-arrow-right"></i></a>' +
+                                            '<a href="javascript:;" title="Mostrar Adjunto" class="btn btn-secondary btn-sm mostrar_adjunto" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-o"></i></a>' +
+                                            '<a href="javascript:;" title="Ver PDF" class="btn btn-primary btn-sm imprimir_solicitud" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'"><i class="fa fa-file-pdf"></i></a>' +
+                                            '<a href="javascript:;" title="Procedimientos" class="btn btn-primary btn-sm procedimientos" data-id="'+ row.id_datos_paciente +'" data-solicitud="'+ row.id_detalle_de_solicitud +'" data-fechasolicitud="'+ row.fecha_solicitud +'"><i class="fa fa-folder"></i></a>' +
+                                        '</td>';
+                            }
+                        }
+                    ]
+                });
+            }
 
         }
     });
