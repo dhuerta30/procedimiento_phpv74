@@ -3763,6 +3763,12 @@ class HomeController
 			$pdocrud = DB::PDOCrud(true);
 			$pdomodel = $pdocrud->getPDOModelObj();
 
+			$pdomodel->DBQuery(
+				"UPDATE detalle_de_solicitud
+				SET estado = 'Egresado'
+				WHERE adjuntar IS NOT NULL AND adjuntar != ''"
+			);	
+
 			$currentWeekStart = date('Y-m-d', strtotime('monday this week'));
 
 			$where = "";
