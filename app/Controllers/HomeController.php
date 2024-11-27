@@ -2397,8 +2397,6 @@ class HomeController
     		SET estado = 'Egresado'
     		WHERE adjuntar IS NOT NULL AND adjuntar != ''"
 		);
-
-		$currentDate = date('Y-m-d');
     
 		// Primer día del mes actual
 		$firstDayOfMonth = date('Y-m-01');
@@ -3889,6 +3887,12 @@ class HomeController
 		$pdocrud = DB::PDOCrud(true);
 		$pdomodel = $pdocrud->getPDOModelObj();
 
+		// Primer día del mes actual
+		$firstDayOfMonth = date('Y-m-01');
+		
+		// Último día del mes actual
+		$lastDayOfMonth = date('Y-m-t');
+
 		$data = $pdomodel->DBQuery(
 			"SELECT 
 				ds.estado,
@@ -3910,13 +3914,15 @@ class HomeController
 				datos_paciente AS dp
 			INNER JOIN 
 				detalle_de_solicitud AS ds ON ds.id_datos_paciente = dp.id_datos_paciente
-			INNER JOIN 
+			INNER JOIN
 				diagnostico_antecedentes_paciente AS dg_p ON dg_p.id_datos_paciente = dp.id_datos_paciente
 			INNER JOIN 
 				profesional AS pro ON pro.id_profesional = dg_p.profesional
 			WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud
-			GROUP BY 
-				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen"
+				AND ds.fecha_solicitud >= '$firstDayOfMonth'
+            	AND ds.fecha_solicitud <= '$lastDayOfMonth'
+			/*GROUP BY 
+				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen*/"
 		);
 
 		$dataValues = array_map(function($row) {
@@ -3943,6 +3949,17 @@ class HomeController
 
 		$pdocrud = DB::PDOCrud(true);
 		$pdomodel = $pdocrud->getPDOModelObj();
+
+		$pdomodel->DBQuery(
+            "UPDATE detalle_de_solicitud
+            SET estado = 'Egresado'
+            WHERE adjuntar IS NOT NULL AND adjuntar != ''"
+        );
+
+		$firstDayOfMonth = date('Y-m-01');
+		
+		// Último día del mes actual
+		$lastDayOfMonth = date('Y-m-t');
 
 		$where = "";
 		$run = $request->get('run');
@@ -3993,7 +4010,11 @@ class HomeController
 
 		if (!empty($fecha_solicitud)) {
 			$where .= " AND dg_p.fecha_solicitud_paciente = '$fecha_solicitud' ";
-		}
+		}  else {
+            // Si la fecha de solicitud está vacía, buscar por la semana actual
+            $where .= " AND ds.fecha_solicitud >= '$firstDayOfMonth'
+            			AND ds.fecha_solicitud <= '$lastDayOfMonth' ";
+        }
 
 		if (!empty($adjuntar)) {
 			// Check if $adjuntar is 'si' or 'no'
@@ -4034,8 +4055,9 @@ class HomeController
 			INNER JOIN 
 				profesional AS pro ON pro.id_profesional = dg_p.profesional
 			WHERE dg_p.fecha_solicitud_paciente = ds.fecha_solicitud " . $where . "
-			GROUP BY 
-				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen"
+			/*GROUP BY 
+				dp.id_datos_paciente, dp.rut, dp.edad, ds.fecha, ds.fecha_solicitud, ds.examen*/
+			"
 		);
 
 		$dataValues = array_map(function($row) {
