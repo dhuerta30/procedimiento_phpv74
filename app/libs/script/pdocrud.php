@@ -123,9 +123,9 @@ function carga_masiva_usuarios_insertar($data, $obj){
             foreach ($records as $Excelval) {
                 $rut_completo = $Excelval['Rut'] . '-' . $Excelval['Dv'];
 
-                if (!App\Controllers\HomeController::validaRut($rut_completo)) {
+                /*if (!App\Controllers\HomeController::validaRut($rut_completo)) {
                     $rutInvalidos[] = $rut_completo;
-                } else {
+                } else {*/
                     $existingUsuario = $pdomodel->DBQuery("SELECT * FROM usuario WHERE rut = :rut", ['rut' => $rut_completo]);
 
                     if (!$existingUsuario) {
@@ -154,13 +154,13 @@ function carga_masiva_usuarios_insertar($data, $obj){
                         $error_msg = array("message" => "", "error" => "Lo Siguientes Usuarios ingresados ya existen: ". implode(", ", $Excelval["Nombre"]), "redirectionurl" => "");
                         die(json_encode($error_msg));
                     }
-                }
+                //}
             }
 
-            if (!empty($rutInvalidos)) {
+            /*if (!empty($rutInvalidos)) {
                 $error_msg = array("message" => "", "error" => "Los siguientes Rut inválidos no han sido cargados: " . implode(", ", $rutInvalidos), "redirectionurl" => "");
                 die(json_encode($error_msg));
-            }
+            }*/
             $data["carga_masiva_usuarios"]["archivo"] = basename($data["carga_masiva_usuarios"]["archivo"]);
         }
     }

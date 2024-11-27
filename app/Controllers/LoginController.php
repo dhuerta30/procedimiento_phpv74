@@ -21,6 +21,8 @@ class LoginController {
 			$pdomodel->where("rut", $_SESSION["data"]["usuario"]["rut"]);
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
+
+			Redirect::to("buscarListaEspera/index");
 		}
 
 		if (isset($_SESSION["data"]["usuario"]["usuario"])) {
@@ -29,12 +31,14 @@ class LoginController {
 			$pdomodel->where("usuario", $_SESSION["data"]["usuario"]["usuario"]);
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
-		}
 
-		$Sesusuario = SessionManager::get('usuario');
-		if (isset($Sesusuario)) {
 			Redirect::to("Home/datos_paciente");
 		}
+
+		/*$Sesusuario = SessionManager::get('usuario');
+		if (isset($Sesusuario)) {
+			Redirect::to("Home/datos_paciente");
+		}*/
 	}
 
     public function index(){

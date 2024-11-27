@@ -74,7 +74,7 @@
                         <table class="table table-striped tabla_reportes text-center" style="width:100%">
                             <thead class="bg-primary">
                                 <tr>
-                                    <th>Estado</th>
+                                    <!--<th>Estado</th>-->
                                     <th>Especialidad</th>
                                     <th>Rut</th>
                                     <th>Paciente</th>
@@ -83,8 +83,8 @@
                                     <th>Código</th>
                                     <th>Tipo Exámen</th>
                                     <th>Exámen</th>
-                                    <th>Fecha Solicitud</th>
-                                    <th>Fecha Agendada</th>
+                                    <!--<th>Fecha Solicitud</th>
+                                    <th>Fecha Agendada</th>-->
                                     <th>Fecha Egreso</th>
                                     <th>Tiene Adjunto</th>
                                     <th>Profesional</th>
@@ -258,7 +258,7 @@ $(document).ready(function(){
             dataType: "json"
         },
         columns: [
-            { data: 'estado' },
+            /*{ data: 'estado' },*/
             { data: 'especialidad' },
             { data: 'rut' },
             { data: 'paciente' },
@@ -301,7 +301,7 @@ $(document).ready(function(){
                     }
                 }
              },
-            { data: 'fecha_solicitud',
+            /*{ data: 'fecha_solicitud',
                 render: function(data, type, row, meta){
                     var fecha = moment(data);
 
@@ -324,7 +324,7 @@ $(document).ready(function(){
                     var fechaFormateada = fecha.format('DD/MM/Y');
                     return fechaFormateada;
                 } 
-            },
+            },*/
             { data: 'fecha_egreso',
                 render: function(data, type, row, meta){
                     var fecha = moment(data);
@@ -461,7 +461,7 @@ $(document).on("click", ".limpiar_filtro", function(){
             }
         },
         columns: [
-            { data: 'estado' },
+            /*{ data: 'estado' },*/
             { data: 'especialidad' },
             { data: 'rut' },
             { data: 'paciente' },
@@ -504,7 +504,7 @@ $(document).on("click", ".limpiar_filtro", function(){
                     }
                 }
              },
-            { data: 'fecha_solicitud',
+            /*{ data: 'fecha_solicitud',
                 render: function(data, type, row, meta){
                     var fecha = moment(data);
 
@@ -527,7 +527,7 @@ $(document).on("click", ".limpiar_filtro", function(){
                     var fechaFormateada = fecha.format('DD/MM/Y');
                     return fechaFormateada;
                 } 
-            },
+            },*/
             { data: 'fecha_egreso',
                 render: function(data, type, row, meta){
                     var fecha = moment(data);
@@ -626,7 +626,7 @@ $(document).on("click", ".buscar", function(){
                 data: response.data, // Los datos filtrados del controlador PHP
                 destroy: true,
                 columns: [
-                    { data: 'estado' },
+                    /*{ data: 'estado' },*/
                     { data: 'especialidad' },
                     { data: 'rut' },
                     { data: 'paciente' },
@@ -669,7 +669,7 @@ $(document).on("click", ".buscar", function(){
                             }
                         }
                     },
-                    { data: 'fecha_solicitud',
+                    /*{ data: 'fecha_solicitud',
                         render: function(data, type, row, meta){
                             var fecha = moment(data);
 
@@ -692,7 +692,7 @@ $(document).on("click", ".buscar", function(){
                             var fechaFormateada = fecha.format('DD/MM/Y');
                             return fechaFormateada;
                         } 
-                    },
+                    },*/
                     { data: 'fecha_egreso',
                         render: function(data, type, row, meta){
                             var fecha = moment(data);

@@ -1931,15 +1931,6 @@ class HomeController
 	}
 
 	public function datos_paciente(){
-		if (
-			$_SESSION["usuario"][0]["cargo"] == "ENFERMERA" || 
-			$_SESSION["usuario"][0]["cargo"] == "ENFERMERO" || 
-			$_SESSION["usuario"][0]["cargo"] == "Kinesiologo" || 
-			$_SESSION["usuario"][0]["cargo"] == "MEDICO CIRUJANO" || 
-			$_SESSION["usuario"][0]["cargo"] == "Médico"
-		) {
-			Redirect::to("buscarListaEspera/index");
-		}	
 
 		date_default_timezone_set('America/Santiago');
 		$fecha_registro = date('Y-m-d H:i:s');
@@ -2400,6 +2391,12 @@ class HomeController
 	public function mostrar_grilla_lista_espera(){
 		$crud = DB::PDOCrud(true);
 		$pdomodel = $crud->getPDOModelObj();
+
+		$pdomodel->DBQuery(
+			"UPDATE detalle_de_solicitud 
+    		SET estado = 'Egresado'
+    		WHERE adjuntar IS NOT NULL AND adjuntar != ''"
+		);
 
 		$currentDate = date('Y-m-d');
     
@@ -3078,6 +3075,8 @@ class HomeController
 			$pdomodel->where("id_datos_paciente", $id, "=", "AND");
 			$pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud);
 			$detalle_de_solicitud = $pdomodel->select("detalle_de_solicitud");
+
+			print_r($detalle_de_solicitud);
 
 			$fecha_egreso = isset($detalle_de_solicitud[0]["fecha_egreso"]) ? $detalle_de_solicitud[0]["fecha_egreso"] : '';
 			$motivo_egreso = isset($detalle_de_solicitud[0]["motivo_egreso"]) ? $detalle_de_solicitud[0]["motivo_egreso"] : '';
