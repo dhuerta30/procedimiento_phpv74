@@ -3887,6 +3887,12 @@ class HomeController
 		$pdocrud = DB::PDOCrud(true);
 		$pdomodel = $pdocrud->getPDOModelObj();
 
+		$pdomodel->DBQuery(
+			"UPDATE detalle_de_solicitud
+			SET estado = 'Egresado'
+			WHERE adjuntar IS NOT NULL AND adjuntar != ''"
+		);
+
 		// Primer día del mes actual
 		$firstDayOfMonth = date('Y-m-01');
 		
