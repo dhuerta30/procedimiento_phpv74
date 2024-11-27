@@ -2553,6 +2553,8 @@ Class PDOCrud {
                 return $this->dbBtnSwitch($data);
             case "SQL":
                 return $this->dbSQL($data);
+            case "PARSESQL":
+                return $this->dbParseSQL($data);    
             case "SELECTFORM":
                 return $this->getSelectForm();
             case "INSERTFORM":
@@ -3296,7 +3298,117 @@ Class PDOCrud {
         return $output;
     }
     
-    
+
+    private function dbParseSQL(){
+        if(!empty($this->sql)){
+            $result = $this->parseSelectQuery($this->sql);
+            if($result["operation"] !=="SELECT") {
+                return  $this->addError($this->getLangData("error_valid_render_option"));
+            }
+            if(!empty($result["tablename"])) {
+                $this->dbTable($result["tablename"]);
+            }
+            if(!empty($result["columns"]) && is_array($result["columns"]) && count($result["columns"])) {
+                $this->crudTableCol($result["columns"]);
+            }
+            if(!empty($result["where"])) {
+                foreach($result["where"] as $where){
+                    $this->where($where["column"], $where["value"], $where["operator"]);
+                }
+            }
+            if(!empty($result["limit"])) {
+                $this->dbLimit($result["limit"]);
+            }
+            if(!empty($result["order_by"])) {
+                $this->dbOrderBy($result["order_by"]);
+            }
+            return $this->render();
+        }
+        else{
+            return $this->addError($this->getLangData("error_valid_render_option"));
+        }   
+    }
+
+    private function parseSelectQuery($query) {
+        $result = [
+            'operation' => '',
+            'columns' => [],
+            'tablename' => '',
+            'alias' => null, // Alias para la tabla principal
+            'joins' => [],   // Clave para guardar los JOINs
+            'where' => [],
+            'limit' => '',
+            'order_by' => '',
+        ];
+
+        // Normalizar espacios para facilitar el análisis
+        $query = preg_replace('/\s+/', ' ', trim($query));
+
+        // Extraer operación (SELECT)
+        if (preg_match('/^\s*(SELECT)\s+/i', $query, $matches)) {
+            $result['operation'] = strtoupper($matches[1]);
+        }
+
+        // Extraer columnas
+        if (preg_match('/SELECT\s+(.*?)\s+FROM/i', $query, $matches)) {
+            $columns = trim($matches[1]);
+            if ($columns === '*') {
+                $result['columns'] = []; // Array vacío si se usa asterisco
+            } else {
+                $result['columns'] = array_map('trim', explode(',', $columns));
+            }
+        }
+
+        // Extraer tabla principal y alias
+        if (preg_match('/FROM\s+([^\s]+)(?:\s+AS\s+([^\s]+)|\s+([^\s]+))?/i', $query, $matches)) {
+            $result['tablename'] = trim($matches[1]);
+            if (!empty($matches[2])) {
+                $result['alias'] = trim($matches[2]); // Alias con AS
+            } elseif (!empty($matches[3])) {
+                $result['alias'] = trim($matches[3]); // Alias sin AS
+            }
+        }
+
+        // Extraer JOINs (INNER JOIN y LEFT JOIN) con alias
+        if (preg_match_all('/(INNER|LEFT)\s+JOIN\s+([^\s]+)(?:\s+AS\s+([^\s]+)|\s+([^\s]+))?\s+ON\s+(.*?)(?=\s+INNER|\s+LEFT|\s+WHERE|\s+LIMIT|\s+ORDER|\s+GROUP|\s+HAVING|$)/i', $query, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                $result['joins'][] = [
+                    'type' => strtoupper(trim($match[1])), // Tipo de JOIN (INNER o LEFT)
+                    'table' => trim($match[2]),           // Tabla asociada
+                    'alias' => !empty($match[3]) ? trim($match[3]) : (!empty($match[4]) ? trim($match[4]) : null), // Alias (si existe)
+                    'on' => trim($match[5]),             // Condición ON
+                ];
+            }
+        }
+
+        // Extraer cláusula WHERE y dividir en condiciones
+        if (preg_match('/WHERE\s+(.*?)(\s+LIMIT|\s+ORDER|\s+GROUP|\s+HAVING|$)/i', $query, $matches)) {
+            $whereClause = trim($matches[1]);
+            $whereConditions = explode(' AND ', $whereClause); // Dividir por AND
+
+            foreach ($whereConditions as $condition) {
+                if (preg_match('/(.+?)(=|<>|<|>|<=|>=|LIKE)\s*\'?(.+?)\'?$/i', trim($condition), $conditionMatches)) {
+                    $result['where'][] = [
+                        'column' => trim($conditionMatches[1]),
+                        'operator' => trim($conditionMatches[2]),
+                        'value' => trim($conditionMatches[3]),
+                    ];
+                }
+            }
+        }
+
+        // Extraer cláusula LIMIT
+        if (preg_match('/LIMIT\s+(.*?)(\s+ORDER|\s+GROUP|\s+HAVING|$)/i', $query, $matches)) {
+            $result['limit'] = trim($matches[1]);
+        }
+
+        // Extraer cláusula ORDER BY
+        if (preg_match('/ORDER\s+BY\s+(.*?)(\s+LIMIT|\s+GROUP|\s+HAVING|$)/i', $query, $matches)) {
+            $result['order_by'] = trim($matches[1]);
+        }
+
+        return $result;
+    }
 
     /*private function dbSQL($data) {
         $this->setSettings("pagination", false);
