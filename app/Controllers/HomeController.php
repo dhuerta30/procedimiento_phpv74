@@ -3075,8 +3075,6 @@ class HomeController
 			$pdomodel->where("id_detalle_de_solicitud", $id_detalle_de_solicitud);
 			$detalle_de_solicitud = $pdomodel->select("detalle_de_solicitud");
 
-			print_r($detalle_de_solicitud);
-
 			$fecha_egreso = isset($detalle_de_solicitud[0]["fecha_egreso"]) ? $detalle_de_solicitud[0]["fecha_egreso"] : '';
 			$motivo_egreso = isset($detalle_de_solicitud[0]["motivo_egreso"]) ? $detalle_de_solicitud[0]["motivo_egreso"] : '';
 			$adjuntar = isset($detalle_de_solicitud[0]["adjuntar"]) ? $detalle_de_solicitud[0]["adjuntar"] : '';
