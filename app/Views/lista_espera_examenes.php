@@ -45,6 +45,11 @@
         margin: 0;
     }
 
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+        width: 350px;
+    }
 </style>
 <div class="content-wrapper">
 	<section class="content">
@@ -71,7 +76,7 @@
                         <button class="exportar_excel border-0 p-2 mb-3"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
                     </div>
                 </div>
-                    <div class='table-responsive tabla_principal'>
+                    <div class='table-responsive tabla_principal pl-2 pr-2'>
                         <table class="table table-striped tabla_reportes text-center" style="width:100%">
                             <thead class="bg-primary">
                                 <tr>
@@ -233,8 +238,9 @@ $(document).ready(function(){
         searching: false,
         scrollX: true,
         lengthMenu: [10],
-        dom: 'rtip',
+        dom: 'frtip',
         language: {
+            "searchPlaceholder": "Escribe aquí para buscar...",
             "decimal": "",
             "emptyTable": "No hay información",
             "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
@@ -245,7 +251,7 @@ $(document).ready(function(){
             "lengthMenu": "Mostrar _MENU_ Entradas",
             "loadingRecords": "Cargando...",
             "processing": "Procesando...",
-            "search": "Buscar:",
+            "search": "",
             "zeroRecords": "Sin resultados encontrados",
             "paginate": {
                 "first": "Primero",
@@ -434,7 +440,7 @@ $(document).on("click", ".limpiar_filtro", function(){
         searching: false,
         scrollX: true,
         lengthMenu: [10],
-        dom: 'rtip',
+        dom: 'frtip',
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -623,11 +629,12 @@ $(document).on("click", ".buscar", function(){
             } else {
                 // Reconstruir la tabla DataTable con los nuevos datos
                 table = $('.tabla_reportes').DataTable({
-                    searching: false,
+                    searching: true,
                     scrollX: true,
                     lengthMenu: [10],
-                    dom: 'rtip',
+                    dom: 'frtip',
                     language: {
+                        "searchPlaceholder": "Buscar en Resultados Encontrados...",
                         "decimal": "",
                         "emptyTable": "No hay información",
                         "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
@@ -638,7 +645,7 @@ $(document).on("click", ".buscar", function(){
                         "lengthMenu": "Mostrar _MENU_ Entradas",
                         "loadingRecords": "Cargando...",
                         "processing": "Procesando...",
-                        "search": "Buscar:",
+                        "search": "",
                         "zeroRecords": "Sin resultados encontrados",
                         "paginate": {
                             "first": "Primero",
@@ -757,6 +764,10 @@ $(document).on("click", ".buscar", function(){
                         }
                     ]
                 });
+
+                $('.dataTables_filter label').contents().unwrap();
+                $('.dataTables_filter input').addClass('form-control mb-3');
+
             }
 
         }
