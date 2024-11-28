@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/flatpickr.min.css">
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>app/libs/script/plugins/datatable/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
 <style>
     .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td {
         white-space: nowrap;
@@ -114,6 +115,7 @@
 <script src="<?=$_ENV["BASE_URL"]?>js/pdfmake.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/buttons.html5.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/buttons.print.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
 <script>
 
 $(document).on("click", ".eliminar_examen", function(){
@@ -366,38 +368,23 @@ $(document).ready(function(){
         ]
     });
 
-    $(".fecha_solicitud").flatpickr({
-        dateFormat: "Y-m-d",
-        allowInput: true,
-        //defaultDate: new Date(),
+    flatpickr(".fecha_solicitud", {
         locale: {
             firstDayOfWeek: 1, // Lunes como primer día de la semana
-            weekdays: {
-                shorthand: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-                longhand: [
-                    'Domingo',
-                    'Lunes',
-                    'Martes',
-                    'Miércoles',
-                    'Jueves',
-                    'Viernes',
-                    'Sábado'
-                ]
-            },
             months: {
                 shorthand: [
-                    'Ene',
-                    'Feb',
-                    'Mar',
-                    'Abr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Ago',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dic'
+                    'Enero',
+                    'Febrero',
+                    'Marzo',
+                    'Abril',
+                    'Mayo',
+                    'Junio',
+                    'Julio',
+                    'Agosto',
+                    'Septiembre',
+                    'Octubre',
+                    'Noviembre',
+                    'Diciembre'
                 ],
                 longhand: [
                     'Enero',
@@ -414,7 +401,15 @@ $(document).ready(function(){
                     'Diciembre'
                 ]
             }
-        }
+        },
+        plugins: [
+            new monthSelectPlugin({
+                shorthand: true, //defaults to false
+                dateFormat: "F Y", //defaults to "F Y"
+                altFormat: "F Y", //defaults to "F Y"
+                
+            })
+        ]
     });
 });
 

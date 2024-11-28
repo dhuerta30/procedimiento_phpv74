@@ -2505,9 +2505,9 @@ class HomeController
 						</select>
 					</div>
 					<div class='col-xl col-lg-6 col-md-6 flex-grow-1'>
-						<label class='control-label col-form-label'>Fecha Solicitud</label>
+						<label class='control-label col-form-label'>Fecha Solicitud por Mes y Año</label>
 						<div class='input-group'>
-							<input type='text' class='form-control pdocrud-form-control pdocrud-text fecha_solicitud pdocrud-date flatpickr-input' data-type='date'>                
+							<input type='text' class='form-control pdocrud-form-control pdocrud-text fecha_solicitud flatpickr-input'>                
 							<div class='input-group-append'>
 								<span class='input-group-text' id='basic-addon1'>
 									<i class='fa fa-calendar'></i>
@@ -3822,7 +3822,44 @@ class HomeController
 			}
 
 			if (!empty($fecha_solicitud)) { 
-				$where .= " AND dg_p.fecha_solicitud_paciente = '$fecha_solicitud' ";
+
+				$meses_esp = [
+					'Enero' => 'January',
+					'Febrero' => 'February',
+					'Marzo' => 'March',
+					'Abril' => 'April',
+					'Mayo' => 'May',
+					'Junio' => 'June',
+					'Julio' => 'July',
+					'Agosto' => 'August',
+					'Septiembre' => 'September',
+					'Octubre' => 'October',
+					'Noviembre' => 'November',
+					'Diciembre' => 'December',
+				];
+
+				list($mes, $anio) = explode(' ', $fecha_solicitud);
+    
+				// Verificar si el mes está en el array de traducción
+				if (isset($meses_esp[$mes])) {
+					// Reemplazar el mes en español por su equivalente en inglés
+					$mes_ingles = $meses_esp[$mes];
+					$fecha_ingles = "$mes_ingles $anio";
+
+					// Crear el objeto DateTime
+					$date = \DateTime::createFromFormat('F Y', $fecha_ingles);
+					if ($date === false) {
+						die("Error inesperado al convertir la fecha: " . print_r(\DateTime::getLastErrors(), true));
+					}
+
+					// Formatear la fecha en el formato deseado
+					$fecha_formateada = $date->format('Y-m'); // "2024-01"
+
+					// Agregar la condición al WHERE
+					$where .= " AND DATE_FORMAT(dg_p.fecha_solicitud_paciente, '%Y-%m') = '$fecha_formateada'";
+					//echo $where; // Para depuración
+				}
+
 			} else {
 				$where .= " AND dg_p.fecha_solicitud_paciente BETWEEN '$currentMonthStart' AND '$currentMonthEnd' ";
 			}
@@ -4015,9 +4052,54 @@ class HomeController
 		}
 
 		if (!empty($fecha_solicitud)) {
-			$where .= " AND dg_p.fecha_solicitud_paciente = '$fecha_solicitud' ";
+
+			$fecha_solicitud = urldecode($fecha_solicitud);
+
+			$partes = explode(' ', $fecha_solicitud);
+			if (count($partes) < 2) {
+				die("Formato de fecha inválido. Se esperaba 'Mes Año', como 'Enero 2024'. Valor recibido: $fecha_solicitud");
+			}
+
+			list($mes, $anio) = $partes;
+
+			// Array para traducir los meses de español a inglés
+			$meses_esp = [
+				'Enero' => 'January',
+				'Febrero' => 'February',
+				'Marzo' => 'March',
+				'Abril' => 'April',
+				'Mayo' => 'May',
+				'Junio' => 'June',
+				'Julio' => 'July',
+				'Agosto' => 'August',
+				'Septiembre' => 'September',
+				'Octubre' => 'October',
+				'Noviembre' => 'November',
+				'Diciembre' => 'December',
+			];
+
+			if (!isset($meses_esp[$mes])) {
+				die("El mes proporcionado no es válido. Mes recibido: $mes");
+			}
+
+			// Reemplazar el mes en español por su equivalente en inglés
+			$mes_ingles = $meses_esp[$mes];
+			$fecha_ingles = "$mes_ingles $anio";
+
+			// Crear el objeto DateTime
+			$date = \DateTime::createFromFormat('F Y', $fecha_ingles);
+			if ($date === false) {
+				die("Error inesperado al convertir la fecha: " . print_r(\DateTime::getLastErrors(), true));
+			}
+
+			// Formatear la fecha en el formato deseado
+			$fecha_formateada = $date->format('Y-m'); // "2024-10"
+
+			// Agregar la condición al WHERE
+			$where .= " AND DATE_FORMAT(dg_p.fecha_solicitud_paciente, '%Y-%m') = '$fecha_formateada'";
+			
 		}  else {
-            // Si la fecha de solicitud está vacía, buscar por la semana actual
+            // Si la fecha de solicitud está vacía, buscar por el mes actual
             $where .= " AND ds.fecha_solicitud >= '$firstDayOfMonth'
             			AND ds.fecha_solicitud <= '$lastDayOfMonth' ";
         }
