@@ -4489,21 +4489,22 @@ class HomeController
 				return;
 			}
 
-			// Verificar si el paciente ya existe en la base de datos
-			$pdomodel->openBrackets = "(";
-			$pdomodel->where("rut", $rut);
-			$pdomodel->andOrOperator = "OR";
-			$pdomodel->where("pasaporte_o_codigo_interno", $pasaporte_o_codigo_interno);
-			$pdomodel->closedBrackets = ")";
-			$pdomodel->where("nombres", $nombres, "=", "AND");
-			$pdomodel->where("apellido_paterno", $apellido_paterno, "=", "AND");
-			$pdomodel->where("apellido_materno", $apellido_materno, "=", "AND");
-			$pdomodel->where("fecha_nacimiento", $fecha_nacimiento, "=", "AND");
-			$pdomodel->where("edad", $edad, "=", "AND");
-			$pdomodel->where("direccion", $direccion, "=", "AND");
-			$pdomodel->where("sexo", $sexo, "=", "AND");
-			$pdomodel->where("telefono", $telefono);
-			$datos_paciente_exists = $pdomodel->select("datos_paciente");
+			if (empty($pasaporte_o_codigo_interno)) {
+				$pasaporte_o_codigo_interno = "NULL";
+			} else {
+				// Escapar el valor para evitar inyección SQL
+				$pasaporte_o_codigo_interno = "'$pasaporte_o_codigo_interno'";
+			}
+
+			$datos_paciente_exists = $pdomodel->executeQuery(
+				"SELECT * FROM datos_paciente 
+				WHERE rut = '$rut' 
+				OR pasaporte_o_codigo_interno = '$pasaporte_o_codigo_interno'
+				OR nombres = '$nombres'"
+			);
+
+			//echo $pdomodel->getLastQuery();
+			//die();
 			
 			if (empty($datos_paciente_exists)) {
 				echo json_encode(['error' => 'Paciente no encontrado']);
