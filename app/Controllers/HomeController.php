@@ -4843,11 +4843,18 @@ class HomeController
 				echo json_encode(['error' => 'Debe proporcionar al menos un dato para buscar']);
 			} else {
 				 // Validar el RUT
-				 $rut = $request->post('rut');
-				 if (!self::validaRut($rut)) {
-					 echo json_encode(['error' => 'RUT inválido']);
-					 return;
-				 } 
+				$rut = $request->post('rut');
+				$pasaporte = $request->post('pasaporte_o_codigo_interno');
+
+				if (empty($rut) && empty($pasaporte)) {
+					echo json_encode(['error' => 'Debe proporcionar al menos el RUT o el Pasaporte']);
+					return;
+				}
+
+				if (!empty($rut) && !self::validaRut($rut)) {
+					echo json_encode(['error' => 'RUT inválido']);
+					return;
+				} 
  
 				// Apply WHERE conditions based on the provided search criteria
 				foreach ($searchCriteria as $field => $value) {
