@@ -4347,9 +4347,11 @@ class HomeController
 				return;
 			}
 
+			$pdomodel->openBrackets = "(";
 			$pdomodel->where("rut", $rut);
-			$pdomodel->andOrOperator = "AND";
+			$pdomodel->andOrOperator = "OR";
 			$pdomodel->where("pasaporte_o_codigo_interno", $pasaporte_o_codigo_interno);
+			$pdomodel->closedBrackets = ")";
 			$pdomodel->andOrOperator = "AND";
 			$pdomodel->where("nombres", $nombres);
 			$pdomodel->andOrOperator = "AND";
@@ -4486,7 +4488,7 @@ class HomeController
 				echo json_encode(['error' => 'Ingrese al menos 1 Detalle de Solicitud']);
 				return;
 			}
-			
+
 			// Verificar si el paciente ya existe en la base de datos
 			$pdomodel->openBrackets = "(";
 			$pdomodel->where("rut", $rut);
