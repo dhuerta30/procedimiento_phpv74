@@ -116,7 +116,13 @@ class LoginController {
 		$pdocrud->formFields(array("usuario", "rut", "password"));
 		$pdocrud->setLangData("login", "Ingresar");
 		$login = $pdocrud->dbTable("usuario")->render("selectform");
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{3}-(9|k|K)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "'none'"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array(
+			"mask"=> "'9{1,2}9{3}9{3}-(9|k|K)'", 
+			"casing" => "'upper'", 
+			"clearIncomplete" => "true",
+			"numericInput"=> "true", 
+			"positionCaretOnClick" => "'none'"
+		));
 
         View::render('login', ['login' => $login, 'mask' => $mask]);
     }
