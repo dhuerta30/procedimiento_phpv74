@@ -1204,8 +1204,8 @@ function beforeloginCallback($data, $obj) {
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS =>'{
             "data": {
-                "rut": '.$_ENV["rut_api"].',
-                "password": '.$_ENV["clave_api"].'
+                "rut": '.$_ENV["rut_polos_api"].',
+                "password": '.$_ENV["clave_polos_api"].'
             }
         }',
         CURLOPT_HTTPHEADER => array(
@@ -1216,6 +1216,7 @@ function beforeloginCallback($data, $obj) {
     $response = curl_exec($curl);
     curl_close($curl);
     $resultArrayPolos = json_decode($response, true);
+
     $obj->setLangData("tokenApiPolos", $resultArrayPolos["data"]);
 
     return $data;

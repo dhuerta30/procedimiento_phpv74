@@ -3004,11 +3004,13 @@ Class PDOCrud {
 
     private function getResponse($data) {
         $this->token = $this->getLangData("tokenApi");
+        $this->tokenpolos = $this->getLangData("tokenApiPolos");
         $response = array(
             "message" => $this->message,
             "error" => $this->getErrors(),
             "data" => $data,
             "tokenApi" => $this->token,
+            "tokenApiPolos" => $this->tokenpolos,
             "redirectionurl" => ""
         );
         if (isset($this->formRedirection))

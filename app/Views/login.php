@@ -149,6 +149,9 @@
       } else {
         var json = JSON.parse(data);
         var token = json["tokenApi"];
+        var tokenpolos = json["tokenApiPolos"];
+       
+        localStorage.setItem("tokenApiPolos", tokenpolos);
         localStorage.setItem("tokenApi", token);
 
         Swal.fire({
