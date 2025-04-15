@@ -212,14 +212,41 @@ $(document).ready(function(){
                     { data: 'dnombre' },
                     { data: 'apellidop' },
                     { data: 'apellidom' },
-                    { data: 'especialidad' },
+                    { data: 'especialidad',
+                        render: function(data, type, row, meta) {
+                            if (data == 1) {
+                                return 'OFTALMOLOGIA';
+                            } else {
+                                return data;
+                            }
+                        }
+                    },
                     { data: 'fechadocumento' },
-                    { data: 'tipodocumento' },
+                    { data: 'tipodocumento',
+                        render: function(data, type, row, meta){
+                            const tipos = {
+                                1: 'ANGIOGRAFIA',
+                                2: 'OCT',
+                                3: 'RECUENTO ENDOTELIAL',
+                                4: 'ECO OCULAR',
+                                5: 'FONDO DE OJO',
+                                6: 'AVASTIN',
+                                7: 'CAMPO VISUAL',
+                                8: 'CONSENTIMIENTO',
+                                9: 'BIOMETRIA',
+                                10: 'Tratamiento Ortóptico',
+                                11: 'Estudio de Estrabismo',
+                                12: 'Retinografía',
+                                13: 'Paquimetría'
+                            };
+                            return tipos[data] || data;
+                        }
+                    },
                     { data: 'observaciones' },
                     { data: 'fecharegistro' },
                     { data: 'rutapdf',
                         render: function(data, type, row, meta){
-                           return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
+                        return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
                         } 
                     },
                     { data: 'rutapdf2' },
