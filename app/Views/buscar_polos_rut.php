@@ -90,11 +90,11 @@
 function generarToken(){
     $.ajax({
         type: "POST",
-        url: "<?=$_ENV['BASE_URL']?>Busqueda/generarToken",
+        url: "<?=$_ENV['BASE_URL']?>Polos/generarToken",
         dataType: "json",
         success: function(data){
             var token = data["data"];
-            localStorage.setItem("tokenApi", token);
+            localStorage.setItem("tokenApiPolos", token);
         }
     });
 }
