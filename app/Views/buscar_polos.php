@@ -137,7 +137,7 @@ $(document).on("click", ".buscar", function(event) {
 
     var ingreso = $('.ingreso').val();
     var termino = $('.termino').val();
-    var token = localStorage.getItem("tokenApi");
+    var token = localStorage.getItem("tokenApiPolos");
 
     function realizarBusqueda() {
         $.ajax({

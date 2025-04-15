@@ -131,7 +131,7 @@ $(document).ready(function(){
     event.preventDefault(); // Evita el envío del formulario
 
     var rut = $('.rut').val();
-    var token = localStorage.getItem("tokenApi");
+    var token = localStorage.getItem("tokenApiPolos");
 
     $.ajax({
         type: "POST",

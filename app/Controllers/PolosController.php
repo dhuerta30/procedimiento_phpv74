@@ -157,6 +157,54 @@ class PolosController
         }
     }
 
+    public function obtener_pdf_por_fecha(){
+        $request = new Request();
+        if ($request->getMethod() === 'POST') {
+            $id = $request->post("id");
+            $token = $request->post("token");
+
+            if(empty($id)){
+                echo json_encode(["error" => "No Hay documento PDF para mostrar"]);
+                return;
+            }
+
+            // Consulta a la base de datos
+            $data = array("op" => "query", "sql" => "SELECT * FROM polos WHERE id = '".$id."' ");
+            
+            // Llamada a la API
+            $data = http_build_query($data);
+            // Inicializa curl
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Authorization: Bearer '. $token
+            ));
+            curl_setopt($ch, CURLOPT_URL, "http://10.5.131.63/repositoriopolos/api/polos?" . $data);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            // Convierte el resultado a un array asociativo
+            $resultArray = json_decode($result, true);
+            
+            if ($resultArray === null || !isset($resultArray["data"]) || empty($resultArray["data"])) {
+                echo json_encode(["error" => "Documento no encontrado o respuesta inválida."]);
+                return;
+            }
+    
+            // Obtener la URL del PDF desde la respuesta de la API
+            $pdfUrl = $resultArray["data"][0]["rutapdf"] ?? null;
+    
+            if (!$pdfUrl) {
+                echo json_encode(["error" => "No se encontró la ruta del PDF."]);
+                return;
+            }
+    
+            // Responder con la URL del PDF
+            echo json_encode(["data" => ["rutapdf" => "http://10.5.131.63/repositoriopolos/app/libs/script/uploads/".$pdfUrl]]);
+        }
+    }
+
     public function obtener_pdf_rut(){
         $request = new Request();
         if ($request->getMethod() === 'POST') {
