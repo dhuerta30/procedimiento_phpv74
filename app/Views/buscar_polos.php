@@ -230,7 +230,26 @@ $(document).on("click", ".buscar", function(event) {
                                 }
                             },
                             { data: 'fechadocumento' },
-                            { data: 'tipodocumento' },
+                            { data: 'tipodocumento',
+                                render: function(data, type, row, meta){
+                                    const tipos = {
+                                        1: 'ANGIOGRAFIA',
+                                        2: 'OCT',
+                                        3: 'RECUENTO ENDOTELIAL',
+                                        4: 'ECO OCULAR',
+                                        5: 'FONDO DE OJO',
+                                        6: 'AVASTIN',
+                                        7: 'CAMPO VISUAL',
+                                        8: 'CONSENTIMIENTO',
+                                        9: 'BIOMETRIA',
+                                        10: 'Tratamiento Ortóptico',
+                                        11: 'Estudio de Estrabismo',
+                                        12: 'Retinografía',
+                                        13: 'Paquimetría'
+                                    };
+                                    return tipos[data] || data;
+                                }
+                            },
                             { data: 'observaciones' },
                             { data: 'fecharegistro' },
                             { data: 'rutapdf',
