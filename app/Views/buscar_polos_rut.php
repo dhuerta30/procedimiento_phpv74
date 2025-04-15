@@ -246,7 +246,7 @@ $(document).ready(function(){
                     { data: 'fecharegistro' },
                     { data: 'rutapdf',
                         render: function(data, type, row, meta){
-                        return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
+                            return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
                         } 
                     },
                     { data: 'rutapdf2' },
