@@ -5214,7 +5214,13 @@ class HomeController
 		</form>
 		');
 		$render = $pdocrud->render("HTML", $html_data);
-		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array("mask"=> "'9{1,2}9{3}9{3}-(9|k|K)'", "casing" => "'upper'", "clearIncomplete" => "true", "numericInput"=> "true", "positionCaretOnClick" => "'none'"));
+		$mask = $pdocrud->loadPluginJsCode("bootstrap-inputmask",".rut", array(
+			"mask"=> "'9{1,2}9{3}9{3}-(9|k|K)'", 
+			"casing" => "'upper'", 
+			"clearIncomplete" => "true",
+			"numericInput"=> "true", 
+			"positionCaretOnClick" => "'none'"
+		));
 
 		$grilla_ingreso_egreso = $this->crud_ingreso_egreso();
 
