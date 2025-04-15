@@ -220,7 +220,15 @@ $(document).on("click", ".buscar", function(event) {
                             { data: 'dnombre' },
                             { data: 'apellidop' },
                             { data: 'apellidom' },
-                            { data: 'especialidad' },
+                            { data: 'especialidad',
+                                render: function(data, type, row, meta) {
+                                    if (data == 1) {
+                                        return 'OFTALMOLOGIA';
+                                    } else {
+                                        return data;
+                                    }
+                                }
+                            },
                             { data: 'fechadocumento' },
                             { data: 'tipodocumento' },
                             { data: 'observaciones' },
