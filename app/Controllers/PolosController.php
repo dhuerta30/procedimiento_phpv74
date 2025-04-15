@@ -162,4 +162,9 @@ class PolosController
     {
         View::render('buscar_polos');
     }
+
+    public function rut()
+    {
+        View::render('buscar_polos_rut');
+    }
 }
