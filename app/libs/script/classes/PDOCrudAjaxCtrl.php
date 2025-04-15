@@ -9,9 +9,30 @@ Class PDOCrudAjaxCtrl {
             die("La sesión ha caducado. Actualice su página para continuar.");
         }
 
-        $pdocrud = @unserialize($_SESSION["pdocrud_sess"][$instanceKey]);
-        if ($pdocrud === false) {
-            die("Ocurrió un error. Por favor, inténtelo de nuevo más tarde.");
+        function is_serialized($data) {
+            if (!is_string($data) || empty($data)) {
+                return false;
+            }
+        
+            $data = trim($data);
+            if ($data === 'b:0;' || @unserialize($data) === false) {
+                return false;
+            }
+            return true;
+        }
+
+        $sessionData = $_SESSION["pdocrud_sess"][$instanceKey];
+       
+        if (is_serialized($sessionData)) {
+            // Deserializa el dato de forma segura
+            $pdocrud = @unserialize($sessionData);
+        
+            // Verifica si la deserialización fue exitosa
+            if ($pdocrud === false) {
+                die("Ocurrió un error al procesar los datos. Por favor, inténtelo de nuevo más tarde.");
+            }
+        } else {
+            die("Los datos de la sesión no están en formato serializado válido.");
         }
 
         $action = isset($_POST["pdocrud_data"]["action"]) ? filter_var($_POST["pdocrud_data"]["action"], FILTER_SANITIZE_STRING) : null;

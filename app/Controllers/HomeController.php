@@ -5219,12 +5219,16 @@ class HomeController
 		$grilla_ingreso_egreso = $this->crud_ingreso_egreso();
 
 		View::render(
-			"reportes_ingreso_egreso",[
+			"reportes_ingreso_egreso", [
 				'render' => $render,
 				'mask' => $mask,
 				'grilla_ingreso_egreso' => $grilla_ingreso_egreso
 			]
 		);
+	}
+
+	public function panel(){
+		View::render('panel');
 	}
 
 	public function menu(){

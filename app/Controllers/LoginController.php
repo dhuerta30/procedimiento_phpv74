@@ -15,6 +15,7 @@ class LoginController {
 	{
 		SessionManager::startSession();
 
+		/* para médicos */
 		if (isset($_SESSION["data"]["usuario"]["rut"])) {
 			$pdocrud = DB::PDOCrud();
 			$pdomodel = $pdocrud->getPDOModelObj();
@@ -22,7 +23,8 @@ class LoginController {
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
 
-			Redirect::to("buscarListaEspera/index");
+			Redirect::to("Home/panel");
+			//Redirect::to("buscarListaEspera/index");
 		}
 
 		if (isset($_SESSION["data"]["usuario"]["usuario"])) {
