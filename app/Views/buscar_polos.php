@@ -212,10 +212,10 @@ $(document).on("click", ".buscar", function(event) {
                                 "previous": "Anterior"
                             }
                         },
-                        data: response.data, // Los datos filtrados del controlador PHP
+                        data: response.data,
                         destroy: true,
                         columns: [
-                            { data: 'rut' }, // Ensure this key exists in the returned objects
+                            { data: 'rut' },
                             { data: 'poc' },
                             { data: 'dnombre' },
                             { data: 'apellidop' },
