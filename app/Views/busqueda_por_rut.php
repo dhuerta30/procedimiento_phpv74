@@ -127,7 +127,7 @@ $(document).ready(function(){
 });
 
  $(document).on("click", ".buscar", function(event){
-    event.preventDefault(); // Evita el envío del formulario
+    event.preventDefault();
 
     var rut = $('.rut').val();
     var token = localStorage.getItem("tokenApi");
@@ -141,7 +141,6 @@ $(document).ready(function(){
             token: token
         },
         beforeSend: function() {
-            // Puedes mostrar un indicador de carga aquí
             $("#loader").show();
         },
         success: function(response){
@@ -168,7 +167,6 @@ $(document).ready(function(){
                     }
                 });
             } else {
-                // Verificar que la respuesta contenga datos
                 if (!response.data || response.data.length === 0) {
                     Swal.fire({
                         title: 'Sin resultados',
@@ -178,7 +176,6 @@ $(document).ready(function(){
                     });
                 }
             }
-            // Reconstruir la tabla DataTable con los nuevos datos
             table = $('.tabla_por_rut').DataTable({
                 searching: true,
                 scrollX: true,
