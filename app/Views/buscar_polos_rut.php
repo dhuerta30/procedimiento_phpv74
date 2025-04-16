@@ -221,7 +221,11 @@ $(document).ready(function(){
                             }
                         }
                     },
-                    { data: 'fechadocumento' },
+                    { data: 'fechadocumento',
+                        render: function(data, type, row, meta) {
+                            return data ? moment(data).format('DD-MM-YYYY') : '';
+                        }
+                     },
                     { data: 'tipodocumento',
                         render: function(data, type, row, meta){
                             const tipos = {
@@ -243,7 +247,11 @@ $(document).ready(function(){
                         }
                     },
                     { data: 'observaciones' },
-                    { data: 'fecharegistro' },
+                    { data: 'fecharegistro',
+                        render: function(data, type, row, meta) {
+                            return data ? moment(data).format('DD-MM-YYYY HH:mm:ss') : '';
+                        }
+                     },
                     { data: 'rutapdf',
                         render: function(data, type, row, meta){
                             return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
