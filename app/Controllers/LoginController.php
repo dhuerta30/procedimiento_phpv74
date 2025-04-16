@@ -34,7 +34,8 @@ class LoginController {
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
 
-			Redirect::to("Home/datos_paciente");
+			Redirect::to("Home/panel");
+			//Redirect::to("Home/datos_paciente");
 		}
 
 		/*$Sesusuario = SessionManager::get('usuario');
