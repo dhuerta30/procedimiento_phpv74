@@ -223,7 +223,7 @@ $(document).on("click", ".buscar", function(event) {
                                 render: function(data, type, row, meta) {
                                     return data ? moment(data).format('DD-MM-YYYY') : '';
                                 }
-                             },
+                            },
                             { data: 'estudio' },
                             { data: 'observaciones' },
                             { data: 'fecha_registro',
