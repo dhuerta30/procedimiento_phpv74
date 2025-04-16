@@ -219,10 +219,18 @@ $(document).on("click", ".buscar", function(event) {
                             { data: 'dnombre' },
                             { data: 'apellidop' },
                             { data: 'apellidom' },
-                            { data: 'fechaestudio' },
+                            { data: 'fechaestudio',
+                                render: function(data, type, row, meta) {
+                                    return data ? moment(data).format('DD-MM-YYYY') : '';
+                                }
+                             },
                             { data: 'estudio' },
                             { data: 'observaciones' },
-                            { data: 'fecha_registro' },
+                            { data: 'fecha_registro',
+                                render: function(data, type, row, meta) {
+                                    return data ? moment(data).format('DD-MM-YYYY HH:mm:ss') : '';
+                                }
+                             },
                             {
                                 data: 'rutapdf',
                                 render: function(data, type, row, meta) {
