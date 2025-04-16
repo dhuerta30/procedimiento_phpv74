@@ -97,7 +97,7 @@ function generarToken(callback) {
             var token = data["data"];
             localStorage.setItem("tokenApi", token);
             if (typeof callback === "function") {
-                callback(); // Ejecutar la función de callback si se proporciona
+                callback();
             }
         }
     });
