@@ -44,18 +44,18 @@
                             ?>
 
                             <div class="col-xl-3 mb-3">
-                                <div class="h-100 p-5 border rounded-3 bg-info">
+                                <div class="h-100 p-5 border rounded-3 bg-info text-center">
                                     <h6><?= $item['nombre_menu'] ?></h6>
                                     <?php if ($tieneSubmenus): ?>
                                         <?php foreach ($submenus as $submenu): ?>
                                             <?php if($submenu["visibilidad_submenu"] != "Ocultar"): ?>
-                                                <a class="btn btn-primary mt-2" href="<?= rtrim($_ENV["BASE_URL"], '/') . $submenu['url_submenu'] ?>" role="button">
+                                                <a class="btn btn-primary btn-block mt-2" href="<?= rtrim($_ENV["BASE_URL"], '/') . $submenu['url_submenu'] ?>" role="button">
                                                     Ir a <?= $submenu['nombre_submenu'] ?>
                                                 </a>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
                                     <?php else: ?>
-                                        <a class="btn btn-primary mt-2" href="<?= rtrim($_ENV["BASE_URL"], '/') . $item['url_menu'] ?>" role="button">
+                                        <a class="btn btn-primary btn-block mt-2" href="<?= rtrim($_ENV["BASE_URL"], '/') . $item['url_menu'] ?>" role="button">
                                             Ir a <?= $item['nombre_menu'] ?>
                                         </a>
                                     <?php endif; ?>
