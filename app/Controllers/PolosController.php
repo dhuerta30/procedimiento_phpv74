@@ -216,7 +216,6 @@ class PolosController
                 return;
             }
 
-            // Consulta a la base de datos
             $data = array("op" => "query", "sql" => "SELECT * FROM polos WHERE id = '".$id."' ");
             
             // Llamada a la API

@@ -96,7 +96,6 @@
                 </div>
             </div>
             <div class="row pdocrud-options-files">
-                <div class="col-sm-12">
                     <div class="col-sm-6">
                         <ul class="pdocrud-export-options">
                             <?php if ($settings["printBtn"]) { ?>
@@ -149,8 +148,7 @@
                             <?php } ?>
                         </div>
                     </div>
-                    <div style="clear:both"></div>
-                </div>  
+                <div style="clear:both"></div>
             </div>  
         </div><!-- /.box-body -->
     <?php echo $modal; ?>
