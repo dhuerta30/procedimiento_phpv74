@@ -262,11 +262,31 @@ $(document).on("click", ".buscar", function(event) {
                              },
                             { data: 'rutapdf',
                                 render: function(data, type, row, meta){
-                                    return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
+                                    if (data) {
+                                        return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
+                                    } else {
+                                        return '';
+                                    }
                                 } 
                             },
-                            { data: 'rutapdf2' },
-                            { data: 'rutapdf3' }
+                            { data: 'rutapdf2',
+                                render: function(data, type, row, meta) {
+                                    if (data) {
+                                        return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
+                                    } else {
+                                        return '';
+                                    }
+                                }
+                             },
+                            { data: 'rutapdf3',
+                                render: function(data, type, row, meta) {
+                                    if (data) {
+                                        return '<button class="btn btn-info ver_pdf" data-id="'+row.id+'">Ver</button>';
+                                    } else {
+                                        return '';
+                                    }
+                                }
+                             }
                         ]
                     });
                 }
