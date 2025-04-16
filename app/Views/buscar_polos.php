@@ -52,6 +52,7 @@
                                                 <th>Documento 1</th>
                                                 <th>Documento 2</th>
                                                 <th>Documento 3</th>
+                                                <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -286,7 +287,17 @@ $(document).on("click", ".buscar", function(event) {
                                         return '';
                                     }
                                 }
-                             }
+                             },
+                             {
+                                data: null,
+                                orderable: false,
+                                render: function(data, type, row, meta) {
+                                    return `
+                                        <button class="btn btn-warning btn-sm editar" data-id="${row.id}"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm eliminar" data-id="${row.id}"><i class="fa fa-trash"></i></button>
+                                    `;
+                                }
+                            }
                         ]
                     });
                 }
