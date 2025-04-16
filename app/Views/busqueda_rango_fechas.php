@@ -132,7 +132,7 @@ $(document).ready(function(){
 });
 
 $(document).on("click", ".buscar", function(event) {
-    event.preventDefault(); // Evita el envío del formulario
+    event.preventDefault();
 
     var ingreso = $('.ingreso').val();
     var termino = $('.termino').val();
