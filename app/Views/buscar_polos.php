@@ -305,7 +305,7 @@ $(document).on("click", ".buscar", function(event) {
         });
     }
 
-    realizarBusqueda(); // Ejecutar la función para realizar la búsqueda inicialmente
+    realizarBusqueda();
 });
 
 $(document).on("click", ".ver_pdf", function() {
