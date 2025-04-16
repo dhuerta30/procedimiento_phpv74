@@ -211,7 +211,7 @@ $(document).on("click", ".buscar", function(event) {
                                 "previous": "Anterior"
                             }
                         },
-                        data: response.data, // Los datos filtrados del controlador PHP
+                        data: response.data,
                         destroy: true,
                         columns: [
                             { data: 'rut' },
