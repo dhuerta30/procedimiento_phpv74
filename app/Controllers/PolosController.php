@@ -371,7 +371,6 @@ class PolosController
             "rutapdf3"
         ));
         $render = $pdocrud->dbTable("polos_api")->render();
-
         View::render('buscar_polos', [
             'render' => $render
         ]);
