@@ -330,6 +330,7 @@ class PolosController
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("11" => "Estudio de Estrabismo"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("12" => "Retinografía"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("13" => "Paquimetría"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("" => ""));
         $pdocrud->setSettings("function_filter_and_search", false);
         $pdocrud->setSettings("searchbox", true);
         $pdocrud->setSettings("addbtn", false);
