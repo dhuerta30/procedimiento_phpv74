@@ -23,7 +23,7 @@ class LoginController {
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
 
-			Redirect::to("Home/panel");
+			Redirect::to("home/panel");
 			//Redirect::to("buscarListaEspera/index");
 		}
 
@@ -34,7 +34,7 @@ class LoginController {
 			$sesion_users = $pdomodel->select("usuario");
 			$_SESSION["usuario"] = $sesion_users;
 
-			Redirect::to("Home/panel");
+			Redirect::to("home/panel");
 			//Redirect::to("Home/datos_paciente");
 		}
 
