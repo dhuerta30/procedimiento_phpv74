@@ -44,7 +44,7 @@ function generarToken(callback) {
             var token = data["data"];
             localStorage.setItem("tokenApiPolos", token);
             if (typeof callback === "function") {
-                callback(); // Ejecutar la función de callback si se proporciona
+                callback();
             }
         }
     });
