@@ -317,6 +317,8 @@ class PolosController
         $pdocrud->tableColFormatting("fechadocumento", "date", array("format" =>"d-m-Y"));
         $pdocrud->tableColFormatting("fecharegistro", "date", array("format" =>"d-m-Y H:i:s"));
         $pdocrud->tableHeading("Búsqueda Rango de Fechas");
+        $pdocrud->where("id", "NULL");
+        $pdocrud->addCallback("before_table_data", "funciones_de_filtro");
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("1" => "ANGIOGRAFIA"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("2" => "OCT"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("3" => "RECUENTO ENDOTELIAL"));
@@ -332,7 +334,7 @@ class PolosController
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("13" => "Paquimetría"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("" => ""));
         $pdocrud->setSettings("function_filter_and_search", false);
-        $pdocrud->setSettings("searchbox", true);
+        $pdocrud->setSettings("searchbox", false);
         $pdocrud->setSettings("addbtn", false);
         $pdocrud->setSettings("viewbtn", false);
         $pdocrud->setSettings("printBtn", false);
@@ -344,6 +346,7 @@ class PolosController
         $pdocrud->setSettings("actionbtn", false);
         $pdocrud->colRename("poc", "Código");
         $pdocrud->colRename("dnombre", "Nombre");
+        $pdocrud->setLangData("no_data", "No se encontraron Resultados");
         $pdocrud->colRename("apellidop", "Apellido Paterno");
         $pdocrud->colRename("apellidom", "Apellido Materno");
         $pdocrud->colRename("fechadocumento", "Fecha Documento");

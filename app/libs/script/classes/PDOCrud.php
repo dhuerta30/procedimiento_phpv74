@@ -1411,6 +1411,11 @@ Class PDOCrud {
         return $this;
     }
 
+    public function clearWhereConditions() {
+        $this->whereCondition = [];
+        return $this;
+    }
+
     /**
      * Set whether current operation is back button operation or not
      * @param   bool   $operation                              true/false, current operation is back button operation or not 

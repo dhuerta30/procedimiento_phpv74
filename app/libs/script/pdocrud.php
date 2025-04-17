@@ -26,6 +26,42 @@ if (isset($_REQUEST["pdocrud_instance"])) {
     $fomplusajax->handleRequest();
 }
 
+
+function funciones_de_filtro($data, $obj){
+    if (isset($data["action"]) && $data["action"] == "filter") {
+        
+        // Limpiar las condiciones WHERE anteriores
+        $obj->clearWhereConditions();
+
+        // Verificar si 'FechaDesdeFilter' y 'FechaHastaFilter' están presentes en $data
+        $fechaDesde = isset($data['FechaInicio']) ? $data['FechaInicio'] : null;
+        $fechaHasta = isset($data['FechaTermino']) ? $data['FechaTermino'] : null;
+
+        if (empty($fechaDesde) && empty($fechaHasta)) {
+            $obj->where('fechadocumento', "NULL");
+        }
+
+        // Filtrar por rango de fechas si ambos filtros están presentes
+        if (!empty($fechaDesde) && !empty($fechaHasta)) {
+            $obj->where('fechadocumento', $fechaDesde, ">=", "AND");
+            $obj->where('fechadocumento', $fechaHasta, "<=", "AND");
+        } 
+        
+        // Si solo se ha seleccionado una fecha desde
+        elseif (!empty($fechaDesde) && empty($fechaHasta)) {
+            $obj->where('fechadocumento', $fechaDesde, "=");
+        }
+        
+        // Si solo se ha seleccionado una fecha hasta
+        elseif (empty($fechaDesde) && !empty($fechaHasta)) {
+            $obj->where('fechadocumento', $fechaHasta, "=");
+        }
+    }
+    
+    return $data;
+}
+
+
 function agregar_menu($data, $obj){
     $id_menu = $data;
     $id_usuario_session = $_SESSION["usuario"][0]["id"];
