@@ -359,15 +359,15 @@ class PolosController
         $pdocrud->setSearchCols(array(
             "rut", 
             "poc", 
-            "dbnombre", 
-            "apellidop", 
-            "apellidom", 
-            "fechadocumento", 
-            "tipodocumento", 
-            "observaciones", 
-            "fecharegistro", 
-            "rutapdf", 
-            "rutapdf2", 
+            "dbnombre",
+            "apellidop",
+            "apellidom",
+            "fechadocumento",
+            "tipodocumento",
+            "observaciones",
+            "fecharegistro",
+            "rutapdf",
+            "rutapdf2",
             "rutapdf3"
         ));
         $render = $pdocrud->dbTable("polos_api")->render();
