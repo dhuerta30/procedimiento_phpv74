@@ -432,6 +432,7 @@ class HomeController
 		$pdocrud->crudRemoveCol(array("rol","estatus","password", "token", "token_api", "expiration_token"));
 		$pdocrud->setSearchCols(array("id","nombre", "rut","email", "usuario", "idrol"));
 		$pdocrud->setSettings("addbtn", false);
+		$pdocrud->setSettings("function_filter_and_search", true);
 		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setSettings("editbtn", false);
 		$pdocrud->setSettings("delbtn", false);
@@ -637,6 +638,7 @@ class HomeController
 		$pdocrud->setSettings("pdfBtn", false);
 		$pdocrud->setSettings("csvBtn", false);
 		$pdocrud->setSettings("excelBtn", false);
+		$pdocrud->setSettings("function_filter_and_search", true);
 		$pdocrud->setSettings("template", "exportacion_ingreso_egreso");
 		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setSettings("encryption", false);
@@ -1042,6 +1044,7 @@ class HomeController
 		$pdocrud->colRename("id_profesional", "ID");
 		$pdocrud->setSearchCols(array("nombre_profesional","apellido_profesional", "rut_profesional"));
 		$pdocrud->buttonHide("submitBtnSaveBack");
+		$pdocrud->setSettings("function_filter_and_search", true);
 		$pdocrud->setSettings("checkboxCol", false);
 		$pdocrud->setSettings("deleteMultipleBtn", false);
 		$pdocrud->setSettings("delbtn", false);
@@ -1766,6 +1769,7 @@ class HomeController
 		$pdocrud->formDisplayInPopup();
 		$pdocrud->where("codigo_o", "Línea", "!=");
 		$pdocrud->crudRemoveCol(array("id"));
+		$pdocrud->setSettings("function_filter_and_search", true);
 		$pdocrud->setSettings("viewbtn", false);
 		$pdocrud->setSettings("printBtn", false);
 		$pdocrud->setSettings("pdfBtn", false);
@@ -1805,6 +1809,7 @@ class HomeController
 			$pdocrud->setSettings("required", false);
 			$pdocrud->setSettings("checkboxCol", false);
 			$pdocrud->setSettings("deleteMultipleBtn", false);
+			$pdocrud->setSettings("function_filter_and_search", true);
 			$pdocrud->colRename("id", "ID");
 			$pdocrud->colRename("idrol", "Rol");
 			$pdocrud->colRename("email", "Correo");
@@ -3272,6 +3277,7 @@ class HomeController
 		$respaldos->setSearchCols(array("usuario", "fecha", "hora"));
         $respaldos->tableColFormatting("archivo", "html", array("type" => "html", "str" => "<a class='btn btn-success btn-sm' href=\"".$_ENV["BASE_URL"]."app/libs/script/uploads/{col-name}\" data-attribute=\"abc-{col-name}\"><i class=\"fa fa-download\"></i> Descargar Respaldo</a>"));
         $respaldos->setSettings("addbtn", false);
+		$respaldos->setSettings("function_filter_and_search", true);
 		$respaldos->setSettings("editbtn", false);
         $respaldos->setSettings("viewbtn", false);
         $respaldos->setSettings("printBtn", false);
@@ -3344,6 +3350,7 @@ class HomeController
 
 		$crud = DB::PDOCrud(true);
 		$crud->formDisplayInPopup();
+		$crud->setSettings("function_filter_and_search", true);
 		$crud->setSettings("viewbtn", false);
 		$crud->enqueueBtnTopActions("Report",  "<i class='fa fa-upload'></i> Carga Masiva", "javascript:;", array(), "btn-report btn btn-light carga_masiva");
 		$crud->fieldRenameLable("tipo_de_examen", "Tipo de Exámen");
@@ -5269,6 +5276,7 @@ class HomeController
 		$pdocrud->fieldCssClass("submenu", array("submenu"));
 		$pdocrud->fieldGroups("Name", array("nombre_menu", "url_menu"));
 		$pdocrud->crudRemoveCol(array("id_menu"));
+		$pdocrud->setSettings("function_filter_and_search", true);
 		$pdocrud->setSettings("printBtn", false);
 		$pdocrud->setSettings("pdfBtn", false);
 		$pdocrud->setSettings("csvBtn", false);

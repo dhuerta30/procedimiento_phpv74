@@ -352,6 +352,7 @@ class PolosController
         $pdocrud->colRename("rutapdf2", "Documento 2");
         $pdocrud->colRename("rutapdf3", "Documento 3");
         $pdocrud->crudRemoveCol(array("id", "subido_por", "fechavalidacion"));
+        $pdocrud->setSearchCols(array("rut", "poc", "dbnombre", "apellidop", "apellidom", "fechadocumento", "tipodocumento", "observaciones", "fecharegistro", "rutapdf", "rutapdf2", "rutapdf3"));
         $render = $pdocrud->dbTable("polos_api")->render();
 
         View::render('buscar_polos', [
