@@ -301,7 +301,6 @@ $(document).on("click", ".buscar", function(event) {
     realizarBusqueda();
 });
 
-
 var token = localStorage.getItem("tokenApiPolos");
 
 $.ajax({
