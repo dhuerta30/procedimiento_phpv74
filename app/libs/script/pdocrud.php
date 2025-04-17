@@ -26,7 +26,6 @@ if (isset($_REQUEST["pdocrud_instance"])) {
     $fomplusajax->handleRequest();
 }
 
-
 function funciones_de_filtro($data, $obj){
     if (isset($data["action"]) && $data["action"] == "filter") {
         
