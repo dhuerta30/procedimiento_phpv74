@@ -289,6 +289,7 @@ class PolosController
                             'dnombre'        => $fila['dnombre'] ?? null,
                             'apellidop'      => $fila['apellidop'] ?? null,
                             'apellidom'      => $fila['apellidom'] ?? null,
+                            'especialidad'      => $fila['especialidad'] ?? null,
                             'fechadocumento' => $fila['fechadocumento'] ?? null,
                             'tipodocumento'  => $fila['tipodocumento'] ?? null,
                             'fecharegistro'  => $fila['fecharegistro'] ?? null,
@@ -307,7 +308,7 @@ class PolosController
     public function busqueda()
     {
         $pdocrud = DB::PDOCrud();
-        
+
         $pdocrud->addFilter("FechaInicio", "Fecha Inicio", "fechadocumento", "date");
         $pdocrud->setFilterSource("FechaInicio", "polos_api", "fechadocumento", "fechadocumento as pl", "db");
         $pdocrud->addFilter("FechaTermino", "Fecha Término", "fechadocumento", "date");
@@ -333,6 +334,7 @@ class PolosController
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("12" => "Retinografía"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("13" => "Paquimetría"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("" => ""));
+        $pdocrud->tableColFormatting("especialidad", "replace", array("1" => "OFTALMOLOGIA"));
         $pdocrud->setSettings("function_filter_and_search", false);
         $pdocrud->setSettings("searchbox", true);
         $pdocrud->setSettings("addbtn", false);
