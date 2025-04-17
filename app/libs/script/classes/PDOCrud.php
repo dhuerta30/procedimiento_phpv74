@@ -2554,7 +2554,7 @@ Class PDOCrud {
             case "SQL":
                 return $this->dbSQL($data);
             case "PARSESQL":
-                return $this->dbParseSQL($data);    
+                return $this->dbParseSQL($data);
             case "SELECTFORM":
                 return $this->getSelectForm();
             case "INSERTFORM":
@@ -3299,8 +3299,7 @@ Class PDOCrud {
         }
         return $output;
     }
-    
-
+ 
     private function dbParseSQL(){
         if(!empty($this->sql)){
             $result = $this->parseSelectQuery($this->sql);
