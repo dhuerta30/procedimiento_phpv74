@@ -314,7 +314,10 @@ class PolosController
         $pdocrud->addFilter("FechaTermino", "Fecha Término", "fechadocumento", "date");
         $pdocrud->setFilterSource("FechaTermino", "polos_api", "fechadocumento", "fechadocumento as pl", "db");
 
-        $pdocrud->tableColFormatting("rutapdf", "html",array("type" => "html", "str"=>"<a href='http://10.5.131.63/repositoriopolos/app/libs/script/uploads/{col-name}' target='_blank' class='btn btn-info btn-sm btn-block'>Ver PDF</a>"));
+        $pdocrud->tableColFormatting("rutapdf", "html",array("type" => "html", "str"=> "<a href='http://10.5.131.63/repositoriopolos/app/libs/script/uploads/{col-name}' target='_blank' class='btn btn-info btn-sm btn-block'>Ver PDF</a>"));
+        $pdocrud->tableColFormatting("rutapdf2", "html",array("type" => "html", "str"=> "<a href='http://10.5.131.63/repositoriopolos/app/libs/script/uploads/{col-name}' target='_blank' class='btn btn-info btn-sm btn-block'>Ver PDF</a>"));
+        $pdocrud->tableColFormatting("rutapdf3", "html",array("type" => "html", "str"=> "<a href='http://10.5.131.63/repositoriopolos/app/libs/script/uploads/{col-name}' target='_blank' class='btn btn-info btn-sm btn-block'>Ver PDF</a>"));
+
         $pdocrud->tableColFormatting("fechadocumento", "date", array("format" =>"d-m-Y"));
         $pdocrud->tableColFormatting("fecharegistro", "date", array("format" =>"d-m-Y H:i:s"));
         $pdocrud->tableHeading("Búsqueda Rango de Fechas");
