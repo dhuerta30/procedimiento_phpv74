@@ -252,9 +252,111 @@ class PolosController
         }
     }
 
+    public function obtener_datos_polos(){
+        $request = new Request();
+        if ($request->getMethod() === 'POST') {
+            $token = $request->post("token");
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Authorization: Bearer '. $token
+            ));
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'http://10.5.131.63/repositoriopolos/api/polos',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+            ));
+            $response = curl_exec($curl);
+            curl_close($curl);
+           
+            $datos = json_decode($response, true);
+
+            if (is_array($datos)) {
+                $db = DB::PDOModel();
+                foreach ($datos['data'] as $fila) {
+                    $db->where("rut", $fila['rut']);
+                    $existe = $db->select("polos_api");
+                    if (empty($existe)) {
+                        $db->insert("polos_api", array(
+                            'rut'            => $fila['rut'] ?? null,
+                            'poc'            => $fila['poc'] ?? null,
+                            'dnombre'        => $fila['dnombre'] ?? null,
+                            'apellidop'      => $fila['apellidop'] ?? null,
+                            'apellidom'      => $fila['apellidom'] ?? null,
+                            'fechadocumento' => $fila['fechadocumento'] ?? null,
+                            'tipodocumento'  => $fila['tipodocumento'] ?? null,
+                            'fecharegistro'  => $fila['fecharegistro'] ?? null,
+                            'rutapdf'        => $fila['rutapdf'] ?? null,
+                            'rutapdf2'       => $fila['rutapdf2'] ?? null,
+                            'rutapdf3'       => $fila['rutapdf3'] ?? null
+                        ));
+                    }
+                }
+            }
+    
+            echo json_encode(['success' => true, 'inserted' => count($datos)]);
+        }
+    }
+
     public function busqueda()
     {
-        View::render('buscar_polos');
+        $pdocrud = DB::PDOCrud();
+
+        $pdocrud->addFilter("FechaInicio", "Fecha Inicio", "fechadocumento", "date");
+        $pdocrud->setFilterSource("FechaInicio", "polos_api", "fechadocumento", "fechadocumento as pl", "db");
+        $pdocrud->addFilter("FechaTermino", "Fecha Término", "fechadocumento", "date");
+        $pdocrud->setFilterSource("FechaTermino", "polos_api", "fechadocumento", "fechadocumento as pl", "db");
+
+        $pdocrud->tableColFormatting("rutapdf", "html",array("type" => "html", "str"=>"<a href='http://10.5.131.63/repositoriopolos/app/libs/script/uploads/{col-name}' target='_blank' class='btn btn-info btn-sm btn-block'>Ver PDF</a>"));
+        $pdocrud->tableColFormatting("fechadocumento", "date", array("format" =>"d-m-Y"));
+        $pdocrud->tableColFormatting("fecharegistro", "date", array("format" =>"d-m-Y H:i:s"));
+        $pdocrud->tableHeading("Búsqueda Rango de Fechas");
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("1" => "ANGIOGRAFIA"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("2" => "OCT"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("3" => "RECUENTO ENDOTELIAL"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("4" => "ECO OCULAR"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("5" => "FONDO DE OJO"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("6" => "AVASTIN"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("7" => "CAMPO VISUAL"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("8" => "CONSENTIMIENTO"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("9" => "BIOMETRIA"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("10" => "Tratamiento Ortóptico"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("11" => "Estudio de Estrabismo"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("12" => "Retinografía"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("13" => "Paquimetría"));
+        $pdocrud->setSettings("function_filter_and_search", false);
+        $pdocrud->setSettings("searchbox", true);
+        $pdocrud->setSettings("addbtn", false);
+        $pdocrud->setSettings("viewbtn", false);
+        $pdocrud->setSettings("printBtn", false);
+        $pdocrud->setSettings("pdfBtn", false);
+        $pdocrud->setSettings("csvBtn", false);
+        $pdocrud->setSettings("excelBtn", false);
+        $pdocrud->setSettings("deleteMultipleBtn", false);
+        $pdocrud->setSettings("checkboxCol", false);
+        $pdocrud->setSettings("actionbtn", false);
+        $pdocrud->colRename("poc", "Código");
+        $pdocrud->colRename("dnombre", "Nombre");
+        $pdocrud->colRename("apellidop", "Apellido Paterno");
+        $pdocrud->colRename("apellidom", "Apellido Materno");
+        $pdocrud->colRename("fechadocumento", "Fecha Documento");
+        $pdocrud->colRename("tipodocumento", "Tipo Documento");
+        $pdocrud->colRename("fecharegistro", "Fecha Registro");
+        $pdocrud->colRename("rutapdf", "Documento 1");
+        $pdocrud->colRename("rutapdf2", "Documento 2");
+        $pdocrud->colRename("rutapdf3", "Documento 3");
+        $pdocrud->crudRemoveCol(array("id", "subido_por", "fechavalidacion"));
+        $render = $pdocrud->dbTable("polos_api")->render();
+
+        View::render('buscar_polos', [
+            'render' => $render
+        ]);
     }
 
     public function rut()

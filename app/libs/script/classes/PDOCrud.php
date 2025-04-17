@@ -5394,171 +5394,191 @@ Class PDOCrud {
             $output = $data . $sidebar;
         return $output;
     }
+
+    private function isFilterAndSearchEnabled() {
+        return $this->settings["function_filter_and_search"] ?? false;
+    }
     
-    private function addWhereCondition(PDOModel $pdoModelObj, $data = array()) {
-        if (!isset($this->searchOperator))
+    private function addWhereCondition(PDOModel $pdomodel, $data = array()) {
+        if ($this->isFilterAndSearchEnabled()) {
+            if (!isset($this->searchOperator))
             $this->searchOperator = $this->settings["searchOperator"];
-        if(isset($this->searchBoxCols))
-            $this->searchCols = $this->searchBoxCols;
-        
-        $this->isRelData = false;
-        $pdoModelObj = $this->searchRelData($pdoModelObj, $data);
+            if(isset($this->searchBoxCols))
+                $this->searchCols = $this->searchBoxCols;
+            
+            $this->isRelData = false;
+            $pdomodel = $this->searchRelData($pdomodel, $data);
 
-        if (isset($data["search_col"]) && isset($data["search_text"]) && !$this->isRelData) {
-            if (isset($data["search_text2"])) {
-                $pdoModelObj->where($this->decrypt($data["search_col"]), array($data["search_text"], $data["search_text2"]), "BETWEEN");
-                return $pdoModelObj;
-            }
-            if (strtolower($this->searchOperator) === "like")
-                $data["search_text"] = "%" . $data["search_text"] . "%";
-
-            if ($data["search_col"] === "all") {
-                $pdoModelObj->openBrackets = "(";
-                $colCount = count($this->searchCols);
-                $loopCol = 0;
-                foreach ($this->searchCols as $key => $col) {
-                    if(isset($this->subSelectQuery[$col])) {
-                       $col = "(". $this->parseSubQuery($this->subSelectQuery[$col], $pdoModelObj->columns) . ")";
-                    }
-                    if(isset($this->joinTable))
-                      $col = $this->getJoinColFullName($col);
-                    if(++$loopCol ===  $colCount)
-                        $pdoModelObj->closedBrackets = ")";
-                    $pdoModelObj = $this->searchRelData($pdoModelObj, $data, $col);
-                    if(!$this->isRelData)
-                        $pdoModelObj->where($col, $data["search_text"], $this->searchOperator);
-                    else
-                        $this->isRelData = true;
-                    $pdoModelObj->andOrOperator = "or";
+            if (isset($data["search_col"]) && isset($data["search_text"]) && !$this->isRelData) {
+                if (isset($data["search_text2"])) {
+                    $pdomodel->where($this->decrypt($data["search_col"]), array($data["search_text"], $data["search_text2"]), "BETWEEN");
+                    return $pdomodel;
                 }
-                $pdoModelObj->andOrOperator = "and";
-            } else {
-                $col = $this->decrypt($data["search_col"]);                
-                if(isset($this->joinTable))
-                    $col = $this->getJoinColFullName($this->decrypt($data["search_col"]));
-
-                  if(isset($this->subSelectQuery[$col])) {
-                  $pdoModelObj = $this->applySubQueryWhere($data["search_col"], $data["search_text"], $pdoModelObj);
-                } else {
-                   $pdoModelObj->where($col, $data["search_text"], $this->searchOperator);
-                }
-            }
-        } else if (isset($this->search["search_col"]) && isset($this->search["search_text"]) && !$this->isRelData) {
-            $data["search_col"] = $this->search["search_col"];
-            $data["search_text"] = $this->search["search_text"];
-
-            if (isset($this->search["search_text2"])) {
-                $pdoModelObj->where($this->decrypt($data["search_col"]), array($data["search_text"], $this->search["search_text2"]), "BETWEEN");
-                return $pdoModelObj;
-            }
-
-            if (strtolower($this->searchOperator) === "like")
-                $data["search_text"] = "%" . $data["search_text"] . "%";
-
-            if ($data["search_col"] === "all") {
-                $pdoModelObj->openBrackets = "(";
-                $colCount = count($this->searchCols);
-                $loopCol = 0;
-                foreach ($this->searchCols as $col) {
-                    if(isset($this->subSelectQuery[$col])) {
-                       $col = "(". $this->parseSubQuery($this->subSelectQuery[$col], $pdoModelObj->columns) . ")";
-                    }
-                    if(isset($this->joinTable))
-                      $col = $this->getJoinColFullName($col);
-                     if(++$loopCol ===  $colCount)
-                        $pdoModelObj->closedBrackets = ")";
-                     $pdoModelObj = $this->searchRelData($pdoModelObj, $data, $col);
-                    if(!$this->isRelData)
-                        $pdoModelObj->where($col, $data["search_text"], $this->searchOperator);
-                    else
-                        $this->isRelData = true;
-                    $pdoModelObj->andOrOperator = "or";
-                }
-                $pdoModelObj->andOrOperator = "and";
-            } else {
-                $col = $this->decrypt($data["search_col"]);
-                if(isset($this->joinTable))
-                    $col = $this->getJoinColFullName($this->decrypt($data["search_col"]));
-                
-              if(isset($this->search["search_col"]) && isset($this->subSelectQuery[$this->decrypt($this->search["search_col"])])){
-                  $pdoModelObj = $this->applySubQueryWhere($this->search["search_col"], $this->search["search_text"], $pdoModelObj);
-                } else {
-                  $pdoModelObj->where($col, $data["search_text"], $this->searchOperator);
-                }
-            }
-        }
-        
-        if (isset($data["action"]) && $data["action"] === "filter" && !isset($data["filter_data"])) {
-            $this->filterData = $data;
-        }
-        
-        if (isset($data["filter_data"]) && is_array($data["filter_data"]) && count($data["filter_data"])) {
-            foreach ($data["filter_data"] as $filter) {
                 if (strtolower($this->searchOperator) === "like")
-                    $filter["value"] = "%" . $filter["value"] . "%";
-                $pdoModelObj->where($this->crudFilter[$filter["key"]]["matchingCol"], $filter["value"], $this->searchOperator);
-            }
-            $this->filterData = $data;
-        } else if (isset($this->filterData["filter_data"]) && is_array($this->filterData["filter_data"]) && count($this->filterData["filter_data"])) {
-            foreach ($this->filterData["filter_data"] as $filter) {
+                    $data["search_text"] = "%" . $data["search_text"] . "%";
+
+                if ($data["search_col"] === "all") {
+                    $pdomodel->openBrackets = "(";
+                    $colCount = count($this->searchCols);
+                    $loopCol = 0;
+                    foreach ($this->searchCols as $key => $col) {
+                        if(isset($this->subSelectQuery[$col])) {
+                        $col = "(". $this->parseSubQuery($this->subSelectQuery[$col], $pdomodel->columns) . ")";
+                        }
+                        if(isset($this->joinTable))
+                        $col = $this->getJoinColFullName($col);
+                        if(++$loopCol ===  $colCount)
+                            $pdomodel->closedBrackets = ")";
+                        $pdomodel = $this->searchRelData($pdomodel, $data, $col);
+                        if(!$this->isRelData)
+                            $pdomodel->where($col, $data["search_text"], $this->searchOperator);
+                        else
+                            $this->isRelData = true;
+                        $pdomodel->andOrOperator = "or";
+                    }
+                    $pdomodel->andOrOperator = "and";
+                } else {
+                    $col = $this->decrypt($data["search_col"]);                
+                    if(isset($this->joinTable))
+                        $col = $this->getJoinColFullName($this->decrypt($data["search_col"]));
+
+                    if(isset($this->subSelectQuery[$col])) {
+                    $pdomodel = $this->applySubQueryWhere($data["search_col"], $data["search_text"], $pdomodel);
+                    } else {
+                    $pdomodel->where($col, $data["search_text"], $this->searchOperator);
+                    }
+                }
+            } else if (isset($this->search["search_col"]) && isset($this->search["search_text"]) && !$this->isRelData) {
+                $data["search_col"] = $this->search["search_col"];
+                $data["search_text"] = $this->search["search_text"];
+
+                if (isset($this->search["search_text2"])) {
+                    $pdomodel->where($this->decrypt($data["search_col"]), array($data["search_text"], $this->search["search_text2"]), "BETWEEN");
+                    return $pdomodel;
+                }
+
                 if (strtolower($this->searchOperator) === "like")
-                    $filter["value"] = "%" . $filter["value"] . "%";
-                $pdoModelObj->where($this->crudFilter[$filter["key"]]["matchingCol"], $filter["value"], $this->searchOperator);
+                    $data["search_text"] = "%" . $data["search_text"] . "%";
+
+                if ($data["search_col"] === "all") {
+                    $pdomodel->openBrackets = "(";
+                    $colCount = count($this->searchCols);
+                    $loopCol = 0;
+                    foreach ($this->searchCols as $col) {
+                        if(isset($this->subSelectQuery[$col])) {
+                        $col = "(". $this->parseSubQuery($this->subSelectQuery[$col], $pdomodel->columns) . ")";
+                        }
+                        if(isset($this->joinTable))
+                        $col = $this->getJoinColFullName($col);
+                        if(++$loopCol ===  $colCount)
+                            $pdomodel->closedBrackets = ")";
+                        $pdomodel = $this->searchRelData($pdomodel, $data, $col);
+                        if(!$this->isRelData)
+                            $pdomodel->where($col, $data["search_text"], $this->searchOperator);
+                        else
+                            $this->isRelData = true;
+                        $pdomodel->andOrOperator = "or";
+                    }
+                    $pdomodel->andOrOperator = "and";
+                } else {
+                    $col = $this->decrypt($data["search_col"]);
+                    if(isset($this->joinTable))
+                        $col = $this->getJoinColFullName($this->decrypt($data["search_col"]));
+                    
+                if(isset($this->search["search_col"]) && isset($this->subSelectQuery[$this->decrypt($this->search["search_col"])])){
+                    $pdomodel = $this->applySubQueryWhere($this->search["search_col"], $this->search["search_text"], $pdomodel);
+                    } else {
+                    $pdomodel->where($col, $data["search_text"], $this->searchOperator);
+                    }
+                }
+            }
+            
+            if (isset($data["action"]) && $data["action"] === "filter" && !isset($data["filter_data"])) {
+                $this->filterData = $data;
+            }
+            
+            if (isset($data["filter_data"]) && is_array($data["filter_data"]) && count($data["filter_data"])) {
+                foreach ($data["filter_data"] as $filter) {
+                    if (strtolower($this->searchOperator) === "like")
+                        $filter["value"] = "%" . $filter["value"] . "%";
+                    $pdomodel->where($this->crudFilter[$filter["key"]]["matchingCol"], $filter["value"], $this->searchOperator);
+                }
+                $this->filterData = $data;
+            } else if (isset($this->filterData["filter_data"]) && is_array($this->filterData["filter_data"]) && count($this->filterData["filter_data"])) {
+                foreach ($this->filterData["filter_data"] as $filter) {
+                    if (strtolower($this->searchOperator) === "like")
+                        $filter["value"] = "%" . $filter["value"] . "%";
+                    $pdomodel->where($this->crudFilter[$filter["key"]]["matchingCol"], $filter["value"], $this->searchOperator);
+                }
+            }
+
+            if (isset($data["actionId"])) {
+                $currentDate = date('Y-m-d H:i:s');
+                $fromDate = $this->getDateRangeFromDate($this->dateRangeReport[$data["actionId"]]["type"]);
+                $pdomodel->where($this->dateRangeReport[$data["actionId"]]["dateField"], array($fromDate, $currentDate), "BETWEEN");
+                $this->dateRangeData = $data;
+            } else if (isset($this->dateRangeData["actionId"])) {
+                $currentDate = date('Y-m-d H:i:s');
+                $fromDate = $this->getDateRangeFromDate($this->dateRangeReport[$this->dateRangeData["actionId"]]["type"]);
+                $pdomodel->where($this->dateRangeReport[$this->dateRangeData["actionId"]]["dateField"], array($fromDate, $currentDate), "BETWEEN");
+            }
+            
+            if (isset($data["form_data"])) {
+                parse_str($data["form_data"], $form_data);
+                foreach ($form_data as $field => $val) {
+                    $col = explode($this->tableFieldJoin, $this->decrypt($field));
+                    $trimVal = trim($val);
+                    if(!empty($trimVal))
+                        $pdomodel->where($col[1], $val);
+                }
+                $this->advSearchData = $data;
+            } else if (isset($this->advSearchData["form_data"])) {
+                parse_str($this->advSearchData["form_data"], $form_data);
+                foreach ($form_data as $field => $val) {
+                    $col = explode($this->tableFieldJoin, $this->decrypt($field));
+                    $trimVal = trim($val);
+                    if(!empty($trimVal))
+                        $pdomodel->where($col[1], $val);
+                }
+            }
+            
+            $this->search = $data;
+            if (isset($this->settings["resetSearch"]) && $this->settings["resetSearch"] === true && empty($this->search["search_text"])){
+                $this->search = array();
+            }
+            if (isset($this->settings["resetSearch"]) && $this->settings["resetSearch"] === true && is_array($this->filterData) && count($this->filterData) === 0){
+                $this->filterData = array();
             }
         }
 
         if (isset($this->whereCondition)) {
-            foreach ($this->whereCondition as $colWhere => $where){
-                if(isset($where["bracket"]) && $where["bracket"] === "("){
-                    $pdoModelObj->openBrackets = "(";
+            foreach ($this->whereCondition as $colWhere => $where) {
+                if(isset($where["bracket"]) && $where["bracket"] === "(") {
+                    $pdomodel->openBrackets = "(";
                 }
-                if(isset($where["andOroperator"]) && !empty($where["andOroperator"])){
-                    $pdoModelObj->andOrOperator = $where["andOroperator"];
+                
+                if(isset($where["andOroperator"]) && !empty($where["andOroperator"])) {
+                    $pdomodel->andOrOperator = $where["andOroperator"];
                 }
-                $pdoModelObj->where($where["colName"], $where["val"], $where["operator"]);
-                if(isset($where["bracket"]) && $where["bracket"] === ")"){
-                    $pdoModelObj->closedBrackets = ")";
+                
+                // Verifica si existe una subconsulta para la columna
+                if(isset($this->subSelectQuery[$where["colName"]])) {
+                    $subQuery = $this->parseSubQuery($this->subSelectQuery[$where["colName"]], $pdomodel->columns);
+                    $colName = "(" . $subQuery . ")";
+                    $pdomodel->where($colName, $where["val"], $where["operator"]);
+                } else {
+                    $pdomodel->where($where["colName"], $where["val"], $where["operator"]);
+                }
+        
+                if(isset($where["bracket"]) && $where["bracket"] === ")") {
+                    $pdomodel->closedBrackets = ")";
                 }
             }
-            $pdoModelObj->andOrOperator = "AND";
-        }
+            
+            $pdomodel->andOrOperator = "AND";
+        }        
         
-        if (isset($data["actionId"])) {
-            $currentDate = date('Y-m-d H:i:s');
-            $fromDate = $this->getDateRangeFromDate($this->dateRangeReport[$data["actionId"]]["type"]);
-            $pdoModelObj->where($this->dateRangeReport[$data["actionId"]]["dateField"], array($fromDate, $currentDate), "BETWEEN");
-            $this->dateRangeData = $data;
-        } else if (isset($this->dateRangeData["actionId"])) {
-            $currentDate = date('Y-m-d H:i:s');
-            $fromDate = $this->getDateRangeFromDate($this->dateRangeReport[$this->dateRangeData["actionId"]]["type"]);
-            $pdoModelObj->where($this->dateRangeReport[$this->dateRangeData["actionId"]]["dateField"], array($fromDate, $currentDate), "BETWEEN");
-        }
-        
-        if (isset($data["form_data"])) {
-            parse_str($data["form_data"], $form_data);
-            foreach ($form_data as $field => $val) {
-                $col = explode($this->tableFieldJoin, $this->decrypt($field));
-                $trimVal = trim($val);
-                if(!empty($trimVal))
-                    $pdoModelObj->where($col[1], $val);
-            }
-            $this->advSearchData = $data;
-        } else if (isset($this->advSearchData["form_data"])) {
-            parse_str($this->advSearchData["form_data"], $form_data);
-            foreach ($form_data as $field => $val) {
-                $col = explode($this->tableFieldJoin, $this->decrypt($field));
-                $trimVal = trim($val);
-                if(!empty($trimVal))
-                    $pdoModelObj->where($col[1], $val);
-            }
-        }
-        
-        $this->search = $data;
-        if (isset($this->settings["resetSearch"]) && $this->settings["resetSearch"] === true && empty($this->search["search_text"]))
-            $this->search = array();
-        if (isset($this->settings["resetSearch"]) && $this->settings["resetSearch"] === true && is_array($this->filterData) && count($this->filterData) === 0)
-            $this->filterData = array();
-        return $pdoModelObj;
+        return $pdomodel;
     }
 
     private function applySubQueryWhere($col, $text, PDOModel $pdoModelObj){

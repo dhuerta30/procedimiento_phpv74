@@ -14,7 +14,7 @@
             <div class="card-body">
                 <div class="row procedimiento">
                     <div class="col-md-12">
-                        <div class="row mb-3">
+                        <!--<div class="row mb-3">
                             <div class="col-md-12">
                                 <form id="form1" name="form1" onsubmit="return buscarPacientes(event);">
                                     <div class="row">
@@ -32,10 +32,11 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="row">
                             <div class="col-md-12">
-                                <div class='table-responsive tabla_principal'>
+                                <?=$render?>
+                                <!--<div class='table-responsive tabla_principal'>
                                     <table class="table table-striped tabla_rango_fechas text-center" style="width:100%">
                                         <thead class="bg-primary">
                                             <tr>
@@ -55,10 +56,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- Los datos se llenarán aquí con AJAX -->
+                                          
                                         </tbody>
                                     </table>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
 
@@ -83,6 +84,9 @@
             </div>
         </div>
     </section>
+</div>
+<div id="pdocrud-ajax-loader">
+    <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/js/jquery.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>
@@ -296,6 +300,22 @@ $(document).on("click", ".buscar", function(event) {
 
     realizarBusqueda();
 });
+
+
+var token = localStorage.getItem("tokenApiPolos");
+
+$.ajax({
+    type: "POST",
+    url: "<?=$_ENV["BASE_URL"]?>Polos/obtener_datos_polos",
+    data: {
+        token: token
+    },
+    dataType: "json",
+    success: function(data){
+        $("#pdocrud_search_btn").click();
+    }
+});
+
 
 $(document).on("click", ".ver_pdf", function() {
     var id = $(this).data("id");

@@ -11,6 +11,11 @@
                 }
                 ?>
             </div>
+            <div class="row mb-2">
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-primary" id="filter-button"><i class="fa fa-search"></i> <?php echo $lang["filter_text"] ?></button>
+                </div>
+            </div>
         <?php
         }
         ?>
