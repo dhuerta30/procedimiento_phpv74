@@ -307,7 +307,7 @@ class PolosController
     public function busqueda()
     {
         $pdocrud = DB::PDOCrud();
-
+        
         $pdocrud->addFilter("FechaInicio", "Fecha Inicio", "fechadocumento", "date");
         $pdocrud->setFilterSource("FechaInicio", "polos_api", "fechadocumento", "fechadocumento as pl", "db");
         $pdocrud->addFilter("FechaTermino", "Fecha Término", "fechadocumento", "date");
