@@ -315,7 +315,6 @@ $.ajax({
     }
 });
 
-
 $(document).on("click", ".ver_pdf", function() {
     var id = $(this).data("id");
 
