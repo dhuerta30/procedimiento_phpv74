@@ -380,6 +380,72 @@ class PolosController
 
     public function rut()
     {
+        $pdocrud = DB::PDOCrud();
+
+        $pdocrud->addFilter("FilterRut", "Filtrar por Rut", "rut", "text");
+        $pdocrud->setFilterSource("FilterRut", "polos_api", "rut", "rut as pl", "db");
+
+        $pdocrud->tableColFormatting("fechadocumento", "date", array("format" =>"d-m-Y"));
+        $pdocrud->tableColFormatting("fecharegistro", "date", array("format" =>"d-m-Y H:i:s"));
+
+        $pdocrud->tableHeading("Búsqueda Rango de Fechas");
+        $pdocrud->where("id", "NULL");
+        $pdocrud->addCallback("format_table_data", "formatTablePolos");
+        $pdocrud->addCallback("before_table_data", "funciones_de_filtro_rut");
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("1" => "ANGIOGRAFIA"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("2" => "OCT"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("3" => "RECUENTO ENDOTELIAL"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("4" => "ECO OCULAR"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("5" => "FONDO DE OJO"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("6" => "AVASTIN"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("7" => "CAMPO VISUAL"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("8" => "CONSENTIMIENTO"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("9" => "BIOMETRIA"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("10" => "Tratamiento Ortóptico"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("11" => "Estudio de Estrabismo"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("12" => "Retinografía"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("13" => "Paquimetría"));
+        $pdocrud->tableColFormatting("tipodocumento", "replace", array("" => ""));
+        $pdocrud->tableColFormatting("especialidad", "replace", array("1" => "OFTALMOLOGIA"));
+        $pdocrud->setSettings("function_filter_and_search", false);
+        $pdocrud->setSettings("searchbox", true);
+        $pdocrud->setSettings("addbtn", false);
+        $pdocrud->setSettings("viewbtn", false);
+        $pdocrud->setSettings("printBtn", false);
+        $pdocrud->setSettings("pdfBtn", false);
+        $pdocrud->setSettings("csvBtn", false);
+        $pdocrud->setSettings("excelBtn", false);
+        $pdocrud->setSettings("deleteMultipleBtn", false);
+        $pdocrud->setSettings("checkboxCol", false);
+        $pdocrud->setSettings("actionbtn", false);
+        $pdocrud->colRename("poc", "Código");
+        $pdocrud->colRename("dnombre", "Nombre");
+        $pdocrud->setLangData("no_data", "No se encontraron Resultados");
+        $pdocrud->colRename("apellidop", "Apellido Paterno");
+        $pdocrud->colRename("apellidom", "Apellido Materno");
+        $pdocrud->colRename("fechadocumento", "Fecha Documento");
+        $pdocrud->colRename("tipodocumento", "Tipo Documento");
+        $pdocrud->colRename("fecharegistro", "Fecha Registro");
+        $pdocrud->colRename("rutapdf", "Documento 1");
+        $pdocrud->colRename("rutapdf2", "Documento 2");
+        $pdocrud->colRename("rutapdf3", "Documento 3");
+        $pdocrud->crudRemoveCol(array("id", "subido_por", "fechavalidacion"));
+        $pdocrud->setSearchCols(array(
+            "rut",
+            "poc",
+            "dbnombre",
+            "apellidop",
+            "apellidom",
+            "fechadocumento",
+            "tipodocumento",
+            "observaciones",
+            "fecharegistro",
+            "rutapdf",
+            "rutapdf2",
+            "rutapdf3"
+        ));
+        $render = $pdocrud->dbTable("polos_api")->render();
+
         View::render('buscar_polos_rut');
     }
 }

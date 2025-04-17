@@ -45,6 +45,30 @@ function formatTablePolos($data, $obj){
     return $data;
 }
 
+
+function funciones_de_filtro_rut($data, $obj){
+    if (isset($data["action"]) && $data["action"] == "filter") {
+        
+        // Limpiar las condiciones WHERE anteriores
+        $obj->clearWhereConditions();
+
+        // Verificar si 'FechaDesdeFilter' y 'FechaHastaFilter' están presentes en $data
+        $rut = isset($data['FilterRut']) ? $data['FilterRut'] : null;
+
+        if (empty($rut)) {
+            $obj->where('rut', "NULL");
+        }
+
+        // Filtrar por rango de fechas si ambos filtros están presentes
+        elseif (empty($rut)) {
+            $obj->where('rut', $rut, "=");
+        }
+    }
+    
+    return $data;
+}
+
+
 function funciones_de_filtro($data, $obj){
     if (isset($data["action"]) && $data["action"] == "filter") {
         
