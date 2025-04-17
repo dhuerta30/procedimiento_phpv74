@@ -14,48 +14,10 @@
             <div class="card-body">
                 <div class="row procedimiento">
                     <div class="col-md-12">
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <form id="form1" name="form1" onsubmit="return buscarPacientes(event);">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label>(Rut sin puntos y con guion)</label>
-                                            <input class="form-control rut" type="text" name="rut" placeholder="Ingresar Rut o Pasaporte" required>
-                                        </div>
-                                        <div class="col-md-4 d-flex align-items-end">
-                                            <input type="submit" id="enviar" name="enviar" value="Buscar" class="btn btn-primary buscar" title="Buscar">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                        
                         <div class="row">
                             <div class="col-md-12">
                                 <?=$render?>
-                                <!--<div class='table-responsive tabla_principal'>
-                                    <table class="table table-striped tabla_por_rut text-center" style="width:100%">
-                                        <thead class="bg-primary">
-                                            <tr>
-                                                <th>N° Rut</th>
-                                                <th>Código</th>
-                                                <th>Nombre</th>
-                                                <th>Apellido Paterno</th>
-                                                <th>Apellido Materno</th>
-                                                <th>Especialidad</th>
-                                                <th>Fecha Documento</th>
-                                                <th>Tipo Documento</th>
-                                                <th>Observaciones</th>
-                                                <th>Fecha Registro</th>
-                                                <th>Documento 1</th>
-                                                <th>Documento 2</th>
-                                                <th>Documento 3</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>-->
                             </div>
                         </div>
 
@@ -82,6 +44,9 @@
             </div>
         </div>
     </section>
+</div>
+<div id="pdocrud-ajax-loader">
+    <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/script/images/ajax-loader.gif" class="pdocrud-img-ajax-loader"/>
 </div>
 <script src="<?=$_ENV["BASE_URL"]?>app/libs/script/js/jquery.min.js"></script>
 <script src="<?=$_ENV["BASE_URL"]?>js/sweetalert2.all.min.js"></script>

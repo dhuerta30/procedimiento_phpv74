@@ -388,7 +388,7 @@ class PolosController
         $pdocrud->tableColFormatting("fechadocumento", "date", array("format" =>"d-m-Y"));
         $pdocrud->tableColFormatting("fecharegistro", "date", array("format" =>"d-m-Y H:i:s"));
 
-        $pdocrud->tableHeading("Búsqueda Rango de Fechas");
+        $pdocrud->tableHeading("Búsqueda Por Rut");
         $pdocrud->where("id", "NULL");
         $pdocrud->addCallback("format_table_data", "formatTablePolos");
         $pdocrud->addCallback("before_table_data", "funciones_de_filtro_rut");

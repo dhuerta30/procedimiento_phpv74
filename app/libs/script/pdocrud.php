@@ -59,7 +59,7 @@ function funciones_de_filtro_rut($data, $obj){
         }
 
         // Filtrar por rango de fechas si ambos filtros están presentes
-        elseif (empty($rut)) {
+        elseif (!empty($rut)) {
             $obj->where('rut', $rut, "=");
         }
     }
