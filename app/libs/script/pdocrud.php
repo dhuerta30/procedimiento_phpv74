@@ -26,6 +26,25 @@ if (isset($_REQUEST["pdocrud_instance"])) {
     $fomplusajax->handleRequest();
 }
 
+function formatTablePolos($data, $obj){
+    if($data){
+        foreach($data as &$item){
+            if($item["rutapdf"] != ""){
+                $item["rutapdf"] = "<a href='http://10.5.131.63/repositoriopolos/app/libs/script/uploads/".$item["rutapdf"]."' target='_blank' class='btn btn-info btn-sm btn-block'>Ver PDF</a>";
+            }
+
+            if($item["rutapdf2"] != ""){
+                $item["rutapdf2"] = "<a href='http://10.5.131.63/repositoriopolos/app/libs/script/uploads/".$item["rutapdf2"]."' target='_blank' class='btn btn-info btn-sm btn-block'>Ver PDF</a>";
+            }
+
+            if($item["rutapdf3"] != ""){
+                $item["rutapdf3"] = "<a href='http://10.5.131.63/repositoriopolos/app/libs/script/uploads/".$item["rutapdf3"]."' target='_blank' class='btn btn-info btn-sm btn-block'>Ver PDF</a>";
+            }
+        }
+    }
+    return $data;
+}
+
 function funciones_de_filtro($data, $obj){
     if (isset($data["action"]) && $data["action"] == "filter") {
         
