@@ -31,7 +31,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class='table-responsive tabla_principal'>
+                                <?=$render?>
+                                <!--<div class='table-responsive tabla_principal'>
                                     <table class="table table-striped tabla_por_rut text-center" style="width:100%">
                                         <thead class="bg-primary">
                                             <tr>
@@ -51,10 +52,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- Los datos se llenarán aquí con AJAX -->
+                                            
                                         </tbody>
                                     </table>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
 

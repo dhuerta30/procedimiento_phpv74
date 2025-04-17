@@ -446,6 +446,8 @@ class PolosController
         ));
         $render = $pdocrud->dbTable("polos_api")->render();
 
-        View::render('buscar_polos_rut');
+        View::render('buscar_polos_rut', [
+            'render' => $render
+        ]);
     }
 }

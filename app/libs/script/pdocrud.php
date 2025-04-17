@@ -45,7 +45,6 @@ function formatTablePolos($data, $obj){
     return $data;
 }
 
-
 function funciones_de_filtro_rut($data, $obj){
     if (isset($data["action"]) && $data["action"] == "filter") {
         
@@ -67,7 +66,6 @@ function funciones_de_filtro_rut($data, $obj){
     
     return $data;
 }
-
 
 function funciones_de_filtro($data, $obj){
     if (isset($data["action"]) && $data["action"] == "filter") {
