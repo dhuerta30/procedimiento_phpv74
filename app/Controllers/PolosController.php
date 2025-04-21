@@ -279,30 +279,23 @@ class PolosController
 
             if (is_array($datos)) {
                 $db = DB::PDOModel();
+
+                $db->delete("polos_api");
                 foreach ($datos['data'] as $fila) {
-
-                    $cadena = json_encode($fila);
-                    $hash = md5($cadena);
-
-                    $db->where("hash_registro", $hash);
-                    $existe = $db->select("polos_api");
-
-                    if (empty($existe)) {
-                        $db->insert("polos_api", array(
-                            'rut'            => $fila['rut'] ?? null,
-                            'poc'            => $fila['poc'] ?? null,
-                            'dnombre'        => $fila['dnombre'] ?? null,
-                            'apellidop'      => $fila['apellidop'] ?? null,
-                            'apellidom'      => $fila['apellidom'] ?? null,
-                            'especialidad'      => $fila['especialidad'] ?? null,
-                            'fechadocumento' => $fila['fechadocumento'] ?? null,
-                            'tipodocumento'  => $fila['tipodocumento'] ?? null,
-                            'fecharegistro'  => $fila['fecharegistro'] ?? null,
-                            'rutapdf'        => $fila['rutapdf'] ?? null,
-                            'rutapdf2'       => $fila['rutapdf2'] ?? null,
-                            'rutapdf3'       => $fila['rutapdf3'] ?? null
-                        ));
-                    }
+                    $db->insert("polos_api", array(
+                        'rut'            => $fila['rut'] ?? null,
+                        'poc'            => $fila['poc'] ?? null,
+                        'dnombre'        => $fila['dnombre'] ?? null,
+                        'apellidop'      => $fila['apellidop'] ?? null,
+                        'apellidom'      => $fila['apellidom'] ?? null,
+                        'especialidad'      => $fila['especialidad'] ?? null,
+                        'fechadocumento' => $fila['fechadocumento'] ?? null,
+                        'tipodocumento'  => $fila['tipodocumento'] ?? null,
+                        'fecharegistro'  => $fila['fecharegistro'] ?? null,
+                        'rutapdf'        => $fila['rutapdf'] ?? null,
+                        'rutapdf2'       => $fila['rutapdf2'] ?? null,
+                        'rutapdf3'       => $fila['rutapdf3'] ?? null
+                    ));
                 }
             }
     
