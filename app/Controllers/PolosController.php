@@ -281,12 +281,12 @@ class PolosController
                 $db = DB::PDOModel();
                 foreach ($datos['data'] as $fila) {
 
-                    $cadena = json_encode($fila); // O puedes seleccionar campos manualmente si prefieres más control
+                    $cadena = json_encode($fila);
                     $hash = md5($cadena);
 
                     $db->where("hash_registro", $hash);
                     $existe = $db->select("polos_api");
-                    
+
                     if (empty($existe)) {
                         $db->insert("polos_api", array(
                             'rut'            => $fila['rut'] ?? null,
