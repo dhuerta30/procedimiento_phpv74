@@ -280,8 +280,13 @@ class PolosController
             if (is_array($datos)) {
                 $db = DB::PDOModel();
                 foreach ($datos['data'] as $fila) {
-                    $db->where("rut", $fila['rut']);
+
+                    $cadena = json_encode($fila); // O puedes seleccionar campos manualmente si prefieres más control
+                    $hash = md5($cadena);
+
+                    $db->where("hash_registro", $hash);
                     $existe = $db->select("polos_api");
+                    
                     if (empty($existe)) {
                         $db->insert("polos_api", array(
                             'rut'            => $fila['rut'] ?? null,
@@ -360,7 +365,7 @@ class PolosController
         $pdocrud->crudRemoveCol(array("id", "subido_por", "fechavalidacion"));
         $pdocrud->setSearchCols(array(
             "rut", 
-            "poc", 
+            "poc",
             "dbnombre",
             "apellidop",
             "apellidom",
