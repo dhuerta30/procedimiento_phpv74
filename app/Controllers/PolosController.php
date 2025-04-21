@@ -318,6 +318,7 @@ class PolosController
         $pdocrud->where("id", "NULL");
         $pdocrud->addCallback("format_table_data", "formatTablePolos");
         $pdocrud->addCallback("before_table_data", "funciones_de_filtro");
+        $pdocrud->addCallback("before_table_data", "funciones_de_busqueda");
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("1" => "ANGIOGRAFIA"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("2" => "OCT"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("3" => "RECUENTO ENDOTELIAL"));
@@ -341,6 +342,7 @@ class PolosController
         $pdocrud->setSettings("pdfBtn", false);
         $pdocrud->setSettings("csvBtn", false);
         $pdocrud->setSettings("excelBtn", false);
+        $pdocrud->setSettings("encryption", false);
         $pdocrud->setSettings("deleteMultipleBtn", false);
         $pdocrud->setSettings("checkboxCol", false);
         $pdocrud->setSettings("actionbtn", false);
@@ -387,6 +389,7 @@ class PolosController
         $pdocrud->where("id", "NULL");
         $pdocrud->addCallback("format_table_data", "formatTablePolos");
         $pdocrud->addCallback("before_table_data", "funciones_de_filtro_rut");
+        $pdocrud->addCallback("before_table_data", "funciones_de_busqueda");
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("1" => "ANGIOGRAFIA"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("2" => "OCT"));
         $pdocrud->tableColFormatting("tipodocumento", "replace", array("3" => "RECUENTO ENDOTELIAL"));

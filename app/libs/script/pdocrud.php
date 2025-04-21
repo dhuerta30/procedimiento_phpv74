@@ -45,6 +45,22 @@ function formatTablePolos($data, $obj){
     return $data;
 }
 
+function funciones_de_busqueda($data, $obj){
+    if (isset($data["action"]) && $data["action"] == "search") {
+        if (isset($data['search_col']) && isset($data['search_text'])) {
+            $search_col = $data['search_col'];
+            $search_text = $data['search_text'];
+ 
+            if ($search_col !== 'all' && !empty($search_text)) {
+                $obj->where($search_col, "%$search_text%", "LIKE");
+            } else {
+                $obj->where("id", "NULL");
+            }
+        }
+    }
+    return $data;
+}
+
 function funciones_de_filtro_rut($data, $obj){
     if (isset($data["action"]) && $data["action"] == "filter") {
         
