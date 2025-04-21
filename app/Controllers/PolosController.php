@@ -288,7 +288,7 @@ class PolosController
                         'dnombre'        => $fila['dnombre'] ?? null,
                         'apellidop'      => $fila['apellidop'] ?? null,
                         'apellidom'      => $fila['apellidom'] ?? null,
-                        'especialidad'      => $fila['especialidad'] ?? null,
+                        'especialidad'   => $fila['especialidad'] ?? null,
                         'fechadocumento' => $fila['fechadocumento'] ?? null,
                         'tipodocumento'  => $fila['tipodocumento'] ?? null,
                         'fecharegistro'  => $fila['fecharegistro'] ?? null,
