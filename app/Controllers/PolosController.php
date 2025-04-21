@@ -367,10 +367,7 @@ class PolosController
             "fechadocumento",
             "tipodocumento",
             "observaciones",
-            "fecharegistro",
-            "rutapdf",
-            "rutapdf2",
-            "rutapdf3"
+            "fecharegistro"
         ));
         $render = $pdocrud->dbTable("polos_api")->render();
         View::render('buscar_polos', [
