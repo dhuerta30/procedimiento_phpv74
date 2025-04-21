@@ -413,6 +413,7 @@ class PolosController
         $pdocrud->setSettings("pdfBtn", false);
         $pdocrud->setSettings("csvBtn", false);
         $pdocrud->setSettings("excelBtn", false);
+        $pdocrud->setSettings("encryption", false);
         $pdocrud->setSettings("deleteMultipleBtn", false);
         $pdocrud->setSettings("checkboxCol", false);
         $pdocrud->setSettings("actionbtn", false);
